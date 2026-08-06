@@ -8,6 +8,10 @@ import { PeriodModule } from './academic/periods/periods.module';
 import { ClassroomModule } from './academic/classrooms/classrooms.module';
 import { SectionModule } from './academic/sections/sections.module';
 import { CourseModule } from './academic/courses/courses.module';
+import { CourseTeacherModule } from './academic/course-teachers/course-teachers.module';
+import { SectionCourseModule } from './academic/section-courses/section-courses.module';
+import { EnrollmentModule } from './academic/enrollments/enrollments.module';
+import { ParentStudentModule } from './academic/parent-students/parent-students.module';
 import { AppController } from './app.controller';
 
 @Module({
@@ -24,6 +28,10 @@ import { AppController } from './app.controller';
     ClassroomModule,
     SectionModule,
     CourseModule,
+    ParentStudentModule,
+    CourseTeacherModule,
+    SectionCourseModule,
+    EnrollmentModule,
   ],
   controllers: [AppController],
   providers: [],

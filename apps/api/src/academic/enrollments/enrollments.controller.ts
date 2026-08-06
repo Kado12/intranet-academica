@@ -1,0 +1,70 @@
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { EnrollmentsService } from './enrollments.service';
+import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
+import { UpdateEnrollmentDto } from './dto/update-enrollment.dto';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../auth/guards/roles.guard';
+import { Roles } from '../../auth/decorators/roles.decorator';
+import { Role } from '@prisma/client';
+
+@ApiTags('Matrículas')
+@Controller('academic/enrollments')
+@UseGuards(JwtAuthGuard, RolesGuard)
+@ApiBearerAuth()
+export class EnrollmentsController {
+  constructor(private readonly enrollmentsService: EnrollmentsService) {}
+
+  @Post()
+  @Roles(Role.ADMIN, Role.COORDINADOR, Role.SECRETARIA)
+  @ApiOperation({ summary: 'Matricular un estudiante en una sección' })
+  @ApiResponse({ status: 201, description: 'Estudiante matriculado exitosamente' })
+  @ApiResponse({ status: 409, description: 'El estudiante ya está matriculado o tiene otra matrícula activa' })
+  create(@Body() createEnrollmentDto: CreateEnrollmentDto) {
+    return this.enrollmentsService.create(createEnrollmentDto);
+  }
+
+  @Get()
+  @ApiQuery({ name: 'periodId', required: false, description: 'Filtrar por ID de período' })
+  @ApiQuery({ name: 'sectionId', required: false, description: 'Filtrar por ID de sección' })
+  @ApiOperation({ summary: 'Listar todas las matrículas' })
+  @ApiResponse({ status: 200, description: 'Lista de matrículas' })
+  findAll(
+    @Query('periodId') periodId?: string,
+    @Query('sectionId') sectionId?: string,
+  ) {
+    return this.enrollmentsService.findAll(periodId, sectionId);
+  }
+
+  @Get('by-student')
+  @ApiQuery({ name: 'studentId', required: true, description: 'ID del estudiante' })
+  @ApiOperation({ summary: 'Obtener matrículas de un estudiante' })
+  @ApiResponse({ status: 200, description: 'Matrículas del estudiante' })
+  findByStudent(@Query('studentId') studentId: string) {
+    return this.enrollmentsService.findByStudent(studentId);
+  }
+
+  @Get('by-section')
+  @ApiQuery({ name: 'sectionId', required: true, description: 'ID de la sección' })
+  @ApiOperation({ summary: 'Obtener estudiantes matriculados en una sección' })
+  @ApiResponse({ status: 200, description: 'Estudiantes de la sección' })
+  findBySection(@Query('sectionId') sectionId: string) {
+    return this.enrollmentsService.findBySection(sectionId);
+  }
+
+  @Patch(':id')
+  @Roles(Role.ADMIN, Role.COORDINADOR, Role.SECRETARIA)
+  @ApiOperation({ summary: 'Actualizar el estado de una matrícula' })
+  @ApiResponse({ status: 200, description: 'Matrícula actualizada' })
+  update(@Param('id') id: string, @Body() updateEnrollmentDto: UpdateEnrollmentDto) {
+    return this.enrollmentsService.update(id, updateEnrollmentDto);
+  }
+
+  @Delete(':id')
+  @Roles(Role.ADMIN, Role.COORDINADOR, Role.SECRETARIA)
+  @ApiOperation({ summary: 'Retirar a un estudiante de una sección (soft delete)' })
+  @ApiResponse({ status: 200, description: 'Matrícula marcada como retirada' })
+  remove(@Param('id') id: string) {
+    return this.enrollmentsService.remove(id);
+  }
+}
