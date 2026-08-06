@@ -102,15 +102,19 @@ Fase 2: Base de datos y modelo inicial con Prisma + MySQL
 		├── apps/
 		├── packages/
 		│   ├── config/
-		│   │   └── package.json
-		│		├── database/
-		│		│   ├── prisma/
+		│   ├── database/
+		│   │   ├── prisma/
+		│   │   │   ├── migrations/
+		│   │   │   └── schema.prisma
+		│   │   ├── .env
+		│   │   ├── .env.example
 		│   │   └── package.json
 		│   └── shared/
-		│       └── package.json
 		├── .gitignore
+		├── docker-compose.yml
 		├── package.json
-		├── pnpm-lock.yaml
 		├── pnpm-workspace.yaml
 		├── turbo.json
 		└── README.md
+
+FASE 3: Backend NestJS base

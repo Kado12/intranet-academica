@@ -14,7 +14,9 @@
     "db:reset": "docker compose down -v",
     "db:generate": "pnpm --filter @intranet/database run prisma:generate",
     "db:migrate": "pnpm --filter @intranet/database run prisma:migrate",
-    "db:studio": "pnpm --filter @intranet/database run prisma:studio"
+    "db:studio": "pnpm --filter @intranet/database run prisma:studio",
+    "api:dev": "pnpm --filter api run dev",
+    "api:build": "pnpm --filter api run build"
   },
   "keywords": [],
   "author": "",
