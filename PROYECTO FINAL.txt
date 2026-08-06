@@ -394,6 +394,44 @@ Fase 6: Relaciones académicas
 		├── turbo.json
 		└── README.md
 
+Fase 7: Frontend React base
+- PASOS
+	Configuración de Vite + React + TypeScript
+	Integración con Tailwind CSS
+	Configuración de Axios para peticiones HTTP
+	Sistema de autenticación en el frontend
+	Layout responsivo con sidebar
+	Rutas protegidas por rol
+	Páginas de login y registro
+
+
+- ESTRUCTURA
+	apps/web/src/
+		├── api/
+		├── components/
+		│   ├── layout/
+		│   └── ui/
+		├── context/
+		├── hooks/
+		├── pages/
+		│   ├── auth/
+		│   └── dashboard/
+		├── types/
+		└── utils/
+
+
+
+
+Fase 8: Módulos CRUD en el frontend
+- Páginas de gestión de Sedes
+- Páginas de gestión de Salones
+- Páginas de gestión de Secciones
+- Páginas de gestión de Cursos
+- Tablas con datos
+- Formularios de creación y edición
+- Modales de confirmación de eliminación
+- Notificaciones de éxito/error
+
 
 
 {

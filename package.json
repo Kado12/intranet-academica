@@ -16,7 +16,9 @@
     "db:migrate": "pnpm --filter @intranet/database run prisma:migrate",
     "db:studio": "pnpm --filter @intranet/database run prisma:studio",
     "api:dev": "pnpm --filter api run dev",
-    "api:build": "pnpm --filter api run build"
+    "api:build": "pnpm --filter api run build",
+    "web:dev": "pnpm --filter web run dev",
+    "web:build": "pnpm --filter web run build"
   },
   "keywords": [],
   "author": "",

@@ -1,0 +1,53 @@
+import { Controller, Get, Param, Patch, Query, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { UsersService } from './users.service';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { Role } from '@prisma/client';
+
+@ApiTags('Usuarios')
+@Controller('users')
+@UseGuards(JwtAuthGuard, RolesGuard)
+@ApiBearerAuth()
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
+  @Get()
+  @Roles(Role.ADMIN, Role.INFORMATICO)
+  @ApiQuery({ name: 'search', required: false, description: 'Buscar por nombre o correo' })
+  @ApiQuery({ name: 'role', required: false, enum: Role, description: 'Filtrar por rol' })
+  @ApiOperation({ summary: 'Listar usuarios administrativos' })
+  @ApiResponse({ status: 200, description: 'Lista de usuarios' })
+  findAll(
+    @Query('search') search?: string,
+    @Query('role') role?: Role,
+  ) {
+    return this.usersService.findAdminUsers(search, role);
+  }
+
+  @Get('stats')
+  @Roles(Role.ADMIN, Role.INFORMATICO)
+  @ApiOperation({ summary: 'Obtener estadísticas de usuarios por rol' })
+  @ApiResponse({ status: 200, description: 'Estadísticas de usuarios' })
+  getStats() {
+    return this.usersService.countByRole();
+  }
+
+  @Get(':id')
+  @Roles(Role.ADMIN, Role.INFORMATICO)
+  @ApiOperation({ summary: 'Obtener un usuario por ID' })
+  @ApiResponse({ status: 200, description: 'Usuario encontrado' })
+  @ApiResponse({ status: 404, description: 'Usuario no encontrado' })
+  findOne(@Param('id') id: string) {
+    return this.usersService.findOne(id);
+  }
+
+  @Patch(':id/toggle-active')
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Activar o desactivar un usuario' })
+  @ApiResponse({ status: 200, description: 'Estado del usuario actualizado' })
+  toggleActive(@Param('id') id: string) {
+    return this.usersService.toggleActive(id);
+  }
+}

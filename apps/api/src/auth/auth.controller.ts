@@ -14,7 +14,10 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  @ApiOperation({ summary: 'Registrar un nuevo usuario' })
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.INFORMATICO)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Registrar un nuevo usuario (solo ADMIN e INFORMATICO)' })
   @ApiResponse({ status: 201, description: 'Usuario registrado exitosamente' })
   @ApiResponse({ status: 409, description: 'El correo ya está registrado' })
   async register(@Body() registerDto: RegisterDto) {
