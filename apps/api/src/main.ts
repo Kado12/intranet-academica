@@ -28,12 +28,22 @@ async function bootstrap() {
     }),
   );
 
-  // Configuración de Swagger
+  // Configuración de Swagger con autenticación
   const config = new DocumentBuilder()
     .setTitle('Intranet Académica API')
-    .setDescription('API para la Intranet Académica')
+    .setDescription('API para el sistema de intranet académica')
     .setVersion('1.0')
-    .addBearerAuth()
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Ingresa tu token JWT aquí',
+        in: 'header',
+      },
+      'access-token',
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);

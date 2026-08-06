@@ -118,3 +118,76 @@ Fase 2: Base de datos y modelo inicial con Prisma + MySQL
 		└── README.md
 
 FASE 3: Backend NestJS base
+- ESTRUCTURA
+	intranet-academica/
+		├── apps/
+		│			└──	api/
+		│						├── src/
+		│						│   ├── prisma/
+		│						│   │   ├── prisma.module.ts
+		│						│   │   └── prisma.service.ts
+		│						│   ├── app.controller.ts
+		│						│   ├── app.module.ts
+		│						│   └── main.ts
+		│						├── .env
+		│						├── .env.example
+		│						└── package.json
+		├── packages/
+		│   ├── config/
+		│   ├── database/
+		│   │   ├── prisma/
+		│   │   │   ├── migrations/
+		│   │   │   └── schema.prisma
+		│   │   ├── .env
+		│   │   ├── .env.example
+		│   │   └── package.json
+		│   └── shared/
+		├── .gitignore
+		├── docker-compose.yml
+		├── package.json
+		├── pnpm-workspace.yaml
+		├── turbo.json
+		└── README.md
+
+Fase 4: Autenticación y autorización
+- PASOS
+	Registro de usuarios
+	Login con JWT
+	Protección de rutas
+	Guards de roles
+	Middleware de autenticación
+- ESTRUCTURA
+	intranet-academica/
+		├── apps/
+		│			└──	api/
+		│						├── src/
+		│						│   ├── auth/
+		│						│   │   ├── dto/
+		│						│   │   ├── strategies/
+		│						│   │   ├── guards/
+		│						│   │   └── decorators/
+		│						│   ├── prisma/
+		│						│   │   ├── prisma.module.ts
+		│						│   │   └── prisma.service.ts
+		│						│   ├── app.controller.ts
+		│						│   ├── app.module.ts
+		│						│   └── main.ts
+		│						├── .env
+		│						├── .env.example
+		│						└── package.json
+		├── packages/
+		│   ├── config/
+		│   ├── database/
+		│   │   ├── prisma/
+		│   │   │   ├── migrations/
+		│   │   │   └── schema.prisma
+		│   │   ├── .env
+		│   │   ├── .env.example
+		│   │   └── package.json
+		│   └── shared/
+		├── .gitignore
+		├── docker-compose.yml
+		├── package.json
+		├── pnpm-workspace.yaml
+		├── turbo.json
+		└── README.md
