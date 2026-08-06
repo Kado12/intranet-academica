@@ -161,11 +161,20 @@ Fase 4: Autenticación y autorización
 		├── apps/
 		│			└──	api/
 		│						├── src/
-		│						│   ├── auth/
-		│						│   │   ├── dto/
-		│						│   │   ├── strategies/
-		│						│   │   ├── guards/
-		│						│   │   └── decorators/
+		│						│		├── auth/
+		│						│		│   ├── dto/
+		│						│		│   │   ├── register.dto.ts
+		│						│		│   │   └── login.dto.ts
+		│						│		│   ├── strategies/
+		│						│		│   │   └── jwt.strategy.ts
+		│						│		│   ├── guards/
+		│						│		│   │   ├── jwt-auth.guard.ts
+		│						│		│   │   └── roles.guard.ts
+		│						│		│   ├── decorators/
+		│						│		│   │   └── roles.decorator.ts
+		│						│		│   ├── auth.controller.ts
+		│						│		│   ├── auth.module.ts
+		│						│		│   └── auth.service.ts
 		│						│   ├── prisma/
 		│						│   │   ├── prisma.module.ts
 		│						│   │   └── prisma.service.ts
@@ -191,3 +200,113 @@ Fase 4: Autenticación y autorización
 		├── pnpm-workspace.yaml
 		├── turbo.json
 		└── README.md
+
+FASE 5: Módulos Académicos
+- ESTRUCTURA
+	intranet-academica/
+		├── apps/
+		│			└──	api/
+		│						├── src/
+		│						│		├── academic/
+		│						│		│   ├── sedes/
+		│						│		│   │   ├── dto/
+		│						│		│   │   │   ├── create-sede.dto.ts
+		│						│		│   │   │   └── update-sede.dto.ts
+		│						│		│   │   ├── sedes.controller.ts
+		│						│		│   │   ├── sedes.module.ts
+		│						│		│   │   └── sedes.service.ts
+		│						│		│   ├── turns/
+		│						│		│   │   ├── dto/
+		│						│		│   │   │   ├── create-turn.dto.ts
+		│						│		│   │   │   └── update-turn.dto.ts
+		│						│		│   │   ├── turns.controller.ts
+		│						│		│   │   ├── turns.module.ts
+		│						│		│   │   └── turns.service.ts
+		│						│		│   ├── periods/
+		│						│		│   │   ├── dto/
+		│						│		│   │   │   ├── create-period.dto.ts
+		│						│		│   │   │   └── update-period.dto.ts
+		│						│		│   │   ├── periods.controller.ts
+		│						│		│   │   ├── periods.module.ts
+		│						│		│   │   └── periods.service.ts
+		│						│		│   ├── classrooms/
+		│						│		│   │   ├── dto/
+		│						│		│   │   │   ├── create-classroom.dto.ts
+		│						│		│   │   │   └── update-classroom.dto.ts
+		│						│		│   │   ├── classrooms.controller.ts
+		│						│		│   │   ├── classrooms.module.ts
+		│						│		│   │   └── classrooms.service.ts
+		│						│		│   ├── sections/
+		│						│		│   │   ├── dto/
+		│						│		│   │   │   ├── create-section.dto.ts
+		│						│		│   │   │   └── update-section.dto.ts
+		│						│		│   │   ├── sections.controller.ts
+		│						│		│   │   ├── sections.module.ts
+		│						│		│   │   └── sections.service.ts
+		│						│		│   └── courses/
+		│						│		│       ├── dto/
+		│						│		│       │   ├── create-course.dto.ts
+		│						│		│       │   └── update-course.dto.ts
+		│						│		│       ├── courses.controller.ts
+		│						│		│       ├── courses.module.ts
+		│						│		│       └── courses.service.ts
+		│						│		├── auth/
+		│						│		│   ├── dto/
+		│						│		│   │   ├── register.dto.ts
+		│						│		│   │   └── login.dto.ts
+		│						│		│   ├── strategies/
+		│						│		│   │   └── jwt.strategy.ts
+		│						│		│   ├── guards/
+		│						│		│   │   ├── jwt-auth.guard.ts
+		│						│		│   │   └── roles.guard.ts
+		│						│		│   ├── decorators/
+		│						│		│   │   └── roles.decorator.ts
+		│						│		│   ├── auth.controller.ts
+		│						│		│   ├── auth.module.ts
+		│						│		│   └── auth.service.ts
+		│						│   ├── prisma/
+		│						│   │   ├── prisma.module.ts
+		│						│   │   └── prisma.service.ts
+		│						│   ├── app.controller.ts
+		│						│   ├── app.module.ts
+		│						│   └── main.ts
+		│						├── .env
+		│						├── .env.example
+		│						└── package.json
+		├── packages/
+		│   ├── config/
+		│   ├── database/
+		│   │   ├── prisma/
+		│   │   │   ├── migrations/
+		│   │   │   └── schema.prisma
+		│   │   ├── .env
+		│   │   ├── .env.example
+		│   │   └── package.json
+		│   └── shared/
+		├── .gitignore
+		├── docker-compose.yml
+		├── package.json
+		├── pnpm-workspace.yaml
+		├── turbo.json
+		└── README.md
+
+Fase 6: Relaciones académicas
+- PASOS
+	Asignación de docentes a cursos (CourseTeacher)
+	Asignación de cursos a secciones con docente (SectionCourse)
+	Matrícula de estudiantes en secciones (Enrollment)
+	Relación padre-estudiante (ParentStudent)
+	Validación de reglas de negocio (una sección activa por período, etc.)
+
+
+
+
+{
+  "email": "admin@intranet.edu",
+  "password": "admin123456"
+}
+
+{
+  "email": "estudiante@intranet.edu",
+  "password": "estudiante123"
+}
