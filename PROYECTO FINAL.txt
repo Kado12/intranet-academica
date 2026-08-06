@@ -1,0 +1,116 @@
+Fase 0: Definir dominio, entidades y relaciones (sin código)
+Fase 1: Configurar monorepo con Turborepo + pnpm
+Fase 2: Diseñar y crear base de datos con Prisma + MySQL
+Fase 3: Backend - Autenticación (login, JWT, bcrypt)
+Fase 4: Backend - Autorización (roles, guards)
+Fase 5: Backend - CRUDs académicos
+Fase 6: Frontend - Layout responsivo + autenticación
+Fase 7: Frontend - Módulos por rol
+Fase 8: Documentación Swagger + preparación para app móvil
+
+Fase 0: Modelo de dominio para Intranet Académica
+- ARQUITECTURA
+	Frontend Web  -> React + Vite
+	Backend API   -> NestJS
+	Base de datos -> MySQL + Prisma
+	Futuro móvil  -> React Native consumiendo la misma API
+- API REST
+	/api/v1/auth/login
+	/api/v1/users
+	/api/v1/academic/sedes
+	/api/v1/academic/salones
+	/api/v1/academic/secciones
+	/api/v1/academic/cursos
+- FLUJO
+	Web App      ----\
+ 	                 |---> API NestJS ---> MySQL
+	Mobile App   ----/
+
+- ENTIDADES DEL SISTEMA
+	Sede
+	Usuario
+	Perfil de usuario
+	Rol / Membresía de rol
+	Período académico
+	Turno
+	Salón
+	Sección
+	Curso
+	Sección-Curso
+	Matrícula de estudiante
+	Asignación docente
+	Relación padre-estudiante
+
+- DIAGRAMA CONCEPTUAL
+	Sede
+		├── Usuarios / Membresías
+		├── Salones
+		├── Períodos académicos
+		└── Turnos
+
+	Salón
+		└── Secciones
+
+	Sección
+		├── Estudiantes matriculados
+		└── Sección-Cursos
+
+	Curso
+		└── Sección-Cursos
+
+	Sección-Curso
+		└── Docente asignado
+
+	Usuario
+		├── Puede tener múltiples roles
+		├── Puede estar en múltiples sedes
+		├── Puede ser estudiante
+		├── Puede ser docente
+		└── Puede ser padre de familia
+
+	Padre de familia
+		└── Está vinculado a uno o varios estudiantes
+
+Fase 1: Crear la base del monorepo
+- ESTRUCTURA
+	intranet-academica/
+		├── apps/
+		├── packages/
+		│   ├── config/
+		│   │   └── package.json
+		│   └── shared/
+		│       └── package.json
+		├── .gitignore
+		├── package.json
+		├── pnpm-lock.yaml
+		├── pnpm-workspace.yaml
+		├── turbo.json
+		└── README.md
+- CONCEPTO
+	Guarda la estructura inicial del monorepo, incluyendo la configuración de Turborepo, pnpm workspaces y carpetas base para aplicaciones y paquetes compartidos.
+
+Fase 2: Base de datos y modelo inicial con Prisma + MySQL
+- PASOS
+	Crear un paquete interno para la base de datos.
+	Configurar MySQL local con Docker.
+	Instalar Prisma.
+	Definir el schema completo de la base de datos.
+	Crear la primera migración.
+	Verificar la base de datos con Prisma Studio.
+- ESTRUCTURA
+	intranet-academica/
+		├── apps/
+		├── packages/
+		│   ├── config/
+		│   │   └── package.json
+		│		├── database/
+		│		│   ├── prisma/
+		│   │   └── package.json
+		│   └── shared/
+		│       └── package.json
+		├── .gitignore
+		├── package.json
+		├── pnpm-lock.yaml
+		├── pnpm-workspace.yaml
+		├── turbo.json
+		└── README.md

@@ -9,7 +9,12 @@
     "build": "turbo run build",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:reset": "docker compose down -v",
+    "db:generate": "pnpm --filter @intranet/database run prisma:generate",
+    "db:migrate": "pnpm --filter @intranet/database run prisma:migrate",
+    "db:studio": "pnpm --filter @intranet/database run prisma:studio"
   },
   "keywords": [],
   "author": "",
