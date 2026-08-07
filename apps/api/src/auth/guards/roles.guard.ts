@@ -16,19 +16,19 @@ export class RolesGuard implements CanActivate {
       context.getClass(),
     ]);
 
-    this.logger.log(`Roles requeridos: ${JSON.stringify(requiredRoles)}`);
+    // this.logger.log(`Roles requeridos: ${JSON.stringify(requiredRoles)}`);
 
     // Si no hay roles requeridos, permitimos el acceso
     if (!requiredRoles) {
-      this.logger.log('No se requieren roles específicos, acceso concedido');
+      // this.logger.log('No se requieren roles específicos, acceso concedido');
       return true;
     }
 
     // Obtenemos el usuario del request
     const { user } = context.switchToHttp().getRequest();
 
-    this.logger.log(`Usuario en request: ${JSON.stringify(user)}`);
-    this.logger.log(`Roles del usuario: ${JSON.stringify(user?.roles)}`);
+    // this.logger.log(`Usuario en request: ${JSON.stringify(user)}`);
+    // this.logger.log(`Roles del usuario: ${JSON.stringify(user?.roles)}`);
 
     if (!user || !user.roles) {
       this.logger.error('El usuario no tiene roles asignados');
@@ -38,7 +38,7 @@ export class RolesGuard implements CanActivate {
     // Verificamos si el usuario tiene alguno de los roles requeridos
     const hasRole = requiredRoles.some((role) => user.roles?.includes(role));
 
-    this.logger.log(`¿Tiene rol requerido? ${hasRole}`);
+    // this.logger.log(`¿Tiene rol requerido? ${hasRole}`);
 
     return hasRole;
   }

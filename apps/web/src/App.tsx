@@ -6,6 +6,9 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { LoginPage } from './pages/auth/LoginPage';
 import { DashboardPage } from './pages/dashboard/DashboardPage';
 import { UsersPage } from './pages/users/UsersPage';
+import {SedesPage} from './pages/sedes/SedesPage';
+import {PeriodsPage} from './pages/periods/PeriodsPage';
+import {ClassroomsPage} from './pages/classrooms/ClassroomsPage';
 import { Role } from './types';
 
 function App() {
@@ -26,10 +29,12 @@ function App() {
                 <Route path="/users" element={<UsersPage />} />
               </Route>
 
+              {/* Módulos académicos */}
+              <Route path="/sedes" element={<SedesPage />} />
+              <Route path="/periods" element={<PeriodsPage />} />
+              <Route path="/classrooms" element={<ClassroomsPage />} />
+
               {/* Placeholder para rutas futuras */}
-              <Route path="/sedes" element={<div className="p-4">Módulo de Sedes (próximamente)</div>} />
-              <Route path="/periods" element={<div className="p-4">Módulo de Períodos (próximamente)</div>} />
-              <Route path="/classrooms" element={<div className="p-4">Módulo de Salones (próximamente)</div>} />
               <Route path="/sections" element={<div className="p-4">Módulo de Secciones (próximamente)</div>} />
               <Route path="/courses" element={<div className="p-4">Módulo de Cursos (próximamente)</div>} />
               <Route path="/enrollments" element={<div className="p-4">Módulo de Matrículas (próximamente)</div>} />

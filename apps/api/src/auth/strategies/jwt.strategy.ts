@@ -18,20 +18,20 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       secretOrKey: configService.get<string>('JWT_SECRET') as string,
     });
 
-    // Log para verificar que el secreto se está cargando
-    const secret = configService.get<string>('JWT_SECRET');
-    this.logger.log(`JWT Secret cargado: ${secret ? 'SÍ' : 'NO'}`);
-    this.logger.log(`JWT Expiration: ${configService.get<string>('JWT_EXPIRATION', '7d')}`);
+    // ! Log para verificar que el secreto se está cargando
+    // const secret = configService.get<string>('JWT_SECRET');
+    // this.logger.log(`JWT Secret cargado: ${secret ? 'SÍ' : 'NO'}`);
+    // this.logger.log(`JWT Expiration: ${configService.get<string>('JWT_EXPIRATION', '7d')}`);
   }
 
   async validate(payload: any) {
-    this.logger.log('Validando token JWT...');
-    this.logger.log(`Payload recibido: ${JSON.stringify(payload)}`);
+    // this.logger.log('Validando token JWT...');
+    // this.logger.log(`Payload recibido: ${JSON.stringify(payload)}`);
 
     try {
       // Verificar que el payload contiene el ID del usuario
       if (!payload || !payload.sub) {
-        this.logger.error('El payload no contiene el campo "sub" (ID del usuario)');
+        // this.logger.error('El payload no contiene el campo "sub" (ID del usuario)');
         throw new UnauthorizedException('Token inválido');
       }
 
@@ -46,11 +46,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       });
 
       if (!user) {
-        this.logger.error(`Usuario no encontrado con ID: ${payload.sub}`);
+        // this.logger.error(`Usuario no encontrado con ID: ${payload.sub}`);
         throw new UnauthorizedException('Usuario no encontrado');
       }
 
-      this.logger.log(`Usuario validado: ${user.email}`);
+      // this.logger.log(`Usuario validado: ${user.email}`);
 
       // Adjuntamos información del usuario al request
       return {
@@ -59,7 +59,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         roles: user.memberships.map((m) => m.role),
       };
     } catch (error) {
-      this.logger.error(`Error al validar token: ${error.message}`);
+      // this.logger.error(`Error al validar token: ${error.message}`);
       throw new UnauthorizedException('Error de autenticación');
     }
   }
