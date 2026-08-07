@@ -1,0 +1,14 @@
+[phases.setup]
+nixPkgs = ['nodejs_20', 'pnpm-9_x', 'openssl']
+
+[phases.install]
+cmds = ['pnpm install --frozen-lockfile']
+
+[phases.build]
+cmds = [
+  'cd packages/database && pnpm exec prisma generate',
+  'pnpm turbo run build --filter=api'
+]
+
+[start]
+cmd = 'cd apps/api && node dist/main'
