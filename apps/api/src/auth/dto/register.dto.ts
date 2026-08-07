@@ -6,7 +6,7 @@ import {
   IsEnum,
   IsOptional,
 } from 'class-validator';
-import { Role } from '@prisma/client';
+import { Role } from '@intranet/database';
 
 export class RegisterDto {
   @ApiProperty({

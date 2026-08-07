@@ -14,6 +14,7 @@ import {
   TrashIcon,
   BookOpenIcon,
 } from '@heroicons/react/24/outline';
+import { getZodErrors } from '../../utils/zodHelpers';
 
 // Schema de validación
 const courseSchema = z.object({
@@ -26,7 +27,7 @@ type CourseFormData = z.infer<typeof courseSchema>;
 
 export const CoursesPage: React.FC = () => {
   const { toasts, addToast, removeToast } = useToast();
-  
+
   const [courses, setCourses] = useState<Course[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -73,19 +74,11 @@ export const CoursesPage: React.FC = () => {
       courseSchema.parse(formData);
       return true;
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        const fieldErrors: Partial<CourseFormData> = {};
-        error.errors.forEach((err) => {
-          if (err.path[0]) {
-            fieldErrors[err.path[0] as keyof CourseFormData] = err.message;
-          }
-        });
-        setErrors(fieldErrors);
-      }
+      const fieldErrors = getZodErrors<CourseFormData>(error);
+      setErrors(fieldErrors);
       return false;
     }
-  };
-
+  }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -101,7 +94,7 @@ export const CoursesPage: React.FC = () => {
         await coursesService.create(formData);
         addToast('success', 'Curso creado exitosamente');
       }
-      
+
       setShowForm(false);
       setEditingCourse(null);
       resetForm();
@@ -318,4 +311,4 @@ export const CoursesPage: React.FC = () => {
       </Card>
     </div>
   );
-};
+}

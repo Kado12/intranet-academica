@@ -14,6 +14,7 @@ import {
   TrashIcon,
   BuildingOfficeIcon,
 } from '@heroicons/react/24/outline';
+import { getZodErrors } from '../../utils/zodHelpers';
 
 // Schema de validación
 const sedeSchema = z.object({
@@ -77,22 +78,15 @@ export const SedesPage: React.FC = () => {
 
   // Validar formulario
   const validateForm = (): boolean => {
-    try {
-      sedeSchema.parse(formData);
-      return true;
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        const fieldErrors: Partial<SedeFormData> = {};
-        error.errors.forEach((err) => {
-          if (err.path[0]) {
-            fieldErrors[err.path[0] as keyof SedeFormData] = err.message;
-          }
-        });
-        setErrors(fieldErrors);
-      }
-      return false;
-    }
-  };
+  try {
+    sedeSchema.parse(formData);
+    return true;
+  } catch (error) {
+    const fieldErrors = getZodErrors<SedeFormData>(error);
+    setErrors(fieldErrors);
+    return false;
+  }
+};
 
   // Crear o actualizar sede
   const handleSubmit = async (e: React.FormEvent) => {

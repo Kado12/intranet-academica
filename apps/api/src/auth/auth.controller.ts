@@ -6,7 +6,7 @@ import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RolesGuard } from './guards/roles.guard';
 import { Roles } from './decorators/roles.decorator';
-import { Role } from '@prisma/client';
+import { Role } from '@intranet/database';
 
 @ApiTags('Auth')
 @Controller('auth')

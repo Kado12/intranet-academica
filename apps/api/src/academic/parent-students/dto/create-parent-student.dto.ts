@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty, IsEnum, IsBoolean, IsOptional } from 'class-validator';
-import { ParentRelationType } from '@prisma/client';
+import { ParentRelationType } from '@intranet/database';
 
 export class CreateParentStudentDto {
   @ApiProperty({ example: 'clxxxxxxxxxxxxx', description: 'ID del padre (usuario con rol PADRE_DE_FAMILIA)' })

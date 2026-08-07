@@ -13,6 +13,7 @@ import {
   CheckCircleIcon,
   XCircleIcon,
 } from '@heroicons/react/24/outline';
+import { getZodErrors, type FormErrors } from '../../utils/zodHelpers';
 
 // Schema de validación para crear usuario
 const createUserSchema = z.object({
@@ -52,7 +53,7 @@ export const UsersPage: React.FC = () => {
     documentType: '',
     role: Role.ESTUDIANTE,
   });
-  const [errors, setErrors] = useState<Partial<CreateUserData>>({});
+  const [errors, setErrors] = useState<FormErrors<CreateUserData>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -102,15 +103,8 @@ export const UsersPage: React.FC = () => {
       createUserSchema.parse(formData);
       return true;
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        const fieldErrors: Partial<CreateUserData> = {};
-        error.errors.forEach((err) => {
-          if (err.path[0]) {
-            fieldErrors[err.path[0] as keyof CreateUserData] = err.message;
-          }
-        });
-        setErrors(fieldErrors);
-      }
+      const fieldErrors = getZodErrors<CreateUserData>(error);
+      setErrors(fieldErrors);
       return false;
     }
   };

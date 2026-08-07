@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Role } from '@prisma/client';
+import { Role } from '@intranet/database';
 
 // Roles administrativos que se muestran en la tabla de gestión
 const ADMIN_ROLES: Role[] = [

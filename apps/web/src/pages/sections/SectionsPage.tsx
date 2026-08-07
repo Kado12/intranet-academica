@@ -20,6 +20,7 @@ import {
   TrashIcon,
   AcademicCapIcon,
 } from '@heroicons/react/24/outline';
+import { getZodErrors } from '../../utils/zodHelpers';
 
 // Schema de validación
 const sectionSchema = z.object({
@@ -34,7 +35,7 @@ type SectionFormData = z.infer<typeof sectionSchema>;
 
 export const SectionsPage: React.FC = () => {
   const { toasts, addToast, removeToast } = useToast();
-  
+
   const [sections, setSections] = useState<Section[]>([]);
   const [classrooms, setClassrooms] = useState<Classroom[]>([]);
   const [turns, setTurns] = useState<Turn[]>([]);
@@ -96,15 +97,8 @@ export const SectionsPage: React.FC = () => {
       sectionSchema.parse(formData);
       return true;
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        const fieldErrors: Partial<SectionFormData> = {};
-        error.errors.forEach((err) => {
-          if (err.path[0]) {
-            fieldErrors[err.path[0] as keyof SectionFormData] = err.message;
-          }
-        });
-        setErrors(fieldErrors);
-      }
+      const fieldErrors = getZodErrors<SectionFormData>(error);
+      setErrors(fieldErrors);
       return false;
     }
   };
@@ -132,7 +126,7 @@ export const SectionsPage: React.FC = () => {
         await sectionsService.create(data);
         addToast('success', 'Sección creada exitosamente');
       }
-      
+
       setShowForm(false);
       setEditingSection(null);
       resetForm();

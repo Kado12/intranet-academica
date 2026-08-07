@@ -15,6 +15,7 @@ import {
   TrashIcon,
   Square3Stack3DIcon,
 } from '@heroicons/react/24/outline';
+import { getZodErrors } from '../../utils/zodHelpers';
 
 // Schema de validación
 const classroomSchema = z.object({
@@ -79,22 +80,15 @@ export const ClassroomsPage: React.FC = () => {
   };
 
   const validateForm = (): boolean => {
-    try {
-      classroomSchema.parse(formData);
-      return true;
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        const fieldErrors: Partial<ClassroomFormData> = {};
-        error.errors.forEach((err) => {
-          if (err.path[0]) {
-            fieldErrors[err.path[0] as keyof ClassroomFormData] = err.message;
-          }
-        });
-        setErrors(fieldErrors);
-      }
-      return false;
-    }
-  };
+  try {
+    classroomSchema.parse(formData);
+    return true;
+  } catch (error) {
+    const fieldErrors = getZodErrors<ClassroomFormData>(error);
+    setErrors(fieldErrors);
+    return false;
+  }
+};
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

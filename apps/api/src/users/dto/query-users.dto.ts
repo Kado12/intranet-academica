@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsEnum, IsString } from 'class-validator';
-import { Role } from '@prisma/client';
+import { Role } from '@intranet/database';
 
 export class QueryUsersDto {
   @ApiProperty({ required: false, description: 'Filtrar por rol' })

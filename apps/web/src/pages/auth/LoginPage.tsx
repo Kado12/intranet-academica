@@ -6,6 +6,7 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card } from '../../components/ui/Card';
 import { AcademicCapIcon } from '@heroicons/react/24/outline';
+import { getZodErrors } from '../../utils/zodHelpers';
 
 // Schema de validación con Zod
 const loginSchema = z.object({
@@ -40,15 +41,8 @@ export const LoginPage: React.FC = () => {
       loginSchema.parse(formData);
       return true;
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        const fieldErrors: Partial<LoginFormData> = {};
-        error.errors.forEach((err) => {
-          if (err.path[0]) {
-            fieldErrors[err.path[0] as keyof LoginFormData] = err.message;
-          }
-        });
-        setErrors(fieldErrors);
-      }
+      const fieldErrors = getZodErrors<LoginFormData>(error);
+      setErrors(fieldErrors);
       return false;
     }
   };

@@ -1,37 +1,45 @@
 // Roles de usuario
-export enum Role {
-  ADMIN = 'ADMIN',
-  DOCENTE = 'DOCENTE',
-  ESTUDIANTE = 'ESTUDIANTE',
-  PADRE_DE_FAMILIA = 'PADRE_DE_FAMILIA',
-  COORDINADOR = 'COORDINADOR',
-  INFORMATICO = 'INFORMATICO',
-  SECRETARIA = 'SECRETARIA',
-}
+export const Role = {
+  ADMIN : 'ADMIN',
+  DOCENTE : 'DOCENTE',
+  ESTUDIANTE : 'ESTUDIANTE',
+  PADRE_DE_FAMILIA : 'PADRE_DE_FAMILIA',
+  COORDINADOR : 'COORDINADOR',
+  INFORMATICO : 'INFORMATICO',
+  SECRETARIA : 'SECRETARIA',
+} as const
+
+export type Role = typeof Role[keyof typeof Role]
 
 // Estados de período académico
-export enum PeriodStatus {
-  DRAFT = 'DRAFT',
-  ACTIVE = 'ACTIVE',
-  FINISHED = 'FINISHED',
-}
+export const PeriodStatus = {
+  DRAFT: 'DRAFT',
+  ACTIVE: 'ACTIVE',
+  FINISHED: 'FINISHED',
+} as const;
+
+export type PeriodStatus = typeof PeriodStatus[keyof typeof PeriodStatus];
 
 // Estados de matrícula
-export enum EnrollmentStatus {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  WITHDRAWN = 'WITHDRAWN',
-  TRANSFERRED = 'TRANSFERRED',
-  COMPLETED = 'COMPLETED',
-}
+export const EnrollmentStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  WITHDRAWN: 'WITHDRAWN',
+  TRANSFERRED: 'TRANSFERRED',
+  COMPLETED: 'COMPLETED',
+} as const;
+
+export type EnrollmentStatus = typeof EnrollmentStatus[keyof typeof EnrollmentStatus];
 
 // Tipos de relación padre-estudiante
-export enum ParentRelationType {
-  PADRE = 'PADRE',
-  MADRE = 'MADRE',
-  TUTOR = 'TUTOR',
-  OTRO = 'OTRO',
-}
+export const ParentRelationType = {
+  PADRE: 'PADRE',
+  MADRE: 'MADRE',
+  TUTOR: 'TUTOR',
+  OTRO: 'OTRO',
+} as const;
+
+export type ParentRelationType = typeof ParentRelationType[keyof typeof ParentRelationType];
 
 // Usuario autenticado
 export interface AuthUser {

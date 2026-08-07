@@ -16,6 +16,7 @@ import {
   CalendarIcon,
   PlayIcon,
 } from '@heroicons/react/24/outline';
+import { getZodErrors, type FormErrors } from '../../utils/zodHelpers';
 
 // Schema de validación
 const periodSchema = z.object({
@@ -46,7 +47,7 @@ export const PeriodsPage: React.FC = () => {
     endDate: '',
     status: PeriodStatus.DRAFT,
   });
-  const [errors, setErrors] = useState<Partial<PeriodFormData>>({});
+  const [errors, setErrors] = useState<FormErrors<PeriodFormData>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; period: AcademicPeriod | null }>({
     isOpen: false,
@@ -92,15 +93,8 @@ export const PeriodsPage: React.FC = () => {
       
       return true;
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        const fieldErrors: Partial<PeriodFormData> = {};
-        error.errors.forEach((err) => {
-          if (err.path[0]) {
-            fieldErrors[err.path[0] as keyof PeriodFormData] = err.message;
-          }
-        });
-        setErrors(fieldErrors);
-      }
+      const fieldErrors = getZodErrors<PeriodFormData>(error);
+      setErrors(fieldErrors);
       return false;
     }
   };
@@ -265,6 +259,7 @@ export const PeriodsPage: React.FC = () => {
               name="endDate"
               value={formData.endDate}
               onChange={handleChange}
+              min={formData.startDate}
               error={errors.endDate}
               required
             />

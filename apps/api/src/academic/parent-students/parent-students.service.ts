@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateParentStudentDto } from './dto/create-parent-student.dto';
-import { Role } from '@prisma/client';
+import { Role } from '@intranet/database';
 
 @Injectable()
 export class ParentStudentsService {

@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, ConflictException, BadRequestException }
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
 import { UpdateEnrollmentDto } from './dto/update-enrollment.dto';
-import { Role, EnrollmentStatus } from '@prisma/client';
+import { Role, EnrollmentStatus } from '@intranet/database';
 
 @Injectable()
 export class EnrollmentsService {

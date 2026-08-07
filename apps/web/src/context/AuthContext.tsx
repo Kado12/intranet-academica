@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import type { AuthUser, LoginDto, RegisterDto } from '../types';
+import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import type { AuthUser, LoginDto } from '../types';
 import { authService } from '../api/auth.service';
 
 // Definir la forma del contexto
@@ -53,21 +53,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       localStorage.setItem('user', JSON.stringify(authUser));
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Error al iniciar sesión');
-    }
-  };
-
-  // Función de registro
-  const register = async (data: RegisterDto) => {
-    try {
-      const response = await authService.register(data);
-      const { user: authUser, token: authToken } = response;
-
-      setUser(authUser);
-      setToken(authToken);
-      localStorage.setItem('token', authToken);
-      localStorage.setItem('user', JSON.stringify(authUser));
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Error al registrar usuario');
     }
   };
 

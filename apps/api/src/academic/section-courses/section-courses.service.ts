@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, ConflictException, BadRequestException }
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateSectionCourseDto } from './dto/create-section-course.dto';
 import { UpdateSectionCourseDto } from './dto/update-section-course.dto';
-import { Role } from '@prisma/client';
+import { Role } from '@intranet/database';
 
 @Injectable()
 export class SectionCoursesService {

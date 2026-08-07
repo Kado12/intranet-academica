@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsDateString, IsEnum, IsOptional } from 'class-validator';
-import { PeriodStatus } from '@prisma/client';
+import { PeriodStatus } from '@intranet/database';
 
 export class CreatePeriodDto {
   @ApiProperty({ example: '2026-I', description: 'Nombre del período académico' })

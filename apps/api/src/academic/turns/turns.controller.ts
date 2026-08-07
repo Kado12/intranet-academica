@@ -6,7 +6,7 @@ import { UpdateTurnDto } from './dto/update-turn.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
-import { Role } from '@prisma/client';
+import { Role } from '@intranet/database';
 
 @ApiTags('Turnos')
 @Controller('academic/turns')

@@ -1,0 +1,261 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  DOCENTE
+  ESTUDIANTE
+  PADRE_DE_FAMILIA
+  COORDINADOR
+  INFORMATICO
+  SECRETARIA
+}
+
+enum PeriodStatus {
+  DRAFT
+  ACTIVE
+  FINISHED
+}
+
+enum MembershipStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  INACTIVE
+  WITHDRAWN
+  TRANSFERRED
+  COMPLETED
+}
+
+enum ParentRelationType {
+  PADRE
+  MADRE
+  TUTOR
+  OTRO
+}
+
+model Sede {
+  id          String       @id @default(cuid())
+  name        String
+  address     String?
+  phone       String?
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  classrooms  Classroom[]
+  memberships Membership[]
+
+  @@map("sedes")
+}
+
+model AcademicPeriod {
+  id        String       @id @default(cuid())
+  name      String       @unique
+  startDate DateTime     @db.Date
+  endDate   DateTime     @db.Date
+  status    PeriodStatus @default(DRAFT)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  sections  Section[]
+
+  @@map("academic_periods")
+}
+
+model Turn {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  startTime String?
+  endTime   String?
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  sections  Section[]
+
+  @@map("turns")
+}
+
+model Classroom {
+  id        String    @id @default(cuid())
+  name      String
+  location  String?
+  capacity  Int?
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  sedeId    String
+  sede      Sede      @relation(fields: [sedeId], references: [id], onDelete: Restrict)
+  sections  Section[]
+
+  @@index([sedeId])
+  @@map("classrooms")
+}
+
+model Section {
+  id             String          @id @default(cuid())
+  name           String
+  capacity       Int?
+  isActive       Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  classroomId    String
+  turnId         String
+  periodId       String
+  classroom      Classroom       @relation(fields: [classroomId], references: [id], onDelete: Restrict)
+  turn           Turn            @relation(fields: [turnId], references: [id], onDelete: Restrict)
+  period         AcademicPeriod  @relation(fields: [periodId], references: [id], onDelete: Restrict)
+  enrollments    Enrollment[]
+  sectionCourses SectionCourse[]
+
+  @@unique([classroomId, turnId, periodId, name])
+  @@index([classroomId])
+  @@index([turnId])
+  @@index([periodId])
+  @@map("sections")
+}
+
+model Course {
+  id             String          @id @default(cuid())
+  code           String          @unique
+  name           String
+  description    String?
+  isActive       Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  courseTeachers CourseTeacher[]
+  sectionCourses SectionCourse[]
+
+  @@map("courses")
+}
+
+model User {
+  id             String          @id @default(cuid())
+  email          String          @unique
+  passwordHash   String
+  isActive       Boolean         @default(true)
+  lastLoginAt    DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  profile        Profile?
+  memberships    Membership[]
+  courseTeachers CourseTeacher[]
+  sectionCourses SectionCourse[]
+  enrollments    Enrollment[]
+  parentOf       ParentStudent[] @relation("Parent")
+  studentOf      ParentStudent[] @relation("Student")
+
+  @@map("users")
+}
+
+model Profile {
+  id             String    @id @default(cuid())
+  userId         String    @unique
+  firstName      String
+  lastName       String
+  documentType   String?
+  documentNumber String?
+  phone          String?
+  birthDate      DateTime? @db.Date
+  avatarUrl      String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+model Membership {
+  id        String           @id @default(cuid())
+  role      Role
+  status    MembershipStatus @default(ACTIVE)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  userId    String
+  // Si sedeId es null, el rol se considera global.
+  sedeId    String?
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sede      Sede?            @relation(fields: [sedeId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, role, sedeId])
+  @@index([userId])
+  @@index([sedeId])
+  @@map("memberships")
+}
+
+model CourseTeacher {
+  id        String   @id @default(cuid())
+  courseId  String
+  teacherId String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  teacher   User     @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, teacherId])
+  @@index([courseId])
+  @@index([teacherId])
+  @@map("course_teachers")
+}
+
+model SectionCourse {
+  id        String   @id @default(cuid())
+  sectionId String
+  courseId  String
+  teacherId String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  section   Section  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  teacher   User     @relation(fields: [teacherId], references: [id], onDelete: Restrict)
+
+  @@unique([sectionId, courseId])
+  @@index([sectionId])
+  @@index([courseId])
+  @@index([teacherId])
+  @@map("section_courses")
+}
+
+model Enrollment {
+  id         String           @id @default(cuid())
+  studentId  String
+  sectionId  String
+  status     EnrollmentStatus @default(ACTIVE)
+  enrolledAt DateTime         @default(now())
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  student    User             @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  section    Section          @relation(fields: [sectionId], references: [id], onDelete: Restrict)
+
+  @@unique([studentId, sectionId])
+  @@index([studentId])
+  @@index([sectionId])
+  @@map("enrollments")
+}
+
+model ParentStudent {
+  id           String             @id @default(cuid())
+  parentId     String
+  studentId    String
+  relationType ParentRelationType @default(OTRO)
+  isPrimary    Boolean            @default(false)
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  parent       User               @relation("Parent", fields: [parentId], references: [id], onDelete: Cascade)
+  student      User               @relation("Student", fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([parentId, studentId])
+  @@index([parentId])
+  @@index([studentId])
+  @@map("parent_students")
+}
