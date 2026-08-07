@@ -1,0 +1,12 @@
+[build]
+builder = "NIXPACKS"
+buildCommand = "pnpm install && cd packages/database && pnpm exec prisma generate && cd ../.. && pnpm turbo run build --filter=api"
+
+[deploy]
+startCommand = "cd apps/api && node dist/main"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+
+[deploy.healthcheck]
+path = "/api"
+timeout = 300
