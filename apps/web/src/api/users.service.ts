@@ -16,22 +16,22 @@ export const usersService = {
     if (search) params.append('search', search);
     if (role) params.append('role', role);
     
-    const response = await api.get<AdminUser[]>(`/users?${params.toString()}`);
+    const response = await api.get<AdminUser[]>(`/api/users?${params.toString()}`);
     return response.data;
   },
 
   async getStats(): Promise<UserStats[]> {
-    const response = await api.get<UserStats[]>('/users/stats');
+    const response = await api.get<UserStats[]>('/api/users/stats');
     return response.data;
   },
 
   async findOne(id: string): Promise<AdminUser> {
-    const response = await api.get<AdminUser>(`/users/${id}`);
+    const response = await api.get<AdminUser>(`/api/users/${id}`);
     return response.data;
   },
 
   async toggleActive(id: string): Promise<AdminUser> {
-    const response = await api.patch<AdminUser>(`/users/${id}/toggle-active`);
+    const response = await api.patch<AdminUser>(`/api/users/${id}/toggle-active`);
     return response.data;
   },
 };

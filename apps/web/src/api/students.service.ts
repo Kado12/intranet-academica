@@ -17,7 +17,7 @@ export const studentsService = {
     params.append('role', Role.ESTUDIANTE);
     if (search) params.append('search', search);
     
-    const response = await api.get<StudentUser[]>(`/users/students?${params.toString()}`);
+    const response = await api.get<StudentUser[]>(`/api/users/students?${params.toString()}`);
     return response.data;
   },
 };

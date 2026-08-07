@@ -1,5 +1,18 @@
-import { Controller, Get, Param, Patch, Query, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -11,18 +24,24 @@ import { Role } from '@prisma/client';
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth()
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Get()
   @Roles(Role.ADMIN, Role.INFORMATICO)
-  @ApiQuery({ name: 'search', required: false, description: 'Buscar por nombre o correo' })
-  @ApiQuery({ name: 'role', required: false, enum: Role, description: 'Filtrar por rol' })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    description: 'Buscar por nombre o correo',
+  })
+  @ApiQuery({
+    name: 'role',
+    required: false,
+    enum: Role,
+    description: 'Filtrar por rol',
+  })
   @ApiOperation({ summary: 'Listar usuarios administrativos' })
   @ApiResponse({ status: 200, description: 'Lista de usuarios' })
-  findAll(
-    @Query('search') search?: string,
-    @Query('role') role?: Role,
-  ) {
+  findAll(@Query('search') search?: string, @Query('role') role?: Role) {
     return this.usersService.findAdminUsers(search, role);
   }
 
@@ -35,8 +54,18 @@ export class UsersController {
   }
 
   @Get('students')
-  @Roles(Role.ADMIN, Role.INFORMATICO, Role.SECRETARIA, Role.COORDINADOR, Role.DOCENTE)
-  @ApiQuery({ name: 'search', required: false, description: 'Buscar por nombre o correo' })
+  @Roles(
+    Role.ADMIN,
+    Role.INFORMATICO,
+    Role.SECRETARIA,
+    Role.COORDINADOR,
+    Role.DOCENTE,
+  )
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    description: 'Buscar por nombre o correo',
+  })
   @ApiOperation({ summary: 'Listar estudiantes' })
   @ApiResponse({ status: 200, description: 'Lista de estudiantes' })
   findStudents(@Query('search') search?: string) {
