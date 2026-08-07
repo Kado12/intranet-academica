@@ -181,3 +181,58 @@ export const coursesService = {
     return response.data;
   },
 };
+
+// ============== MATRICULAS ==============
+export interface EnrollmentResponse {
+  id: string;
+  studentId: string;
+  sectionId: string;
+  status: string;
+  enrolledAt: string;
+  student?: {
+    id: string;
+    email: string;
+    profile?: {
+      firstName: string;
+      lastName: string;
+    };
+  };
+  section?: {
+    id: string;
+    name: string;
+    classroom?: { name: string };
+    turn?: { name: string };
+    period?: { name: string };
+  };
+}
+
+export const enrollmentsService = {
+  async findAll(periodId?: string, sectionId?: string): Promise<EnrollmentResponse[]> {
+    const params = new URLSearchParams();
+    if (periodId) params.append('periodId', periodId);
+    if (sectionId) params.append('sectionId', sectionId);
+    
+    const response = await api.get<EnrollmentResponse[]>(`/academic/enrollments?${params.toString()}`);
+    return response.data;
+  },
+
+  async findBySection(sectionId: string): Promise<EnrollmentResponse[]> {
+    const response = await api.get<EnrollmentResponse[]>(`/academic/enrollments/by-section?sectionId=${sectionId}`);
+    return response.data;
+  },
+
+  async create(data: { studentId: string; sectionId: string }): Promise<EnrollmentResponse> {
+    const response = await api.post<EnrollmentResponse>('/academic/enrollments', data);
+    return response.data;
+  },
+
+  async updateStatus(id: string, status: string): Promise<EnrollmentResponse> {
+    const response = await api.patch<EnrollmentResponse>(`/academic/enrollments/${id}`, { status });
+    return response.data;
+  },
+
+  async remove(id: string): Promise<EnrollmentResponse> {
+    const response = await api.delete<EnrollmentResponse>(`/academic/enrollments/${id}`);
+    return response.data;
+  },
+};

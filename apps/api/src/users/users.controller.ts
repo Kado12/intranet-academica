@@ -11,7 +11,7 @@ import { Role } from '@prisma/client';
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth()
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Get()
   @Roles(Role.ADMIN, Role.INFORMATICO)
@@ -32,6 +32,15 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'Estadísticas de usuarios' })
   getStats() {
     return this.usersService.countByRole();
+  }
+
+  @Get('students')
+  @Roles(Role.ADMIN, Role.INFORMATICO, Role.SECRETARIA, Role.COORDINADOR, Role.DOCENTE)
+  @ApiQuery({ name: 'search', required: false, description: 'Buscar por nombre o correo' })
+  @ApiOperation({ summary: 'Listar estudiantes' })
+  @ApiResponse({ status: 200, description: 'Lista de estudiantes' })
+  findStudents(@Query('search') search?: string) {
+    return this.usersService.findStudents(search);
   }
 
   @Get(':id')

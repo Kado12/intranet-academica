@@ -423,16 +423,65 @@ Fase 7: Frontend React base
 
 
 Fase 8: Módulos CRUD en el frontend
-- Páginas de gestión de Sedes
-- Páginas de gestión de Salones
-- Páginas de gestión de Secciones
-- Páginas de gestión de Cursos
-- Tablas con datos
-- Formularios de creación y edición
-- Modales de confirmación de eliminación
-- Notificaciones de éxito/error
+	PARTE 1
+	- PASOS
+		Páginas de gestión de Sedes
+		Páginas de gestión de Salones
+		Páginas de gestión de Secciones
+		Páginas de gestión de Cursos
+		Tablas con datos
+		Formularios de creación y edición
+		Modales de confirmación de eliminación
+		Notificaciones de éxito/error
 
+	- ESTRUCTURA
+		apps/web/src/
+		├── components/
+		│   ├── ui/
+		│   │   ├── Modal.tsx
+		│   │   ├── Toast.tsx
+		│   │   └── ...
+		│   └── ...
+		├── hooks/
+		│   └── useToast.ts
+		├── pages/
+		│   ├── sedes/
+		│   │   └── SedesPage.tsx
+		│   ├── periods/
+		│   │   └── PeriodsPage.tsx
+		│   ├── classrooms/
+		│   │   └── ClassroomsPage.tsx
+		│   └── ...
+		└── ...
+	PARTE 2
+	- ESTRUCTURA
+		apps/web/src/pages/
+		├── auth/
+		│   └── LoginPage.tsx
+		├── dashboard/
+		│   └── DashboardPage.tsx
+		├── users/
+		│   └── UsersPage.tsx
+		├── sedes/
+		│   └── SedesPage.tsx
+		├── periods/
+		│   └── PeriodsPage.tsx
+		├── classrooms/
+		│   └── ClassroomsPage.tsx
+		├── sections/
+		│   └── SectionsPage.tsx
+		├── courses/
+		│   └── CoursesPage.tsx
+		└── enrollments/
+				└── EnrollmentsPage.tsx
 
+Fase 9: Preparación para deployment
+- PASOS
+	Configuración para Vercel (frontend)
+	Configuración para Railway (backend + base de datos)
+	Variables de entorno para producción
+	GitHub Actions para CI/CD
+	Checklist de seguridad antes de deploy
 
 {
   "email": "admin@intranet.edu",

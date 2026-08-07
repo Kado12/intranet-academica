@@ -99,4 +99,39 @@ export class UsersService {
       count: item._count,
     }));
   }
+
+  async findStudents(search?: string) {
+    const where: any = {
+      memberships: {
+        some: {
+          role: Role.ESTUDIANTE,
+          status: 'ACTIVE',
+        },
+      },
+    };
+
+    if (search) {
+      where.OR = [
+        { email: { contains: search } },
+        { profile: { firstName: { contains: search } } },
+        { profile: { lastName: { contains: search } } },
+      ];
+    }
+
+    return this.prisma.user.findMany({
+      where,
+      include: {
+        profile: true,
+        memberships: {
+          where: { status: 'ACTIVE' },
+          select: { role: true },
+        },
+      },
+      orderBy: {
+        profile: {
+          firstName: 'asc',
+        },
+      },
+    });
+  }
 }

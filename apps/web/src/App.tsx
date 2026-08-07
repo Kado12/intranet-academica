@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { Layout } from './components/layout/Layout';
@@ -6,9 +5,12 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { LoginPage } from './pages/auth/LoginPage';
 import { DashboardPage } from './pages/dashboard/DashboardPage';
 import { UsersPage } from './pages/users/UsersPage';
-import {SedesPage} from './pages/sedes/SedesPage';
-import {PeriodsPage} from './pages/periods/PeriodsPage';
-import {ClassroomsPage} from './pages/classrooms/ClassroomsPage';
+import { SedesPage } from './pages/sedes/SedesPage';
+import { PeriodsPage } from './pages/periods/PeriodsPage';
+import { ClassroomsPage } from './pages/classrooms/ClassroomsPage';
+import { SectionsPage } from './pages/sections/SectionsPage';
+import { CoursesPage } from './pages/courses/CoursesPage';
+import { EnrollmentsPage } from './pages/enrollments/EnrollmentsPage';
 import { Role } from './types';
 
 function App() {
@@ -23,7 +25,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>
               <Route path="/dashboard" element={<DashboardPage />} />
-              
+
               {/* Página de usuarios: solo ADMIN e INFORMATICO */}
               <Route element={<ProtectedRoute roles={[Role.ADMIN, Role.INFORMATICO]} />}>
                 <Route path="/users" element={<UsersPage />} />
@@ -33,11 +35,11 @@ function App() {
               <Route path="/sedes" element={<SedesPage />} />
               <Route path="/periods" element={<PeriodsPage />} />
               <Route path="/classrooms" element={<ClassroomsPage />} />
+              <Route path="/sections" element={<SectionsPage/>} />
+              <Route path="/courses" element={<CoursesPage/>} />
+              <Route path="/enrollments" element={<EnrollmentsPage/>} />
 
               {/* Placeholder para rutas futuras */}
-              <Route path="/sections" element={<div className="p-4">Módulo de Secciones (próximamente)</div>} />
-              <Route path="/courses" element={<div className="p-4">Módulo de Cursos (próximamente)</div>} />
-              <Route path="/enrollments" element={<div className="p-4">Módulo de Matrículas (próximamente)</div>} />
               <Route path="/parents" element={<div className="p-4">Módulo de Padres (próximamente)</div>} />
             </Route>
           </Route>
