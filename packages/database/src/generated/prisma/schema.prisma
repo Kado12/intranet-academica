@@ -55,6 +55,9 @@ model Sede {
   classrooms  Classroom[]
   memberships Membership[]
 
+  // Nueva relación
+  announcements Announcement[]
+
   @@map("sedes")
 }
 
@@ -116,6 +119,9 @@ model Section {
   enrollments    Enrollment[]
   sectionCourses SectionCourse[]
 
+  // Nueva relación
+  announcements Announcement[]
+
   @@unique([classroomId, turnId, periodId, name])
   @@index([classroomId])
   @@index([turnId])
@@ -152,6 +158,17 @@ model User {
   enrollments    Enrollment[]
   parentOf       ParentStudent[] @relation("Parent")
   studentOf      ParentStudent[] @relation("Student")
+
+  // Nuevas relaciones
+  studentAttendances Attendance[]       @relation("StudentAttendance")
+  excusedAttendances Attendance[]       @relation("ExcusedAttendance")
+  studentGrades      Grade[]            @relation("StudentGrades")
+  gradedGrades       Grade[]            @relation("GradedBy")
+  createdTasks       Task[]             @relation("TaskCreatedBy")
+  studentSubmissions TaskSubmission[]   @relation("StudentSubmissions")
+  gradedSubmissions  TaskSubmission[]   @relation("SubmissionGradedBy")
+  announcements      Announcement[]     @relation("AnnouncementAuthor")
+  announcementViews  AnnouncementView[] @relation("AnnouncementViews")
 
   @@map("users")
 }
@@ -219,6 +236,11 @@ model SectionCourse {
   course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   teacher   User     @relation(fields: [teacherId], references: [id], onDelete: Restrict)
 
+  // Nuevas relaciones
+  attendances Attendance[]
+  assessments Assessment[]
+  tasks       Task[]
+
   @@unique([sectionId, courseId])
   @@index([sectionId])
   @@index([courseId])
@@ -258,4 +280,181 @@ model ParentStudent {
   @@index([parentId])
   @@index([studentId])
   @@map("parent_students")
+}
+
+// ==================== ASISTENCIA ====================
+
+enum AttendanceStatus {
+  PRESENT // Presente
+  ABSENT // Ausente
+  LATE // Tarde
+  EXCUSED // Justificado
+}
+
+model Attendance {
+  id              String           @id @default(cuid())
+  date            DateTime         @db.Date
+  status          AttendanceStatus
+  notes           String?
+  studentId       String
+  sectionCourseId String
+  student         User             @relation("StudentAttendance", fields: [studentId], references: [id], onDelete: Cascade)
+  sectionCourse   SectionCourse    @relation(fields: [sectionCourseId], references: [id], onDelete: Cascade)
+  excusedBy       User?            @relation("ExcusedAttendance", fields: [excusedById], references: [id])
+  excusedById     String?
+  excuseNote      String?
+  excuseDate      DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@unique([studentId, sectionCourseId, date]) // Una asistencia por estudiante por curso por día
+  @@index([sectionCourseId, date])
+  @@index([studentId])
+  @@map("attendances")
+}
+
+// ==================== CALIFICACIONES ====================
+
+enum AssessmentType {
+  EXAM // Examen
+  QUIZ // Prueba rápida
+  HOMEWORK // Tarea
+  PROJECT // Proyecto
+  PARTICIPATION // Participación
+  OTHER // Otro
+}
+
+model Assessment {
+  id              String         @id @default(cuid())
+  name            String
+  type            AssessmentType
+  maxScore        Float          @default(20) // Nota máxima (por defecto 20, sistema peruano)
+  weight          Float          @default(1) // Peso para el promedio ponderado
+  date            DateTime       @db.Date
+  sectionCourseId String
+  sectionCourse   SectionCourse  @relation(fields: [sectionCourseId], references: [id], onDelete: Cascade)
+  grades          Grade[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([sectionCourseId])
+  @@map("assessments")
+}
+
+model Grade {
+  id           String     @id @default(cuid())
+  score        Float
+  comment      String?
+  studentId    String
+  assessmentId String
+  student      User       @relation("StudentGrades", fields: [studentId], references: [id], onDelete: Cascade)
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  gradedBy     User?      @relation("GradedBy", fields: [gradedById], references: [id])
+  gradedById   String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@unique([studentId, assessmentId]) // Una nota por estudiante por evaluación
+  @@index([assessmentId])
+  @@index([studentId])
+  @@map("grades")
+}
+
+// ==================== TAREAS ====================
+
+enum TaskStatus {
+  PENDING // Pendiente
+  SUBMITTED // Entregada
+  GRADED // Calificada
+  LATE // Entregada tarde
+  MISSING // No entregada
+}
+
+model Task {
+  id              String           @id @default(cuid())
+  title           String
+  description     String?
+  dueDate         DateTime
+  maxScore        Float            @default(20)
+  sectionCourseId String
+  sectionCourse   SectionCourse    @relation(fields: [sectionCourseId], references: [id], onDelete: Cascade)
+  createdBy       User             @relation("TaskCreatedBy", fields: [createdById], references: [id])
+  createdById     String
+  submissions     TaskSubmission[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([sectionCourseId])
+  @@index([dueDate])
+  @@map("tasks")
+}
+
+model TaskSubmission {
+  id          String     @id @default(cuid())
+  content     String?
+  fileUrl     String?
+  submittedAt DateTime   @default(now())
+  status      TaskStatus @default(PENDING)
+  score       Float?
+  feedback    String?
+  studentId   String
+  taskId      String
+  student     User       @relation("StudentSubmissions", fields: [studentId], references: [id], onDelete: Cascade)
+  task        Task       @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  gradedBy    User?      @relation("SubmissionGradedBy", fields: [gradedById], references: [id])
+  gradedById  String?
+  gradedAt    DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@unique([studentId, taskId]) // Una entrega por estudiante por tarea
+  @@index([taskId])
+  @@index([studentId])
+  @@map("task_submissions")
+}
+
+// ==================== ANUNCIOS ====================
+
+enum AnnouncementPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model Announcement {
+  id        String               @id @default(cuid())
+  title     String
+  content   String
+  priority  AnnouncementPriority @default(MEDIUM)
+  publishAt DateTime             @default(now())
+  expiresAt DateTime?
+  authorId  String
+  author    User                 @relation("AnnouncementAuthor", fields: [authorId], references: [id])
+  sedeId    String?
+  sede      Sede?                @relation(fields: [sedeId], references: [id])
+  sectionId String?
+  section   Section?             @relation(fields: [sectionId], references: [id])
+  isGlobal  Boolean              @default(false) // Si es para toda la institución
+  views     AnnouncementView[]
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+
+  @@index([sedeId])
+  @@index([sectionId])
+  @@index([publishAt])
+  @@map("announcements")
+}
+
+model AnnouncementView {
+  id             String       @id @default(cuid())
+  announcementId String
+  userId         String
+  announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  user           User         @relation("AnnouncementViews", fields: [userId], references: [id], onDelete: Cascade)
+  viewedAt       DateTime     @default(now())
+
+  @@unique([announcementId, userId]) // Un usuario ve un anuncio una vez
+  @@index([userId])
+  @@map("announcement_views")
 }

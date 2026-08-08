@@ -257,6 +257,93 @@ exports.Prisma.ParentStudentScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.AttendanceScalarFieldEnum = {
+  id: 'id',
+  date: 'date',
+  status: 'status',
+  notes: 'notes',
+  studentId: 'studentId',
+  sectionCourseId: 'sectionCourseId',
+  excusedById: 'excusedById',
+  excuseNote: 'excuseNote',
+  excuseDate: 'excuseDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AssessmentScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  type: 'type',
+  maxScore: 'maxScore',
+  weight: 'weight',
+  date: 'date',
+  sectionCourseId: 'sectionCourseId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.GradeScalarFieldEnum = {
+  id: 'id',
+  score: 'score',
+  comment: 'comment',
+  studentId: 'studentId',
+  assessmentId: 'assessmentId',
+  gradedById: 'gradedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TaskScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  dueDate: 'dueDate',
+  maxScore: 'maxScore',
+  sectionCourseId: 'sectionCourseId',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TaskSubmissionScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  fileUrl: 'fileUrl',
+  submittedAt: 'submittedAt',
+  status: 'status',
+  score: 'score',
+  feedback: 'feedback',
+  studentId: 'studentId',
+  taskId: 'taskId',
+  gradedById: 'gradedById',
+  gradedAt: 'gradedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AnnouncementScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  content: 'content',
+  priority: 'priority',
+  publishAt: 'publishAt',
+  expiresAt: 'expiresAt',
+  authorId: 'authorId',
+  sedeId: 'sedeId',
+  sectionId: 'sectionId',
+  isGlobal: 'isGlobal',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AnnouncementViewScalarFieldEnum = {
+  id: 'id',
+  announcementId: 'announcementId',
+  userId: 'userId',
+  viewedAt: 'viewedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -355,6 +442,62 @@ exports.Prisma.ParentStudentOrderByRelevanceFieldEnum = {
   parentId: 'parentId',
   studentId: 'studentId'
 };
+
+exports.Prisma.AttendanceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  notes: 'notes',
+  studentId: 'studentId',
+  sectionCourseId: 'sectionCourseId',
+  excusedById: 'excusedById',
+  excuseNote: 'excuseNote'
+};
+
+exports.Prisma.AssessmentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  sectionCourseId: 'sectionCourseId'
+};
+
+exports.Prisma.GradeOrderByRelevanceFieldEnum = {
+  id: 'id',
+  comment: 'comment',
+  studentId: 'studentId',
+  assessmentId: 'assessmentId',
+  gradedById: 'gradedById'
+};
+
+exports.Prisma.TaskOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  sectionCourseId: 'sectionCourseId',
+  createdById: 'createdById'
+};
+
+exports.Prisma.TaskSubmissionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  content: 'content',
+  fileUrl: 'fileUrl',
+  feedback: 'feedback',
+  studentId: 'studentId',
+  taskId: 'taskId',
+  gradedById: 'gradedById'
+};
+
+exports.Prisma.AnnouncementOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  content: 'content',
+  authorId: 'authorId',
+  sedeId: 'sedeId',
+  sectionId: 'sectionId'
+};
+
+exports.Prisma.AnnouncementViewOrderByRelevanceFieldEnum = {
+  id: 'id',
+  announcementId: 'announcementId',
+  userId: 'userId'
+};
 exports.PeriodStatus = exports.$Enums.PeriodStatus = {
   DRAFT: 'DRAFT',
   ACTIVE: 'ACTIVE',
@@ -391,6 +534,37 @@ exports.ParentRelationType = exports.$Enums.ParentRelationType = {
   OTRO: 'OTRO'
 };
 
+exports.AttendanceStatus = exports.$Enums.AttendanceStatus = {
+  PRESENT: 'PRESENT',
+  ABSENT: 'ABSENT',
+  LATE: 'LATE',
+  EXCUSED: 'EXCUSED'
+};
+
+exports.AssessmentType = exports.$Enums.AssessmentType = {
+  EXAM: 'EXAM',
+  QUIZ: 'QUIZ',
+  HOMEWORK: 'HOMEWORK',
+  PROJECT: 'PROJECT',
+  PARTICIPATION: 'PARTICIPATION',
+  OTHER: 'OTHER'
+};
+
+exports.TaskStatus = exports.$Enums.TaskStatus = {
+  PENDING: 'PENDING',
+  SUBMITTED: 'SUBMITTED',
+  GRADED: 'GRADED',
+  LATE: 'LATE',
+  MISSING: 'MISSING'
+};
+
+exports.AnnouncementPriority = exports.$Enums.AnnouncementPriority = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT'
+};
+
 exports.Prisma.ModelName = {
   Sede: 'Sede',
   AcademicPeriod: 'AcademicPeriod',
@@ -404,7 +578,14 @@ exports.Prisma.ModelName = {
   CourseTeacher: 'CourseTeacher',
   SectionCourse: 'SectionCourse',
   Enrollment: 'Enrollment',
-  ParentStudent: 'ParentStudent'
+  ParentStudent: 'ParentStudent',
+  Attendance: 'Attendance',
+  Assessment: 'Assessment',
+  Grade: 'Grade',
+  Task: 'Task',
+  TaskSubmission: 'TaskSubmission',
+  Announcement: 'Announcement',
+  AnnouncementView: 'AnnouncementView'
 };
 
 /**

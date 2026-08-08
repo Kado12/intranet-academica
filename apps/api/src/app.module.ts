@@ -16,6 +16,7 @@ import { SectionCourseModule } from './academic/section-courses/section-courses.
 import { EnrollmentModule } from './academic/enrollments/enrollments.module';
 import { ParentStudentModule } from './academic/parent-students/parent-students.module';
 import { AppController } from './app.controller';
+import { AttendanceModule } from './academic/attendance/attendance.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { AppController } from './app.controller';
     CourseTeacherModule,
     SectionCourseModule,
     EnrollmentModule,
+    AttendanceModule,
   ],
   controllers: [AppController],
   providers: [
