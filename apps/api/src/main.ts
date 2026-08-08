@@ -1,18 +1,28 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { WinstonModule } from 'nest-winston';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
+import { loggerConfig } from './common/logger/logger.config';
+import { AuditInterceptor } from './common/interceptors/audit.interceptor';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: WinstonModule.createLogger(loggerConfig),
+  });
+
+  const logger = new Logger('Bootstrap');
   const configService = app.get(ConfigService);
 
   const nodeEnv = configService.get<string>('NODE_ENV', 'development');
   const isProduction = nodeEnv === 'production';
 
-  console.log(`🌍 Entorno: ${nodeEnv}`);
+  logger.log(`🌍 Entorno: ${nodeEnv}`);
+
+  app.useGlobalInterceptors(new AuditInterceptor());
+  logger.log('📝 Interceptor de auditoría configurado');
 
   // Helmet - Headers de seguridad HTTP
   app.use(
@@ -54,7 +64,7 @@ async function bootstrap() {
     }),
   );
 
-  console.log('🛡️  Helmet configurado');
+  logger.log('🛡️  Helmet configurado');
 
   // Configuración de CORS dinámico según el entorno
   const corsOrigins = isProduction
@@ -109,13 +119,14 @@ async function bootstrap() {
       .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api/docs', app, document);
-    console.log(
+    logger.log(
       `📚 Swagger documentation: http://localhost:${configService.get('PORT', 3000)}/api/docs`,
     );
   }
 
   const port = configService.get<number>('PORT', 3000);
   await app.listen(port);
-  console.log(`🚀 Application running in ${nodeEnv} mode on port ${port}`);
+  logger.log(`🚀 Application running in ${nodeEnv} mode on port ${port}`);
 }
+
 bootstrap();
