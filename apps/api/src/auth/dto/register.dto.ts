@@ -5,6 +5,7 @@ import {
   MinLength,
   IsEnum,
   IsOptional,
+  Matches,
 } from 'class-validator';
 import { Role } from '@intranet/database';
 
@@ -22,6 +23,9 @@ export class RegisterDto {
   })
   @IsString()
   @MinLength(8, { message: 'La contraseña debe tener al menos 8 caracteres' })
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/, {
+    message: 'La contraseña debe contener al menos una mayúscula, una minúscula, un número y un símbolo especial',
+  })
   password: string;
 
   @ApiProperty({ example: 'Juan', description: 'Nombre del usuario' })
@@ -53,7 +57,8 @@ export class RegisterDto {
   @ApiProperty({
     enum: Role,
     example: Role.ESTUDIANTE,
-    description: 'Rol del usuario' })
+    description: 'Rol del usuario',
+  })
   @IsEnum(Role, { message: 'El rol no es válido' })
   role: Role;
 }
