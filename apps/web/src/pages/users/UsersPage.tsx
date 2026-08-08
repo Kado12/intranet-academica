@@ -119,7 +119,7 @@ export const UsersPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await api.post('/auth/register', formData);
+      const response = await api.post('api/auth/register', formData);
       setSuccessMessage(`Usuario ${response.data.user.email} creado exitosamente`);
       
       // Resetear el formulario

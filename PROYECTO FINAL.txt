@@ -483,6 +483,151 @@ Fase 9: Preparación para deployment
 	GitHub Actions para CI/CD
 	Checklist de seguridad antes de deploy
 
+Fase 10: Deploy del proyecto
+
+Fase 11: Seguridad y Robustez
+	11.1 Rate Limiting
+		Limitar intentos de login (máximo 5 intentos por IP cada 15 minutos)
+		Rate limiting general para endpoints públicos
+		Protección contra brute force
+	11.2 Headers de Seguridad
+		Helmet.js para headers HTTP seguros
+		Content Security Policy (CSP)
+		HSTS (HTTP Strict Transport Security)
+		X-Frame-Options, X-Content-Type-Options
+	11.3 Validación de Contraseñas
+		Contraseñas fuertes (mínimo 8 caracteres, mayúsculas, números, símbolos)
+		Verificación de contraseñas comprometidas (Have I Been Pwned API)
+		Expiración de contraseñas cada 90 días
+	11.4 Auditoría y Logging
+		Logger estructurado (Winston/Pino)
+		Logs de acciones críticas (login, cambios de rol, eliminaciones)
+		Tabla de auditoría para rastrear cambios
+
+Fase 12: Funcionalidades Académicas
+	12.1 Gestión de Asistencia
+		Registro diario de asistencia por sección
+		Reportes de asistencia por estudiante/curso
+		Justificaciones de inasistencias
+		Estadísticas de asistencia
+	12.2 Sistema de Calificaciones
+		Registro de notas por curso y período
+		Promedios automáticos (ponderados, aritméticos)
+		Libreta de calificaciones digital
+		Reportes de rendimiento académico
+	12.3 Tareas y Entregables
+		Creación de tareas por docente
+		Entrega de trabajos por estudiantes
+		Calificación de tareas
+		Notificaciones de tareas pendientes
+	12.4 Anuncios y Comunicados
+		Sistema de anuncios por sede/sección
+		Notificaciones push
+		Historial de comunicaciones
+		Adjuntar archivos (PDFs, imágenes)
+
+Fase 13: App Móvil React Native
+	13.1 Setup Inicial
+		Crear proyecto React Native con Expo
+		Configurar monorepo para compartir código
+		Reutilizar tipos TypeScript del backend
+		Integración con la API existente
+	13.2 Funcionalidades del Estudiante
+		Login y perfil
+		Ver horario de clases
+		Ver calificaciones
+		Ver tareas pendientes
+		Notificaciones push
+	13.3 Funcionalidades del Docente
+		Pasar lista (asistencia)
+		Registrar calificaciones
+		Crear tareas
+		Ver lista de estudiantes por sección
+	13.4 Funcionalidades del Padre
+		Ver progreso académico del hijo
+		Ver asistencia
+		Recibir comunicados
+		Contactar con docentes
+
+Fase 14: Sistema de notificaciones
+	14.1 Backend de Notificaciones
+		Tabla de notificaciones en base de datos
+		Sistema de eventos (nueva tarea, nueva nota, etc.)
+		Cola de notificaciones (Bull/BullMQ)
+	14.2 Canales de Notificación
+		Notificaciones in-app (web y móvil)
+		Email (SendGrid/Resend)
+		Push notifications (Firebase Cloud Messaging)
+	14.3 Preferencias de Usuario
+		Configurar qué notificaciones recibir
+		Horarios de no molestar
+		Silenciar notificaciones específicas
+
+Fase 15: Reportes y Analíticas
+	15.1 Dashboard Administrativo
+		Estadísticas generales de la institución
+		Gráficos de rendimiento académico
+		Tasas de asistencia
+		Distribución de estudiantes por sede/sección
+	15.2 Reportes Exportables
+		Exportar listas de estudiantes a Excel/PDF
+		Reportes de calificaciones por período
+		Certificados de estudio
+		Constancias de matrícula
+	15.3 Analíticas Predictivas
+		Predicción de estudiantes en riesgo
+		Tendencias de rendimiento
+		Alertas tempranas de deserción
+
+Fase 16: Optimizaciones de Performance
+	16.1 Caché
+		Redis para caché de consultas frecuentes
+		Caché de listas (sedes, turnos, cursos)
+		Invalidación de caché en actualizaciones
+	16.2 Optimización de Base de Datos
+		Índices compuestos para consultas frecuentes
+		Paginación eficiente con cursores
+		Consultas optimizadas con Prisma
+	16.3 Frontend Performance
+		Code splitting avanzado
+		Lazy loading de rutas
+		Optimización de imágenes
+		Service Worker para offline
+
+Fase 17: Mejoras de UX/UI
+	17.1 Dark Mode
+		Tema oscuro en frontend web
+		Tema oscuro en app móvil
+		Preferencia de usuario guardada
+	17.2 Accesibilidad
+		Navegación por teclado
+		ARIA labels
+		Contraste WCAG AA
+		Soporte para lectores de pantalla
+	17.3 Animaciones y Transiciones
+		Transiciones suaves entre páginas
+		Feedback visual en acciones
+		Skeletons para loading states
+		Micro-interacciones
+
+Fase 18: CI/CD y Automatizaon
+	18.1 GitHub Actions
+		Pipeline de tests automáticos en cada PR
+		Linting y formateo automático
+		Type checking en CI
+		Deploy automático a staging
+	18.2 Testing
+		Tests unitarios (Jest)
+		Tests de integración (Supertest)
+		Tests E2E (Playwright/Cypress)
+		Coverage mínimo del 80%
+	18.3 Monitoreo
+		Sentry para error tracking
+		Health checks automáticos
+		Alertas por email/Slack
+		Métricas de performance
+
+
 {
   "email": "admin@intranet.edu",
   "password": "admin123456"

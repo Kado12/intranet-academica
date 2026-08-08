@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import helmet from 'helmet';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -10,6 +11,50 @@ async function bootstrap() {
 
   const nodeEnv = configService.get<string>('NODE_ENV', 'development');
   const isProduction = nodeEnv === 'production';
+
+  console.log(`🌍 Entorno: ${nodeEnv}`);
+
+  // Helmet - Headers de seguridad HTTP
+  app.use(
+    helmet({
+      contentSecurityPolicy: isProduction
+        ? {
+            directives: {
+              defaultSrc: ["'self'"],
+              styleSrc: ["'self'", "'unsafe-inline'"], // Necesario para Swagger UI
+              scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"], // Necesario para Swagger UI
+              imgSrc: ["'self'", "'data:'", "'https:'"],
+              connectSrc: ["'self'"],
+              fontSrc: ["'self'"],
+              objectSrc: ["'none'"],
+              mediaSrc: ["'self'"],
+              frameSrc: ["'none'"],
+            },
+          }
+        : false, // Deshabilitar CSP en desarrollo
+      crossOriginEmbedderPolicy: false, // Deshabilitar para Swagger
+      crossOriginOpenerPolicy: false,
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+      dnsPrefetchControl: true,
+      frameguard: { action: 'deny' }, // Previene clickjacking
+      hidePoweredBy: true, // Oculta X-Powered-By
+      hsts: isProduction
+        ? {
+            maxAge: 31536000, // 1 año
+            includeSubDomains: true,
+            preload: true,
+          }
+        : false,
+      ieNoOpen: true,
+      noSniff: true,
+      referrerPolicy: {
+        policy: 'strict-origin-when-cross-origin',
+      },
+      xssFilter: true,
+    }),
+  );
+
+  console.log('🛡️  Helmet configurado');
 
   // Configuración de CORS dinámico según el entorno
   const corsOrigins = isProduction
