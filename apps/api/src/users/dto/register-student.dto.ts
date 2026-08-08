@@ -85,4 +85,15 @@ export class RegisterStudentDto {
   @IsString()
   @IsNotEmpty()
   paymentPlanId: string;
+
+  // ===== FOTO =====
+  @ApiProperty({ description: 'URL de la foto en Cloudinary', required: false })
+  @IsString()
+  @IsOptional()
+  avatarUrl?: string;
+
+  @ApiProperty({ description: 'ID público en Cloudinary (número de documento)', required: false })
+  @IsString()
+  @IsOptional()
+  avatarPublicId?: string;
 }

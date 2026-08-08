@@ -11,6 +11,7 @@ import { ClassroomsPage } from './pages/classrooms/ClassroomsPage';
 import { SectionsPage } from './pages/sections/SectionsPage';
 import { CoursesPage } from './pages/courses/CoursesPage';
 import { EnrollmentsPage } from './pages/enrollments/EnrollmentsPage';
+import { StudentRegistrationPage } from './pages/students/StudentRegistrationPage';
 import { Role } from './types';
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
               <Route path="/sections" element={<SectionsPage/>} />
               <Route path="/courses" element={<CoursesPage/>} />
               <Route path="/enrollments" element={<EnrollmentsPage/>} />
+              <Route path="/students/register" element={<StudentRegistrationPage />} />
 
               {/* Placeholder para rutas futuras */}
               <Route path="/parents" element={<div className="p-4">Módulo de Padres (próximamente)</div>} />

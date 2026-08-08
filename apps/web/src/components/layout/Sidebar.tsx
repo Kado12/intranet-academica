@@ -11,6 +11,8 @@ import {
   ClipboardDocumentListIcon,
   UsersIcon,
   XMarkIcon,
+  UserPlusIcon,
+  CreditCardIcon,
 } from '@heroicons/react/24/outline';
 import { useAuth } from '../../context/AuthContext';
 import { Role } from '../../types';
@@ -81,6 +83,18 @@ const menuItems: MenuItem[] = [
     icon: UsersIcon,
     roles: [Role.ADMIN, Role.COORDINADOR, Role.SECRETARIA],
   },
+  {
+  path: '/students/register',
+  label: 'Registrar Estudiante',
+  icon: UserPlusIcon,
+  roles: [Role.ADMIN, Role.SECRETARIA, Role.COORDINADOR],
+},
+{
+  path: '/payment-plans',
+  label: 'Planes de Pago',
+  icon: CreditCardIcon,
+  roles: [Role.ADMIN, Role.SECRETARIA],
+},
 ];
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {

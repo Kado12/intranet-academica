@@ -264,6 +264,8 @@ export class UsersService {
               gender,
               phone,
               address,
+              avatarUrl: dto.avatarUrl || null, // ← NUEVO
+              avatarPublicId: dto.avatarPublicId || null, // ← NUEVO
             },
           },
           memberships: {

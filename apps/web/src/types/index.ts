@@ -175,3 +175,30 @@ export interface ApiError {
   message: string | string[];
   error?: string;
 }
+
+// Plan de pago
+export const PaymentPlanType = {
+  FULL_PAYMENT: 'FULL_PAYMENT',
+  INSTALLMENTS: 'INSTALLMENTS',
+  SIBLING_DISCOUNT: 'SIBLING_DISCOUNT',
+  AGREEMENT: 'AGREEMENT',
+  SCHOLARSHIP: 'SCHOLARSHIP',
+  OTHER: 'OTHER',
+} as const;
+
+export type PaymentPlanType = typeof PaymentPlanType[keyof typeof PaymentPlanType];
+
+export interface PaymentPlan {
+  id: string;
+  name: string;
+  type: PaymentPlanType;
+  description?: string;
+  baseAmount: number;
+  discount: number;
+  finalAmount: number;
+  installments?: number;
+  isActive: boolean;
+  sedeId?: string;
+  createdAt: string;
+  updatedAt: string;
+}

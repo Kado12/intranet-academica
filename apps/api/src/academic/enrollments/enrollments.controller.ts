@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, Res } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { EnrollmentsService } from './enrollments.service';
 import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
@@ -7,13 +7,18 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { Role } from '@intranet/database';
+import { Response } from 'express';
+import { StudentCardService } from './student-card.service';
 
 @ApiTags('Matrículas')
 @Controller('academic/enrollments')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth()
 export class EnrollmentsController {
-  constructor(private readonly enrollmentsService: EnrollmentsService) {}
+  constructor(
+    private readonly enrollmentsService: EnrollmentsService,
+    private readonly studentCardService: StudentCardService,
+  ) {}
 
   @Post()
   @Roles(Role.ADMIN, Role.COORDINADOR, Role.SECRETARIA)
@@ -50,6 +55,22 @@ export class EnrollmentsController {
   @ApiResponse({ status: 200, description: 'Estudiantes de la sección' })
   findBySection(@Query('sectionId') sectionId: string) {
     return this.enrollmentsService.findBySection(sectionId);
+  }
+
+  @Get(':id/card')
+  @Roles(Role.ADMIN, Role.COORDINADOR, Role.SECRETARIA, Role.DOCENTE)
+  @ApiOperation({ summary: 'Descargar ficha de matrícula en PDF (A4 con dos fichas A5)' })
+  @ApiResponse({ status: 200, description: 'PDF generado' })
+  async downloadCard(@Param('id') id: string, @Res() res: Response) {
+    const pdf = await this.studentCardService.generateEnrollmentCardPdf(id);
+
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename=ficha-matricula-${id}.pdf`,
+      'Content-Length': pdf.length.toString(),
+    });
+
+    res.send(pdf);
   }
 
   @Patch(':id')

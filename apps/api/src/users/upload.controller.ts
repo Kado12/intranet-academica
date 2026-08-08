@@ -1,12 +1,13 @@
 import {
   Controller,
   Post,
-  Patch,
   UseInterceptors,
   UploadedFile,
   UseGuards,
   Request,
   BadRequestException,
+  Logger,
+  Body,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiConsumes, ApiBody } from '@nestjs/swagger';
@@ -20,6 +21,8 @@ import { Role } from '@intranet/database';
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export class UploadController {
+  private readonly logger = new Logger(UploadController.name);
+
   constructor(
     private readonly cloudinaryService: CloudinaryService,
     private readonly prisma: PrismaService,
@@ -103,22 +106,38 @@ export class UploadController {
   @ApiOperation({ summary: 'Subir foto de un estudiante (usado durante el registro)' })
   async uploadStudentPicture(
     @UploadedFile() file: Express.Multer.File,
-    @Request() req,
+    @Body('documentNumber') documentNumber: string,
   ) {
+    this.logger.log('Recibiendo petición de subida de foto de estudiante');
+
     if (!file) {
+      this.logger.error('❌ No se proporcionó ningún archivo');
       throw new BadRequestException('No se proporcionó ningún archivo');
     }
 
-    const result = await this.cloudinaryService.uploadProfilePicture(
-      file.buffer,
-      'temp_' + Date.now(), // ID temporal
-      Role.ESTUDIANTE,
-    );
+    this.logger.log(`✅ Archivo recibido:`);
+    this.logger.log(`   Nombre: ${file.originalname}`);
+    this.logger.log(`   Numero de Documento: ${documentNumber}`);
+    this.logger.log(`   Tamaño: ${file.size} bytes`);
+    this.logger.log(`   Tipo: ${file.mimetype}`);
 
-    return {
-      message: 'Foto subida temporalmente',
-      tempAvatarUrl: result.secure_url,
-      tempPublicId: result.public_id,
-    };
+    try {
+      // Subir a Cloudinary con ID temporal
+      const result = await this.cloudinaryService.uploadStudentPicture(
+        file.buffer,
+        documentNumber,
+      );
+
+      this.logger.log(`✅ Foto subida temporalmente: ${result.secure_url}`);
+
+      return {
+        message: 'Foto subida temporalmente',
+        tempAvatarUrl: result.secure_url,
+        tempPublicId: result.public_id,
+      };
+    } catch (error) {
+      this.logger.error(`❌ Error en uploadStudentPicture: ${error.message}`);
+      throw error;
+    }
   }
 }
