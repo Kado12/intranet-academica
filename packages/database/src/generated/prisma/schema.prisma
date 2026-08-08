@@ -45,18 +45,19 @@ enum ParentRelationType {
 }
 
 model Sede {
-  id          String       @id @default(cuid())
-  name        String
-  address     String?
-  phone       String?
-  isActive    Boolean      @default(true)
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  classrooms  Classroom[]
-  memberships Membership[]
-
-  // Nueva relación
+  id            String         @id @default(cuid())
+  name          String
+  address       String?
+  phone         String?
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  classrooms    Classroom[]
+  memberships   Membership[]
   announcements Announcement[]
+
+  // ← NUEVO
+  paymentPlans PaymentPlan[]
 
   @@map("sedes")
 }
@@ -107,6 +108,7 @@ model Section {
   id             String          @id @default(cuid())
   name           String
   capacity       Int?
+  priority       Int             @default(1) // ← NUEVO: Prioridad de llenado (1 = primero)
   isActive       Boolean         @default(true)
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
@@ -118,14 +120,13 @@ model Section {
   period         AcademicPeriod  @relation(fields: [periodId], references: [id], onDelete: Restrict)
   enrollments    Enrollment[]
   sectionCourses SectionCourse[]
-
-  // Nueva relación
-  announcements Announcement[]
+  announcements  Announcement[]
 
   @@unique([classroomId, turnId, periodId, name])
   @@index([classroomId])
   @@index([turnId])
   @@index([periodId])
+  @@index([priority]) // ← NUEVO: Índice para búsquedas por prioridad
   @@map("sections")
 }
 
@@ -144,22 +145,24 @@ model Course {
 }
 
 model User {
-  id             String          @id @default(cuid())
-  email          String          @unique
-  passwordHash   String
-  isActive       Boolean         @default(true)
-  lastLoginAt    DateTime?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  profile        Profile?
-  memberships    Membership[]
-  courseTeachers CourseTeacher[]
-  sectionCourses SectionCourse[]
-  enrollments    Enrollment[]
-  parentOf       ParentStudent[] @relation("Parent")
-  studentOf      ParentStudent[] @relation("Student")
+  id                 String          @id @default(cuid())
+  email              String          @unique
+  passwordHash       String
+  isActive           Boolean         @default(true)
+  mustChangePassword Boolean         @default(false) // ← NUEVO
+  passwordChangedAt  DateTime? // ← NUEVO
+  lastLoginAt        DateTime?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  profile            Profile?
+  memberships        Membership[]
+  courseTeachers     CourseTeacher[]
+  sectionCourses     SectionCourse[]
+  enrollments        Enrollment[]
+  parentOf           ParentStudent[] @relation("Parent")
+  studentOf          ParentStudent[] @relation("Student")
 
-  // Nuevas relaciones
+  // Relaciones de la Fase 12
   studentAttendances Attendance[]       @relation("StudentAttendance")
   excusedAttendances Attendance[]       @relation("ExcusedAttendance")
   studentGrades      Grade[]            @relation("StudentGrades")
@@ -179,14 +182,18 @@ model Profile {
   firstName      String
   lastName       String
   documentType   String?
-  documentNumber String?
+  documentNumber String?   @unique // DNI único en todo el sistema
   phone          String?
   birthDate      DateTime? @db.Date
-  avatarUrl      String?
+  gender         String? // ← NUEVO: M, F, Otro
+  address        String? // ← NUEVO: Dirección
+  avatarUrl      String? // ← NUEVO: URL pública de Cloudinary
+  avatarPublicId String? // ← NUEVO: ID en Cloudinary para gestionar
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([documentNumber])
   @@map("profiles")
 }
 
@@ -259,9 +266,14 @@ model Enrollment {
   student    User             @relation(fields: [studentId], references: [id], onDelete: Restrict)
   section    Section          @relation(fields: [sectionId], references: [id], onDelete: Restrict)
 
+  // ← NUEVO: Plan de pago
+  paymentPlanId String?
+  paymentPlan   PaymentPlan? @relation(fields: [paymentPlanId], references: [id])
+
   @@unique([studentId, sectionId])
   @@index([studentId])
   @@index([sectionId])
+  @@index([paymentPlanId])
   @@map("enrollments")
 }
 
@@ -457,4 +469,36 @@ model AnnouncementView {
   @@unique([announcementId, userId]) // Un usuario ve un anuncio una vez
   @@index([userId])
   @@map("announcement_views")
+}
+
+// ==================== PLANES DE PAGO ====================
+
+enum PaymentPlanType {
+  FULL_PAYMENT // Pago completo del ciclo
+  INSTALLMENTS // Pago en cuotas
+  SIBLING_DISCOUNT // Descuento por hermanos
+  AGREEMENT // Convenio institucional
+  SCHOLARSHIP // Beca
+  OTHER // Otro
+}
+
+model PaymentPlan {
+  id           String          @id @default(cuid())
+  name         String // "Plan Hermanos", "Convenio Empresa X", "Pago Completo"
+  type         PaymentPlanType
+  description  String?
+  baseAmount   Float // Monto base de la matrícula
+  discount     Float           @default(0) // Porcentaje de descuento (0-100)
+  finalAmount  Float // Monto final después del descuento
+  installments Int? // Número de cuotas (si aplica)
+  isActive     Boolean         @default(true)
+  sedeId       String? // Puede ser específico de una sede o global
+  sede         Sede?           @relation(fields: [sedeId], references: [id])
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  enrollments  Enrollment[]
+
+  @@index([sedeId])
+  @@index([type])
+  @@map("payment_plans")
 }

@@ -113,6 +113,11 @@ export type Announcement = $Result.DefaultSelection<Prisma.$AnnouncementPayload>
  * 
  */
 export type AnnouncementView = $Result.DefaultSelection<Prisma.$AnnouncementViewPayload>
+/**
+ * Model PaymentPlan
+ * 
+ */
+export type PaymentPlan = $Result.DefaultSelection<Prisma.$PaymentPlanPayload>
 
 /**
  * Enums
@@ -211,6 +216,18 @@ export const AnnouncementPriority: {
 
 export type AnnouncementPriority = (typeof AnnouncementPriority)[keyof typeof AnnouncementPriority]
 
+
+export const PaymentPlanType: {
+  FULL_PAYMENT: 'FULL_PAYMENT',
+  INSTALLMENTS: 'INSTALLMENTS',
+  SIBLING_DISCOUNT: 'SIBLING_DISCOUNT',
+  AGREEMENT: 'AGREEMENT',
+  SCHOLARSHIP: 'SCHOLARSHIP',
+  OTHER: 'OTHER'
+};
+
+export type PaymentPlanType = (typeof PaymentPlanType)[keyof typeof PaymentPlanType]
+
 }
 
 export type Role = $Enums.Role
@@ -248,6 +265,10 @@ export const TaskStatus: typeof $Enums.TaskStatus
 export type AnnouncementPriority = $Enums.AnnouncementPriority
 
 export const AnnouncementPriority: typeof $Enums.AnnouncementPriority
+
+export type PaymentPlanType = $Enums.PaymentPlanType
+
+export const PaymentPlanType: typeof $Enums.PaymentPlanType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -566,6 +587,16 @@ export class PrismaClient<
     * ```
     */
   get announcementView(): Prisma.AnnouncementViewDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.paymentPlan`: Exposes CRUD operations for the **PaymentPlan** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PaymentPlans
+    * const paymentPlans = await prisma.paymentPlan.findMany()
+    * ```
+    */
+  get paymentPlan(): Prisma.PaymentPlanDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1026,7 +1057,8 @@ export namespace Prisma {
     Task: 'Task',
     TaskSubmission: 'TaskSubmission',
     Announcement: 'Announcement',
-    AnnouncementView: 'AnnouncementView'
+    AnnouncementView: 'AnnouncementView',
+    PaymentPlan: 'PaymentPlan'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1045,7 +1077,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "sede" | "academicPeriod" | "turn" | "classroom" | "section" | "course" | "user" | "profile" | "membership" | "courseTeacher" | "sectionCourse" | "enrollment" | "parentStudent" | "attendance" | "assessment" | "grade" | "task" | "taskSubmission" | "announcement" | "announcementView"
+      modelProps: "sede" | "academicPeriod" | "turn" | "classroom" | "section" | "course" | "user" | "profile" | "membership" | "courseTeacher" | "sectionCourse" | "enrollment" | "parentStudent" | "attendance" | "assessment" | "grade" | "task" | "taskSubmission" | "announcement" | "announcementView" | "paymentPlan"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2369,6 +2401,72 @@ export namespace Prisma {
           }
         }
       }
+      PaymentPlan: {
+        payload: Prisma.$PaymentPlanPayload<ExtArgs>
+        fields: Prisma.PaymentPlanFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PaymentPlanFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPlanPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PaymentPlanFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPlanPayload>
+          }
+          findFirst: {
+            args: Prisma.PaymentPlanFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPlanPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PaymentPlanFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPlanPayload>
+          }
+          findMany: {
+            args: Prisma.PaymentPlanFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPlanPayload>[]
+          }
+          create: {
+            args: Prisma.PaymentPlanCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPlanPayload>
+          }
+          createMany: {
+            args: Prisma.PaymentPlanCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.PaymentPlanDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPlanPayload>
+          }
+          update: {
+            args: Prisma.PaymentPlanUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPlanPayload>
+          }
+          deleteMany: {
+            args: Prisma.PaymentPlanDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PaymentPlanUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PaymentPlanUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentPlanPayload>
+          }
+          aggregate: {
+            args: Prisma.PaymentPlanAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePaymentPlan>
+          }
+          groupBy: {
+            args: Prisma.PaymentPlanGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PaymentPlanGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PaymentPlanCountArgs<ExtArgs>
+            result: $Utils.Optional<PaymentPlanCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2485,6 +2583,7 @@ export namespace Prisma {
     taskSubmission?: TaskSubmissionOmit
     announcement?: AnnouncementOmit
     announcementView?: AnnouncementViewOmit
+    paymentPlan?: PaymentPlanOmit
   }
 
   /* Types for Logging */
@@ -2568,12 +2667,14 @@ export namespace Prisma {
     classrooms: number
     memberships: number
     announcements: number
+    paymentPlans: number
   }
 
   export type SedeCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     classrooms?: boolean | SedeCountOutputTypeCountClassroomsArgs
     memberships?: boolean | SedeCountOutputTypeCountMembershipsArgs
     announcements?: boolean | SedeCountOutputTypeCountAnnouncementsArgs
+    paymentPlans?: boolean | SedeCountOutputTypeCountPaymentPlansArgs
   }
 
   // Custom InputTypes
@@ -2606,6 +2707,13 @@ export namespace Prisma {
    */
   export type SedeCountOutputTypeCountAnnouncementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AnnouncementWhereInput
+  }
+
+  /**
+   * SedeCountOutputType without action
+   */
+  export type SedeCountOutputTypeCountPaymentPlansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PaymentPlanWhereInput
   }
 
 
@@ -3091,6 +3199,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type PaymentPlanCountOutputType
+   */
+
+  export type PaymentPlanCountOutputType = {
+    enrollments: number
+  }
+
+  export type PaymentPlanCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    enrollments?: boolean | PaymentPlanCountOutputTypeCountEnrollmentsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PaymentPlanCountOutputType without action
+   */
+  export type PaymentPlanCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentPlanCountOutputType
+     */
+    select?: PaymentPlanCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PaymentPlanCountOutputType without action
+   */
+  export type PaymentPlanCountOutputTypeCountEnrollmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EnrollmentWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -3277,6 +3416,7 @@ export namespace Prisma {
     classrooms?: boolean | Sede$classroomsArgs<ExtArgs>
     memberships?: boolean | Sede$membershipsArgs<ExtArgs>
     announcements?: boolean | Sede$announcementsArgs<ExtArgs>
+    paymentPlans?: boolean | Sede$paymentPlansArgs<ExtArgs>
     _count?: boolean | SedeCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["sede"]>
 
@@ -3297,6 +3437,7 @@ export namespace Prisma {
     classrooms?: boolean | Sede$classroomsArgs<ExtArgs>
     memberships?: boolean | Sede$membershipsArgs<ExtArgs>
     announcements?: boolean | Sede$announcementsArgs<ExtArgs>
+    paymentPlans?: boolean | Sede$paymentPlansArgs<ExtArgs>
     _count?: boolean | SedeCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -3306,6 +3447,7 @@ export namespace Prisma {
       classrooms: Prisma.$ClassroomPayload<ExtArgs>[]
       memberships: Prisma.$MembershipPayload<ExtArgs>[]
       announcements: Prisma.$AnnouncementPayload<ExtArgs>[]
+      paymentPlans: Prisma.$PaymentPlanPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3658,6 +3800,7 @@ export namespace Prisma {
     classrooms<T extends Sede$classroomsArgs<ExtArgs> = {}>(args?: Subset<T, Sede$classroomsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ClassroomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     memberships<T extends Sede$membershipsArgs<ExtArgs> = {}>(args?: Subset<T, Sede$membershipsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MembershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     announcements<T extends Sede$announcementsArgs<ExtArgs> = {}>(args?: Subset<T, Sede$announcementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AnnouncementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    paymentPlans<T extends Sede$paymentPlansArgs<ExtArgs> = {}>(args?: Subset<T, Sede$paymentPlansArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4106,6 +4249,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AnnouncementScalarFieldEnum | AnnouncementScalarFieldEnum[]
+  }
+
+  /**
+   * Sede.paymentPlans
+   */
+  export type Sede$paymentPlansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentPlan
+     */
+    select?: PaymentPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentPlan
+     */
+    omit?: PaymentPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentPlanInclude<ExtArgs> | null
+    where?: PaymentPlanWhereInput
+    orderBy?: PaymentPlanOrderByWithRelationInput | PaymentPlanOrderByWithRelationInput[]
+    cursor?: PaymentPlanWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PaymentPlanScalarFieldEnum | PaymentPlanScalarFieldEnum[]
   }
 
   /**
@@ -7121,16 +7288,19 @@ export namespace Prisma {
 
   export type SectionAvgAggregateOutputType = {
     capacity: number | null
+    priority: number | null
   }
 
   export type SectionSumAggregateOutputType = {
     capacity: number | null
+    priority: number | null
   }
 
   export type SectionMinAggregateOutputType = {
     id: string | null
     name: string | null
     capacity: number | null
+    priority: number | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -7143,6 +7313,7 @@ export namespace Prisma {
     id: string | null
     name: string | null
     capacity: number | null
+    priority: number | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -7155,6 +7326,7 @@ export namespace Prisma {
     id: number
     name: number
     capacity: number
+    priority: number
     isActive: number
     createdAt: number
     updatedAt: number
@@ -7167,16 +7339,19 @@ export namespace Prisma {
 
   export type SectionAvgAggregateInputType = {
     capacity?: true
+    priority?: true
   }
 
   export type SectionSumAggregateInputType = {
     capacity?: true
+    priority?: true
   }
 
   export type SectionMinAggregateInputType = {
     id?: true
     name?: true
     capacity?: true
+    priority?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -7189,6 +7364,7 @@ export namespace Prisma {
     id?: true
     name?: true
     capacity?: true
+    priority?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -7201,6 +7377,7 @@ export namespace Prisma {
     id?: true
     name?: true
     capacity?: true
+    priority?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -7300,6 +7477,7 @@ export namespace Prisma {
     id: string
     name: string
     capacity: number | null
+    priority: number
     isActive: boolean
     createdAt: Date
     updatedAt: Date
@@ -7331,6 +7509,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     capacity?: boolean
+    priority?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7352,6 +7531,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     capacity?: boolean
+    priority?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7360,7 +7540,7 @@ export namespace Prisma {
     periodId?: boolean
   }
 
-  export type SectionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "capacity" | "isActive" | "createdAt" | "updatedAt" | "classroomId" | "turnId" | "periodId", ExtArgs["result"]["section"]>
+  export type SectionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "capacity" | "priority" | "isActive" | "createdAt" | "updatedAt" | "classroomId" | "turnId" | "periodId", ExtArgs["result"]["section"]>
   export type SectionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     classroom?: boolean | ClassroomDefaultArgs<ExtArgs>
     turn?: boolean | TurnDefaultArgs<ExtArgs>
@@ -7385,6 +7565,7 @@ export namespace Prisma {
       id: string
       name: string
       capacity: number | null
+      priority: number
       isActive: boolean
       createdAt: Date
       updatedAt: Date
@@ -7769,6 +7950,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Section", 'String'>
     readonly name: FieldRef<"Section", 'String'>
     readonly capacity: FieldRef<"Section", 'Int'>
+    readonly priority: FieldRef<"Section", 'Int'>
     readonly isActive: FieldRef<"Section", 'Boolean'>
     readonly createdAt: FieldRef<"Section", 'DateTime'>
     readonly updatedAt: FieldRef<"Section", 'DateTime'>
@@ -9228,6 +9410,8 @@ export namespace Prisma {
     email: string | null
     passwordHash: string | null
     isActive: boolean | null
+    mustChangePassword: boolean | null
+    passwordChangedAt: Date | null
     lastLoginAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -9238,6 +9422,8 @@ export namespace Prisma {
     email: string | null
     passwordHash: string | null
     isActive: boolean | null
+    mustChangePassword: boolean | null
+    passwordChangedAt: Date | null
     lastLoginAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -9248,6 +9434,8 @@ export namespace Prisma {
     email: number
     passwordHash: number
     isActive: number
+    mustChangePassword: number
+    passwordChangedAt: number
     lastLoginAt: number
     createdAt: number
     updatedAt: number
@@ -9260,6 +9448,8 @@ export namespace Prisma {
     email?: true
     passwordHash?: true
     isActive?: true
+    mustChangePassword?: true
+    passwordChangedAt?: true
     lastLoginAt?: true
     createdAt?: true
     updatedAt?: true
@@ -9270,6 +9460,8 @@ export namespace Prisma {
     email?: true
     passwordHash?: true
     isActive?: true
+    mustChangePassword?: true
+    passwordChangedAt?: true
     lastLoginAt?: true
     createdAt?: true
     updatedAt?: true
@@ -9280,6 +9472,8 @@ export namespace Prisma {
     email?: true
     passwordHash?: true
     isActive?: true
+    mustChangePassword?: true
+    passwordChangedAt?: true
     lastLoginAt?: true
     createdAt?: true
     updatedAt?: true
@@ -9363,6 +9557,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive: boolean
+    mustChangePassword: boolean
+    passwordChangedAt: Date | null
     lastLoginAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -9390,6 +9586,8 @@ export namespace Prisma {
     email?: boolean
     passwordHash?: boolean
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: boolean
     lastLoginAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -9419,12 +9617,14 @@ export namespace Prisma {
     email?: boolean
     passwordHash?: boolean
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: boolean
     lastLoginAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "passwordHash" | "isActive" | "lastLoginAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "passwordHash" | "isActive" | "mustChangePassword" | "passwordChangedAt" | "lastLoginAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     profile?: boolean | User$profileArgs<ExtArgs>
     memberships?: boolean | User$membershipsArgs<ExtArgs>
@@ -9470,6 +9670,8 @@ export namespace Prisma {
       email: string
       passwordHash: string
       isActive: boolean
+      mustChangePassword: boolean
+      passwordChangedAt: Date | null
       lastLoginAt: Date | null
       createdAt: Date
       updatedAt: Date
@@ -9862,6 +10064,8 @@ export namespace Prisma {
     readonly email: FieldRef<"User", 'String'>
     readonly passwordHash: FieldRef<"User", 'String'>
     readonly isActive: FieldRef<"User", 'Boolean'>
+    readonly mustChangePassword: FieldRef<"User", 'Boolean'>
+    readonly passwordChangedAt: FieldRef<"User", 'DateTime'>
     readonly lastLoginAt: FieldRef<"User", 'DateTime'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
@@ -10624,7 +10828,10 @@ export namespace Prisma {
     documentNumber: string | null
     phone: string | null
     birthDate: Date | null
+    gender: string | null
+    address: string | null
     avatarUrl: string | null
+    avatarPublicId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10638,7 +10845,10 @@ export namespace Prisma {
     documentNumber: string | null
     phone: string | null
     birthDate: Date | null
+    gender: string | null
+    address: string | null
     avatarUrl: string | null
+    avatarPublicId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10652,7 +10862,10 @@ export namespace Prisma {
     documentNumber: number
     phone: number
     birthDate: number
+    gender: number
+    address: number
     avatarUrl: number
+    avatarPublicId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -10668,7 +10881,10 @@ export namespace Prisma {
     documentNumber?: true
     phone?: true
     birthDate?: true
+    gender?: true
+    address?: true
     avatarUrl?: true
+    avatarPublicId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -10682,7 +10898,10 @@ export namespace Prisma {
     documentNumber?: true
     phone?: true
     birthDate?: true
+    gender?: true
+    address?: true
     avatarUrl?: true
+    avatarPublicId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -10696,7 +10915,10 @@ export namespace Prisma {
     documentNumber?: true
     phone?: true
     birthDate?: true
+    gender?: true
+    address?: true
     avatarUrl?: true
+    avatarPublicId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -10783,7 +11005,10 @@ export namespace Prisma {
     documentNumber: string | null
     phone: string | null
     birthDate: Date | null
+    gender: string | null
+    address: string | null
     avatarUrl: string | null
+    avatarPublicId: string | null
     createdAt: Date
     updatedAt: Date
     _count: ProfileCountAggregateOutputType | null
@@ -10814,7 +11039,10 @@ export namespace Prisma {
     documentNumber?: boolean
     phone?: boolean
     birthDate?: boolean
+    gender?: boolean
+    address?: boolean
     avatarUrl?: boolean
+    avatarPublicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -10831,12 +11059,15 @@ export namespace Prisma {
     documentNumber?: boolean
     phone?: boolean
     birthDate?: boolean
+    gender?: boolean
+    address?: boolean
     avatarUrl?: boolean
+    avatarPublicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "firstName" | "lastName" | "documentType" | "documentNumber" | "phone" | "birthDate" | "avatarUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
+  export type ProfileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "firstName" | "lastName" | "documentType" | "documentNumber" | "phone" | "birthDate" | "gender" | "address" | "avatarUrl" | "avatarPublicId" | "createdAt" | "updatedAt", ExtArgs["result"]["profile"]>
   export type ProfileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -10855,7 +11086,10 @@ export namespace Prisma {
       documentNumber: string | null
       phone: string | null
       birthDate: Date | null
+      gender: string | null
+      address: string | null
       avatarUrl: string | null
+      avatarPublicId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["profile"]>
@@ -11236,7 +11470,10 @@ export namespace Prisma {
     readonly documentNumber: FieldRef<"Profile", 'String'>
     readonly phone: FieldRef<"Profile", 'String'>
     readonly birthDate: FieldRef<"Profile", 'DateTime'>
+    readonly gender: FieldRef<"Profile", 'String'>
+    readonly address: FieldRef<"Profile", 'String'>
     readonly avatarUrl: FieldRef<"Profile", 'String'>
+    readonly avatarPublicId: FieldRef<"Profile", 'String'>
     readonly createdAt: FieldRef<"Profile", 'DateTime'>
     readonly updatedAt: FieldRef<"Profile", 'DateTime'>
   }
@@ -14581,6 +14818,7 @@ export namespace Prisma {
     enrolledAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    paymentPlanId: string | null
   }
 
   export type EnrollmentMaxAggregateOutputType = {
@@ -14591,6 +14829,7 @@ export namespace Prisma {
     enrolledAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    paymentPlanId: string | null
   }
 
   export type EnrollmentCountAggregateOutputType = {
@@ -14601,6 +14840,7 @@ export namespace Prisma {
     enrolledAt: number
     createdAt: number
     updatedAt: number
+    paymentPlanId: number
     _all: number
   }
 
@@ -14613,6 +14853,7 @@ export namespace Prisma {
     enrolledAt?: true
     createdAt?: true
     updatedAt?: true
+    paymentPlanId?: true
   }
 
   export type EnrollmentMaxAggregateInputType = {
@@ -14623,6 +14864,7 @@ export namespace Prisma {
     enrolledAt?: true
     createdAt?: true
     updatedAt?: true
+    paymentPlanId?: true
   }
 
   export type EnrollmentCountAggregateInputType = {
@@ -14633,6 +14875,7 @@ export namespace Prisma {
     enrolledAt?: true
     createdAt?: true
     updatedAt?: true
+    paymentPlanId?: true
     _all?: true
   }
 
@@ -14716,6 +14959,7 @@ export namespace Prisma {
     enrolledAt: Date
     createdAt: Date
     updatedAt: Date
+    paymentPlanId: string | null
     _count: EnrollmentCountAggregateOutputType | null
     _min: EnrollmentMinAggregateOutputType | null
     _max: EnrollmentMaxAggregateOutputType | null
@@ -14743,8 +14987,10 @@ export namespace Prisma {
     enrolledAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    paymentPlanId?: boolean
     student?: boolean | UserDefaultArgs<ExtArgs>
     section?: boolean | SectionDefaultArgs<ExtArgs>
+    paymentPlan?: boolean | Enrollment$paymentPlanArgs<ExtArgs>
   }, ExtArgs["result"]["enrollment"]>
 
 
@@ -14757,12 +15003,14 @@ export namespace Prisma {
     enrolledAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    paymentPlanId?: boolean
   }
 
-  export type EnrollmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "sectionId" | "status" | "enrolledAt" | "createdAt" | "updatedAt", ExtArgs["result"]["enrollment"]>
+  export type EnrollmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "sectionId" | "status" | "enrolledAt" | "createdAt" | "updatedAt" | "paymentPlanId", ExtArgs["result"]["enrollment"]>
   export type EnrollmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     student?: boolean | UserDefaultArgs<ExtArgs>
     section?: boolean | SectionDefaultArgs<ExtArgs>
+    paymentPlan?: boolean | Enrollment$paymentPlanArgs<ExtArgs>
   }
 
   export type $EnrollmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -14770,6 +15018,7 @@ export namespace Prisma {
     objects: {
       student: Prisma.$UserPayload<ExtArgs>
       section: Prisma.$SectionPayload<ExtArgs>
+      paymentPlan: Prisma.$PaymentPlanPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -14779,6 +15028,7 @@ export namespace Prisma {
       enrolledAt: Date
       createdAt: Date
       updatedAt: Date
+      paymentPlanId: string | null
     }, ExtArgs["result"]["enrollment"]>
     composites: {}
   }
@@ -15121,6 +15371,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     student<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     section<T extends SectionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SectionDefaultArgs<ExtArgs>>): Prisma__SectionClient<$Result.GetResult<Prisma.$SectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    paymentPlan<T extends Enrollment$paymentPlanArgs<ExtArgs> = {}>(args?: Subset<T, Enrollment$paymentPlanArgs<ExtArgs>>): Prisma__PaymentPlanClient<$Result.GetResult<Prisma.$PaymentPlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -15157,6 +15408,7 @@ export namespace Prisma {
     readonly enrolledAt: FieldRef<"Enrollment", 'DateTime'>
     readonly createdAt: FieldRef<"Enrollment", 'DateTime'>
     readonly updatedAt: FieldRef<"Enrollment", 'DateTime'>
+    readonly paymentPlanId: FieldRef<"Enrollment", 'String'>
   }
     
 
@@ -15497,6 +15749,25 @@ export namespace Prisma {
      * Limit how many Enrollments to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Enrollment.paymentPlan
+   */
+  export type Enrollment$paymentPlanArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentPlan
+     */
+    select?: PaymentPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentPlan
+     */
+    omit?: PaymentPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentPlanInclude<ExtArgs> | null
+    where?: PaymentPlanWhereInput
   }
 
   /**
@@ -23683,6 +23954,1107 @@ export namespace Prisma {
 
 
   /**
+   * Model PaymentPlan
+   */
+
+  export type AggregatePaymentPlan = {
+    _count: PaymentPlanCountAggregateOutputType | null
+    _avg: PaymentPlanAvgAggregateOutputType | null
+    _sum: PaymentPlanSumAggregateOutputType | null
+    _min: PaymentPlanMinAggregateOutputType | null
+    _max: PaymentPlanMaxAggregateOutputType | null
+  }
+
+  export type PaymentPlanAvgAggregateOutputType = {
+    baseAmount: number | null
+    discount: number | null
+    finalAmount: number | null
+    installments: number | null
+  }
+
+  export type PaymentPlanSumAggregateOutputType = {
+    baseAmount: number | null
+    discount: number | null
+    finalAmount: number | null
+    installments: number | null
+  }
+
+  export type PaymentPlanMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    type: $Enums.PaymentPlanType | null
+    description: string | null
+    baseAmount: number | null
+    discount: number | null
+    finalAmount: number | null
+    installments: number | null
+    isActive: boolean | null
+    sedeId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PaymentPlanMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    type: $Enums.PaymentPlanType | null
+    description: string | null
+    baseAmount: number | null
+    discount: number | null
+    finalAmount: number | null
+    installments: number | null
+    isActive: boolean | null
+    sedeId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PaymentPlanCountAggregateOutputType = {
+    id: number
+    name: number
+    type: number
+    description: number
+    baseAmount: number
+    discount: number
+    finalAmount: number
+    installments: number
+    isActive: number
+    sedeId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PaymentPlanAvgAggregateInputType = {
+    baseAmount?: true
+    discount?: true
+    finalAmount?: true
+    installments?: true
+  }
+
+  export type PaymentPlanSumAggregateInputType = {
+    baseAmount?: true
+    discount?: true
+    finalAmount?: true
+    installments?: true
+  }
+
+  export type PaymentPlanMinAggregateInputType = {
+    id?: true
+    name?: true
+    type?: true
+    description?: true
+    baseAmount?: true
+    discount?: true
+    finalAmount?: true
+    installments?: true
+    isActive?: true
+    sedeId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PaymentPlanMaxAggregateInputType = {
+    id?: true
+    name?: true
+    type?: true
+    description?: true
+    baseAmount?: true
+    discount?: true
+    finalAmount?: true
+    installments?: true
+    isActive?: true
+    sedeId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PaymentPlanCountAggregateInputType = {
+    id?: true
+    name?: true
+    type?: true
+    description?: true
+    baseAmount?: true
+    discount?: true
+    finalAmount?: true
+    installments?: true
+    isActive?: true
+    sedeId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PaymentPlanAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PaymentPlan to aggregate.
+     */
+    where?: PaymentPlanWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PaymentPlans to fetch.
+     */
+    orderBy?: PaymentPlanOrderByWithRelationInput | PaymentPlanOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PaymentPlanWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PaymentPlans from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PaymentPlans.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PaymentPlans
+    **/
+    _count?: true | PaymentPlanCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PaymentPlanAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PaymentPlanSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PaymentPlanMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PaymentPlanMaxAggregateInputType
+  }
+
+  export type GetPaymentPlanAggregateType<T extends PaymentPlanAggregateArgs> = {
+        [P in keyof T & keyof AggregatePaymentPlan]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePaymentPlan[P]>
+      : GetScalarType<T[P], AggregatePaymentPlan[P]>
+  }
+
+
+
+
+  export type PaymentPlanGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PaymentPlanWhereInput
+    orderBy?: PaymentPlanOrderByWithAggregationInput | PaymentPlanOrderByWithAggregationInput[]
+    by: PaymentPlanScalarFieldEnum[] | PaymentPlanScalarFieldEnum
+    having?: PaymentPlanScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PaymentPlanCountAggregateInputType | true
+    _avg?: PaymentPlanAvgAggregateInputType
+    _sum?: PaymentPlanSumAggregateInputType
+    _min?: PaymentPlanMinAggregateInputType
+    _max?: PaymentPlanMaxAggregateInputType
+  }
+
+  export type PaymentPlanGroupByOutputType = {
+    id: string
+    name: string
+    type: $Enums.PaymentPlanType
+    description: string | null
+    baseAmount: number
+    discount: number
+    finalAmount: number
+    installments: number | null
+    isActive: boolean
+    sedeId: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: PaymentPlanCountAggregateOutputType | null
+    _avg: PaymentPlanAvgAggregateOutputType | null
+    _sum: PaymentPlanSumAggregateOutputType | null
+    _min: PaymentPlanMinAggregateOutputType | null
+    _max: PaymentPlanMaxAggregateOutputType | null
+  }
+
+  type GetPaymentPlanGroupByPayload<T extends PaymentPlanGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PaymentPlanGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PaymentPlanGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PaymentPlanGroupByOutputType[P]>
+            : GetScalarType<T[P], PaymentPlanGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PaymentPlanSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    type?: boolean
+    description?: boolean
+    baseAmount?: boolean
+    discount?: boolean
+    finalAmount?: boolean
+    installments?: boolean
+    isActive?: boolean
+    sedeId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    sede?: boolean | PaymentPlan$sedeArgs<ExtArgs>
+    enrollments?: boolean | PaymentPlan$enrollmentsArgs<ExtArgs>
+    _count?: boolean | PaymentPlanCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["paymentPlan"]>
+
+
+
+  export type PaymentPlanSelectScalar = {
+    id?: boolean
+    name?: boolean
+    type?: boolean
+    description?: boolean
+    baseAmount?: boolean
+    discount?: boolean
+    finalAmount?: boolean
+    installments?: boolean
+    isActive?: boolean
+    sedeId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PaymentPlanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "type" | "description" | "baseAmount" | "discount" | "finalAmount" | "installments" | "isActive" | "sedeId" | "createdAt" | "updatedAt", ExtArgs["result"]["paymentPlan"]>
+  export type PaymentPlanInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    sede?: boolean | PaymentPlan$sedeArgs<ExtArgs>
+    enrollments?: boolean | PaymentPlan$enrollmentsArgs<ExtArgs>
+    _count?: boolean | PaymentPlanCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $PaymentPlanPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PaymentPlan"
+    objects: {
+      sede: Prisma.$SedePayload<ExtArgs> | null
+      enrollments: Prisma.$EnrollmentPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      type: $Enums.PaymentPlanType
+      description: string | null
+      baseAmount: number
+      discount: number
+      finalAmount: number
+      installments: number | null
+      isActive: boolean
+      sedeId: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["paymentPlan"]>
+    composites: {}
+  }
+
+  type PaymentPlanGetPayload<S extends boolean | null | undefined | PaymentPlanDefaultArgs> = $Result.GetResult<Prisma.$PaymentPlanPayload, S>
+
+  type PaymentPlanCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PaymentPlanFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PaymentPlanCountAggregateInputType | true
+    }
+
+  export interface PaymentPlanDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PaymentPlan'], meta: { name: 'PaymentPlan' } }
+    /**
+     * Find zero or one PaymentPlan that matches the filter.
+     * @param {PaymentPlanFindUniqueArgs} args - Arguments to find a PaymentPlan
+     * @example
+     * // Get one PaymentPlan
+     * const paymentPlan = await prisma.paymentPlan.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PaymentPlanFindUniqueArgs>(args: SelectSubset<T, PaymentPlanFindUniqueArgs<ExtArgs>>): Prisma__PaymentPlanClient<$Result.GetResult<Prisma.$PaymentPlanPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PaymentPlan that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PaymentPlanFindUniqueOrThrowArgs} args - Arguments to find a PaymentPlan
+     * @example
+     * // Get one PaymentPlan
+     * const paymentPlan = await prisma.paymentPlan.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PaymentPlanFindUniqueOrThrowArgs>(args: SelectSubset<T, PaymentPlanFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PaymentPlanClient<$Result.GetResult<Prisma.$PaymentPlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PaymentPlan that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentPlanFindFirstArgs} args - Arguments to find a PaymentPlan
+     * @example
+     * // Get one PaymentPlan
+     * const paymentPlan = await prisma.paymentPlan.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PaymentPlanFindFirstArgs>(args?: SelectSubset<T, PaymentPlanFindFirstArgs<ExtArgs>>): Prisma__PaymentPlanClient<$Result.GetResult<Prisma.$PaymentPlanPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PaymentPlan that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentPlanFindFirstOrThrowArgs} args - Arguments to find a PaymentPlan
+     * @example
+     * // Get one PaymentPlan
+     * const paymentPlan = await prisma.paymentPlan.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PaymentPlanFindFirstOrThrowArgs>(args?: SelectSubset<T, PaymentPlanFindFirstOrThrowArgs<ExtArgs>>): Prisma__PaymentPlanClient<$Result.GetResult<Prisma.$PaymentPlanPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PaymentPlans that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentPlanFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PaymentPlans
+     * const paymentPlans = await prisma.paymentPlan.findMany()
+     * 
+     * // Get first 10 PaymentPlans
+     * const paymentPlans = await prisma.paymentPlan.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const paymentPlanWithIdOnly = await prisma.paymentPlan.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PaymentPlanFindManyArgs>(args?: SelectSubset<T, PaymentPlanFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PaymentPlan.
+     * @param {PaymentPlanCreateArgs} args - Arguments to create a PaymentPlan.
+     * @example
+     * // Create one PaymentPlan
+     * const PaymentPlan = await prisma.paymentPlan.create({
+     *   data: {
+     *     // ... data to create a PaymentPlan
+     *   }
+     * })
+     * 
+     */
+    create<T extends PaymentPlanCreateArgs>(args: SelectSubset<T, PaymentPlanCreateArgs<ExtArgs>>): Prisma__PaymentPlanClient<$Result.GetResult<Prisma.$PaymentPlanPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PaymentPlans.
+     * @param {PaymentPlanCreateManyArgs} args - Arguments to create many PaymentPlans.
+     * @example
+     * // Create many PaymentPlans
+     * const paymentPlan = await prisma.paymentPlan.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PaymentPlanCreateManyArgs>(args?: SelectSubset<T, PaymentPlanCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a PaymentPlan.
+     * @param {PaymentPlanDeleteArgs} args - Arguments to delete one PaymentPlan.
+     * @example
+     * // Delete one PaymentPlan
+     * const PaymentPlan = await prisma.paymentPlan.delete({
+     *   where: {
+     *     // ... filter to delete one PaymentPlan
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PaymentPlanDeleteArgs>(args: SelectSubset<T, PaymentPlanDeleteArgs<ExtArgs>>): Prisma__PaymentPlanClient<$Result.GetResult<Prisma.$PaymentPlanPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PaymentPlan.
+     * @param {PaymentPlanUpdateArgs} args - Arguments to update one PaymentPlan.
+     * @example
+     * // Update one PaymentPlan
+     * const paymentPlan = await prisma.paymentPlan.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PaymentPlanUpdateArgs>(args: SelectSubset<T, PaymentPlanUpdateArgs<ExtArgs>>): Prisma__PaymentPlanClient<$Result.GetResult<Prisma.$PaymentPlanPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PaymentPlans.
+     * @param {PaymentPlanDeleteManyArgs} args - Arguments to filter PaymentPlans to delete.
+     * @example
+     * // Delete a few PaymentPlans
+     * const { count } = await prisma.paymentPlan.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PaymentPlanDeleteManyArgs>(args?: SelectSubset<T, PaymentPlanDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PaymentPlans.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentPlanUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PaymentPlans
+     * const paymentPlan = await prisma.paymentPlan.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PaymentPlanUpdateManyArgs>(args: SelectSubset<T, PaymentPlanUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PaymentPlan.
+     * @param {PaymentPlanUpsertArgs} args - Arguments to update or create a PaymentPlan.
+     * @example
+     * // Update or create a PaymentPlan
+     * const paymentPlan = await prisma.paymentPlan.upsert({
+     *   create: {
+     *     // ... data to create a PaymentPlan
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PaymentPlan we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PaymentPlanUpsertArgs>(args: SelectSubset<T, PaymentPlanUpsertArgs<ExtArgs>>): Prisma__PaymentPlanClient<$Result.GetResult<Prisma.$PaymentPlanPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PaymentPlans.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentPlanCountArgs} args - Arguments to filter PaymentPlans to count.
+     * @example
+     * // Count the number of PaymentPlans
+     * const count = await prisma.paymentPlan.count({
+     *   where: {
+     *     // ... the filter for the PaymentPlans we want to count
+     *   }
+     * })
+    **/
+    count<T extends PaymentPlanCountArgs>(
+      args?: Subset<T, PaymentPlanCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PaymentPlanCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PaymentPlan.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentPlanAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PaymentPlanAggregateArgs>(args: Subset<T, PaymentPlanAggregateArgs>): Prisma.PrismaPromise<GetPaymentPlanAggregateType<T>>
+
+    /**
+     * Group by PaymentPlan.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentPlanGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PaymentPlanGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PaymentPlanGroupByArgs['orderBy'] }
+        : { orderBy?: PaymentPlanGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PaymentPlanGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPaymentPlanGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PaymentPlan model
+   */
+  readonly fields: PaymentPlanFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PaymentPlan.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PaymentPlanClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    sede<T extends PaymentPlan$sedeArgs<ExtArgs> = {}>(args?: Subset<T, PaymentPlan$sedeArgs<ExtArgs>>): Prisma__SedeClient<$Result.GetResult<Prisma.$SedePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    enrollments<T extends PaymentPlan$enrollmentsArgs<ExtArgs> = {}>(args?: Subset<T, PaymentPlan$enrollmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EnrollmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PaymentPlan model
+   */
+  interface PaymentPlanFieldRefs {
+    readonly id: FieldRef<"PaymentPlan", 'String'>
+    readonly name: FieldRef<"PaymentPlan", 'String'>
+    readonly type: FieldRef<"PaymentPlan", 'PaymentPlanType'>
+    readonly description: FieldRef<"PaymentPlan", 'String'>
+    readonly baseAmount: FieldRef<"PaymentPlan", 'Float'>
+    readonly discount: FieldRef<"PaymentPlan", 'Float'>
+    readonly finalAmount: FieldRef<"PaymentPlan", 'Float'>
+    readonly installments: FieldRef<"PaymentPlan", 'Int'>
+    readonly isActive: FieldRef<"PaymentPlan", 'Boolean'>
+    readonly sedeId: FieldRef<"PaymentPlan", 'String'>
+    readonly createdAt: FieldRef<"PaymentPlan", 'DateTime'>
+    readonly updatedAt: FieldRef<"PaymentPlan", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PaymentPlan findUnique
+   */
+  export type PaymentPlanFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentPlan
+     */
+    select?: PaymentPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentPlan
+     */
+    omit?: PaymentPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentPlanInclude<ExtArgs> | null
+    /**
+     * Filter, which PaymentPlan to fetch.
+     */
+    where: PaymentPlanWhereUniqueInput
+  }
+
+  /**
+   * PaymentPlan findUniqueOrThrow
+   */
+  export type PaymentPlanFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentPlan
+     */
+    select?: PaymentPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentPlan
+     */
+    omit?: PaymentPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentPlanInclude<ExtArgs> | null
+    /**
+     * Filter, which PaymentPlan to fetch.
+     */
+    where: PaymentPlanWhereUniqueInput
+  }
+
+  /**
+   * PaymentPlan findFirst
+   */
+  export type PaymentPlanFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentPlan
+     */
+    select?: PaymentPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentPlan
+     */
+    omit?: PaymentPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentPlanInclude<ExtArgs> | null
+    /**
+     * Filter, which PaymentPlan to fetch.
+     */
+    where?: PaymentPlanWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PaymentPlans to fetch.
+     */
+    orderBy?: PaymentPlanOrderByWithRelationInput | PaymentPlanOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PaymentPlans.
+     */
+    cursor?: PaymentPlanWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PaymentPlans from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PaymentPlans.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PaymentPlans.
+     */
+    distinct?: PaymentPlanScalarFieldEnum | PaymentPlanScalarFieldEnum[]
+  }
+
+  /**
+   * PaymentPlan findFirstOrThrow
+   */
+  export type PaymentPlanFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentPlan
+     */
+    select?: PaymentPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentPlan
+     */
+    omit?: PaymentPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentPlanInclude<ExtArgs> | null
+    /**
+     * Filter, which PaymentPlan to fetch.
+     */
+    where?: PaymentPlanWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PaymentPlans to fetch.
+     */
+    orderBy?: PaymentPlanOrderByWithRelationInput | PaymentPlanOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PaymentPlans.
+     */
+    cursor?: PaymentPlanWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PaymentPlans from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PaymentPlans.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PaymentPlans.
+     */
+    distinct?: PaymentPlanScalarFieldEnum | PaymentPlanScalarFieldEnum[]
+  }
+
+  /**
+   * PaymentPlan findMany
+   */
+  export type PaymentPlanFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentPlan
+     */
+    select?: PaymentPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentPlan
+     */
+    omit?: PaymentPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentPlanInclude<ExtArgs> | null
+    /**
+     * Filter, which PaymentPlans to fetch.
+     */
+    where?: PaymentPlanWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PaymentPlans to fetch.
+     */
+    orderBy?: PaymentPlanOrderByWithRelationInput | PaymentPlanOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PaymentPlans.
+     */
+    cursor?: PaymentPlanWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PaymentPlans from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PaymentPlans.
+     */
+    skip?: number
+    distinct?: PaymentPlanScalarFieldEnum | PaymentPlanScalarFieldEnum[]
+  }
+
+  /**
+   * PaymentPlan create
+   */
+  export type PaymentPlanCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentPlan
+     */
+    select?: PaymentPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentPlan
+     */
+    omit?: PaymentPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentPlanInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PaymentPlan.
+     */
+    data: XOR<PaymentPlanCreateInput, PaymentPlanUncheckedCreateInput>
+  }
+
+  /**
+   * PaymentPlan createMany
+   */
+  export type PaymentPlanCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PaymentPlans.
+     */
+    data: PaymentPlanCreateManyInput | PaymentPlanCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PaymentPlan update
+   */
+  export type PaymentPlanUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentPlan
+     */
+    select?: PaymentPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentPlan
+     */
+    omit?: PaymentPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentPlanInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PaymentPlan.
+     */
+    data: XOR<PaymentPlanUpdateInput, PaymentPlanUncheckedUpdateInput>
+    /**
+     * Choose, which PaymentPlan to update.
+     */
+    where: PaymentPlanWhereUniqueInput
+  }
+
+  /**
+   * PaymentPlan updateMany
+   */
+  export type PaymentPlanUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PaymentPlans.
+     */
+    data: XOR<PaymentPlanUpdateManyMutationInput, PaymentPlanUncheckedUpdateManyInput>
+    /**
+     * Filter which PaymentPlans to update
+     */
+    where?: PaymentPlanWhereInput
+    /**
+     * Limit how many PaymentPlans to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PaymentPlan upsert
+   */
+  export type PaymentPlanUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentPlan
+     */
+    select?: PaymentPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentPlan
+     */
+    omit?: PaymentPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentPlanInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PaymentPlan to update in case it exists.
+     */
+    where: PaymentPlanWhereUniqueInput
+    /**
+     * In case the PaymentPlan found by the `where` argument doesn't exist, create a new PaymentPlan with this data.
+     */
+    create: XOR<PaymentPlanCreateInput, PaymentPlanUncheckedCreateInput>
+    /**
+     * In case the PaymentPlan was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PaymentPlanUpdateInput, PaymentPlanUncheckedUpdateInput>
+  }
+
+  /**
+   * PaymentPlan delete
+   */
+  export type PaymentPlanDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentPlan
+     */
+    select?: PaymentPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentPlan
+     */
+    omit?: PaymentPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentPlanInclude<ExtArgs> | null
+    /**
+     * Filter which PaymentPlan to delete.
+     */
+    where: PaymentPlanWhereUniqueInput
+  }
+
+  /**
+   * PaymentPlan deleteMany
+   */
+  export type PaymentPlanDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PaymentPlans to delete
+     */
+    where?: PaymentPlanWhereInput
+    /**
+     * Limit how many PaymentPlans to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PaymentPlan.sede
+   */
+  export type PaymentPlan$sedeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sede
+     */
+    select?: SedeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sede
+     */
+    omit?: SedeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SedeInclude<ExtArgs> | null
+    where?: SedeWhereInput
+  }
+
+  /**
+   * PaymentPlan.enrollments
+   */
+  export type PaymentPlan$enrollmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Enrollment
+     */
+    select?: EnrollmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Enrollment
+     */
+    omit?: EnrollmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EnrollmentInclude<ExtArgs> | null
+    where?: EnrollmentWhereInput
+    orderBy?: EnrollmentOrderByWithRelationInput | EnrollmentOrderByWithRelationInput[]
+    cursor?: EnrollmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: EnrollmentScalarFieldEnum | EnrollmentScalarFieldEnum[]
+  }
+
+  /**
+   * PaymentPlan without action
+   */
+  export type PaymentPlanDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentPlan
+     */
+    select?: PaymentPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentPlan
+     */
+    omit?: PaymentPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentPlanInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -23753,6 +25125,7 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     capacity: 'capacity',
+    priority: 'priority',
     isActive: 'isActive',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -23782,6 +25155,8 @@ export namespace Prisma {
     email: 'email',
     passwordHash: 'passwordHash',
     isActive: 'isActive',
+    mustChangePassword: 'mustChangePassword',
+    passwordChangedAt: 'passwordChangedAt',
     lastLoginAt: 'lastLoginAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -23799,7 +25174,10 @@ export namespace Prisma {
     documentNumber: 'documentNumber',
     phone: 'phone',
     birthDate: 'birthDate',
+    gender: 'gender',
+    address: 'address',
     avatarUrl: 'avatarUrl',
+    avatarPublicId: 'avatarPublicId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -23852,7 +25230,8 @@ export namespace Prisma {
     status: 'status',
     enrolledAt: 'enrolledAt',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    paymentPlanId: 'paymentPlanId'
   };
 
   export type EnrollmentScalarFieldEnum = (typeof EnrollmentScalarFieldEnum)[keyof typeof EnrollmentScalarFieldEnum]
@@ -23979,6 +25358,24 @@ export namespace Prisma {
   export type AnnouncementViewScalarFieldEnum = (typeof AnnouncementViewScalarFieldEnum)[keyof typeof AnnouncementViewScalarFieldEnum]
 
 
+  export const PaymentPlanScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    type: 'type',
+    description: 'description',
+    baseAmount: 'baseAmount',
+    discount: 'discount',
+    finalAmount: 'finalAmount',
+    installments: 'installments',
+    isActive: 'isActive',
+    sedeId: 'sedeId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PaymentPlanScalarFieldEnum = (typeof PaymentPlanScalarFieldEnum)[keyof typeof PaymentPlanScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -24071,7 +25468,10 @@ export namespace Prisma {
     documentType: 'documentType',
     documentNumber: 'documentNumber',
     phone: 'phone',
-    avatarUrl: 'avatarUrl'
+    gender: 'gender',
+    address: 'address',
+    avatarUrl: 'avatarUrl',
+    avatarPublicId: 'avatarPublicId'
   };
 
   export type ProfileOrderByRelevanceFieldEnum = (typeof ProfileOrderByRelevanceFieldEnum)[keyof typeof ProfileOrderByRelevanceFieldEnum]
@@ -24108,7 +25508,8 @@ export namespace Prisma {
   export const EnrollmentOrderByRelevanceFieldEnum: {
     id: 'id',
     studentId: 'studentId',
-    sectionId: 'sectionId'
+    sectionId: 'sectionId',
+    paymentPlanId: 'paymentPlanId'
   };
 
   export type EnrollmentOrderByRelevanceFieldEnum = (typeof EnrollmentOrderByRelevanceFieldEnum)[keyof typeof EnrollmentOrderByRelevanceFieldEnum]
@@ -24198,6 +25599,16 @@ export namespace Prisma {
   };
 
   export type AnnouncementViewOrderByRelevanceFieldEnum = (typeof AnnouncementViewOrderByRelevanceFieldEnum)[keyof typeof AnnouncementViewOrderByRelevanceFieldEnum]
+
+
+  export const PaymentPlanOrderByRelevanceFieldEnum: {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    sedeId: 'sedeId'
+  };
+
+  export type PaymentPlanOrderByRelevanceFieldEnum = (typeof PaymentPlanOrderByRelevanceFieldEnum)[keyof typeof PaymentPlanOrderByRelevanceFieldEnum]
 
 
   /**
@@ -24301,6 +25712,13 @@ export namespace Prisma {
    */
   export type EnumAnnouncementPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AnnouncementPriority'>
     
+
+
+  /**
+   * Reference to a field of type 'PaymentPlanType'
+   */
+  export type EnumPaymentPlanTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentPlanType'>
+    
   /**
    * Deep Input Types
    */
@@ -24320,6 +25738,7 @@ export namespace Prisma {
     classrooms?: ClassroomListRelationFilter
     memberships?: MembershipListRelationFilter
     announcements?: AnnouncementListRelationFilter
+    paymentPlans?: PaymentPlanListRelationFilter
   }
 
   export type SedeOrderByWithRelationInput = {
@@ -24333,6 +25752,7 @@ export namespace Prisma {
     classrooms?: ClassroomOrderByRelationAggregateInput
     memberships?: MembershipOrderByRelationAggregateInput
     announcements?: AnnouncementOrderByRelationAggregateInput
+    paymentPlans?: PaymentPlanOrderByRelationAggregateInput
     _relevance?: SedeOrderByRelevanceInput
   }
 
@@ -24350,6 +25770,7 @@ export namespace Prisma {
     classrooms?: ClassroomListRelationFilter
     memberships?: MembershipListRelationFilter
     announcements?: AnnouncementListRelationFilter
+    paymentPlans?: PaymentPlanListRelationFilter
   }, "id">
 
   export type SedeOrderByWithAggregationInput = {
@@ -24593,6 +26014,7 @@ export namespace Prisma {
     id?: StringFilter<"Section"> | string
     name?: StringFilter<"Section"> | string
     capacity?: IntNullableFilter<"Section"> | number | null
+    priority?: IntFilter<"Section"> | number
     isActive?: BoolFilter<"Section"> | boolean
     createdAt?: DateTimeFilter<"Section"> | Date | string
     updatedAt?: DateTimeFilter<"Section"> | Date | string
@@ -24611,6 +26033,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     capacity?: SortOrderInput | SortOrder
+    priority?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -24634,6 +26057,7 @@ export namespace Prisma {
     NOT?: SectionWhereInput | SectionWhereInput[]
     name?: StringFilter<"Section"> | string
     capacity?: IntNullableFilter<"Section"> | number | null
+    priority?: IntFilter<"Section"> | number
     isActive?: BoolFilter<"Section"> | boolean
     createdAt?: DateTimeFilter<"Section"> | Date | string
     updatedAt?: DateTimeFilter<"Section"> | Date | string
@@ -24652,6 +26076,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     capacity?: SortOrderInput | SortOrder
+    priority?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -24672,6 +26097,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Section"> | string
     name?: StringWithAggregatesFilter<"Section"> | string
     capacity?: IntNullableWithAggregatesFilter<"Section"> | number | null
+    priority?: IntWithAggregatesFilter<"Section"> | number
     isActive?: BoolWithAggregatesFilter<"Section"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Section"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Section"> | Date | string
@@ -24757,6 +26183,8 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     passwordHash?: StringFilter<"User"> | string
     isActive?: BoolFilter<"User"> | boolean
+    mustChangePassword?: BoolFilter<"User"> | boolean
+    passwordChangedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
@@ -24783,6 +26211,8 @@ export namespace Prisma {
     email?: SortOrder
     passwordHash?: SortOrder
     isActive?: SortOrder
+    mustChangePassword?: SortOrder
+    passwordChangedAt?: SortOrderInput | SortOrder
     lastLoginAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -24813,6 +26243,8 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     passwordHash?: StringFilter<"User"> | string
     isActive?: BoolFilter<"User"> | boolean
+    mustChangePassword?: BoolFilter<"User"> | boolean
+    passwordChangedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
@@ -24839,6 +26271,8 @@ export namespace Prisma {
     email?: SortOrder
     passwordHash?: SortOrder
     isActive?: SortOrder
+    mustChangePassword?: SortOrder
+    passwordChangedAt?: SortOrderInput | SortOrder
     lastLoginAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -24855,6 +26289,8 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"User"> | string
     passwordHash?: StringWithAggregatesFilter<"User"> | string
     isActive?: BoolWithAggregatesFilter<"User"> | boolean
+    mustChangePassword?: BoolWithAggregatesFilter<"User"> | boolean
+    passwordChangedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     lastLoginAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -24872,7 +26308,10 @@ export namespace Prisma {
     documentNumber?: StringNullableFilter<"Profile"> | string | null
     phone?: StringNullableFilter<"Profile"> | string | null
     birthDate?: DateTimeNullableFilter<"Profile"> | Date | string | null
+    gender?: StringNullableFilter<"Profile"> | string | null
+    address?: StringNullableFilter<"Profile"> | string | null
     avatarUrl?: StringNullableFilter<"Profile"> | string | null
+    avatarPublicId?: StringNullableFilter<"Profile"> | string | null
     createdAt?: DateTimeFilter<"Profile"> | Date | string
     updatedAt?: DateTimeFilter<"Profile"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -24887,7 +26326,10 @@ export namespace Prisma {
     documentNumber?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     birthDate?: SortOrderInput | SortOrder
+    gender?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
     avatarUrl?: SortOrderInput | SortOrder
+    avatarPublicId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -24897,20 +26339,23 @@ export namespace Prisma {
   export type ProfileWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     userId?: string
+    documentNumber?: string
     AND?: ProfileWhereInput | ProfileWhereInput[]
     OR?: ProfileWhereInput[]
     NOT?: ProfileWhereInput | ProfileWhereInput[]
     firstName?: StringFilter<"Profile"> | string
     lastName?: StringFilter<"Profile"> | string
     documentType?: StringNullableFilter<"Profile"> | string | null
-    documentNumber?: StringNullableFilter<"Profile"> | string | null
     phone?: StringNullableFilter<"Profile"> | string | null
     birthDate?: DateTimeNullableFilter<"Profile"> | Date | string | null
+    gender?: StringNullableFilter<"Profile"> | string | null
+    address?: StringNullableFilter<"Profile"> | string | null
     avatarUrl?: StringNullableFilter<"Profile"> | string | null
+    avatarPublicId?: StringNullableFilter<"Profile"> | string | null
     createdAt?: DateTimeFilter<"Profile"> | Date | string
     updatedAt?: DateTimeFilter<"Profile"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "id" | "userId">
+  }, "id" | "userId" | "documentNumber">
 
   export type ProfileOrderByWithAggregationInput = {
     id?: SortOrder
@@ -24921,7 +26366,10 @@ export namespace Prisma {
     documentNumber?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     birthDate?: SortOrderInput | SortOrder
+    gender?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
     avatarUrl?: SortOrderInput | SortOrder
+    avatarPublicId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ProfileCountOrderByAggregateInput
@@ -24941,7 +26389,10 @@ export namespace Prisma {
     documentNumber?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     phone?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     birthDate?: DateTimeNullableWithAggregatesFilter<"Profile"> | Date | string | null
+    gender?: StringNullableWithAggregatesFilter<"Profile"> | string | null
+    address?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     avatarUrl?: StringNullableWithAggregatesFilter<"Profile"> | string | null
+    avatarPublicId?: StringNullableWithAggregatesFilter<"Profile"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Profile"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Profile"> | Date | string
   }
@@ -25174,8 +26625,10 @@ export namespace Prisma {
     enrolledAt?: DateTimeFilter<"Enrollment"> | Date | string
     createdAt?: DateTimeFilter<"Enrollment"> | Date | string
     updatedAt?: DateTimeFilter<"Enrollment"> | Date | string
+    paymentPlanId?: StringNullableFilter<"Enrollment"> | string | null
     student?: XOR<UserScalarRelationFilter, UserWhereInput>
     section?: XOR<SectionScalarRelationFilter, SectionWhereInput>
+    paymentPlan?: XOR<PaymentPlanNullableScalarRelationFilter, PaymentPlanWhereInput> | null
   }
 
   export type EnrollmentOrderByWithRelationInput = {
@@ -25186,8 +26639,10 @@ export namespace Prisma {
     enrolledAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    paymentPlanId?: SortOrderInput | SortOrder
     student?: UserOrderByWithRelationInput
     section?: SectionOrderByWithRelationInput
+    paymentPlan?: PaymentPlanOrderByWithRelationInput
     _relevance?: EnrollmentOrderByRelevanceInput
   }
 
@@ -25203,8 +26658,10 @@ export namespace Prisma {
     enrolledAt?: DateTimeFilter<"Enrollment"> | Date | string
     createdAt?: DateTimeFilter<"Enrollment"> | Date | string
     updatedAt?: DateTimeFilter<"Enrollment"> | Date | string
+    paymentPlanId?: StringNullableFilter<"Enrollment"> | string | null
     student?: XOR<UserScalarRelationFilter, UserWhereInput>
     section?: XOR<SectionScalarRelationFilter, SectionWhereInput>
+    paymentPlan?: XOR<PaymentPlanNullableScalarRelationFilter, PaymentPlanWhereInput> | null
   }, "id" | "studentId_sectionId">
 
   export type EnrollmentOrderByWithAggregationInput = {
@@ -25215,6 +26672,7 @@ export namespace Prisma {
     enrolledAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    paymentPlanId?: SortOrderInput | SortOrder
     _count?: EnrollmentCountOrderByAggregateInput
     _max?: EnrollmentMaxOrderByAggregateInput
     _min?: EnrollmentMinOrderByAggregateInput
@@ -25231,6 +26689,7 @@ export namespace Prisma {
     enrolledAt?: DateTimeWithAggregatesFilter<"Enrollment"> | Date | string
     createdAt?: DateTimeWithAggregatesFilter<"Enrollment"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Enrollment"> | Date | string
+    paymentPlanId?: StringNullableWithAggregatesFilter<"Enrollment"> | string | null
   }
 
   export type ParentStudentWhereInput = {
@@ -25901,6 +27360,102 @@ export namespace Prisma {
     viewedAt?: DateTimeWithAggregatesFilter<"AnnouncementView"> | Date | string
   }
 
+  export type PaymentPlanWhereInput = {
+    AND?: PaymentPlanWhereInput | PaymentPlanWhereInput[]
+    OR?: PaymentPlanWhereInput[]
+    NOT?: PaymentPlanWhereInput | PaymentPlanWhereInput[]
+    id?: StringFilter<"PaymentPlan"> | string
+    name?: StringFilter<"PaymentPlan"> | string
+    type?: EnumPaymentPlanTypeFilter<"PaymentPlan"> | $Enums.PaymentPlanType
+    description?: StringNullableFilter<"PaymentPlan"> | string | null
+    baseAmount?: FloatFilter<"PaymentPlan"> | number
+    discount?: FloatFilter<"PaymentPlan"> | number
+    finalAmount?: FloatFilter<"PaymentPlan"> | number
+    installments?: IntNullableFilter<"PaymentPlan"> | number | null
+    isActive?: BoolFilter<"PaymentPlan"> | boolean
+    sedeId?: StringNullableFilter<"PaymentPlan"> | string | null
+    createdAt?: DateTimeFilter<"PaymentPlan"> | Date | string
+    updatedAt?: DateTimeFilter<"PaymentPlan"> | Date | string
+    sede?: XOR<SedeNullableScalarRelationFilter, SedeWhereInput> | null
+    enrollments?: EnrollmentListRelationFilter
+  }
+
+  export type PaymentPlanOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    description?: SortOrderInput | SortOrder
+    baseAmount?: SortOrder
+    discount?: SortOrder
+    finalAmount?: SortOrder
+    installments?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    sedeId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    sede?: SedeOrderByWithRelationInput
+    enrollments?: EnrollmentOrderByRelationAggregateInput
+    _relevance?: PaymentPlanOrderByRelevanceInput
+  }
+
+  export type PaymentPlanWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PaymentPlanWhereInput | PaymentPlanWhereInput[]
+    OR?: PaymentPlanWhereInput[]
+    NOT?: PaymentPlanWhereInput | PaymentPlanWhereInput[]
+    name?: StringFilter<"PaymentPlan"> | string
+    type?: EnumPaymentPlanTypeFilter<"PaymentPlan"> | $Enums.PaymentPlanType
+    description?: StringNullableFilter<"PaymentPlan"> | string | null
+    baseAmount?: FloatFilter<"PaymentPlan"> | number
+    discount?: FloatFilter<"PaymentPlan"> | number
+    finalAmount?: FloatFilter<"PaymentPlan"> | number
+    installments?: IntNullableFilter<"PaymentPlan"> | number | null
+    isActive?: BoolFilter<"PaymentPlan"> | boolean
+    sedeId?: StringNullableFilter<"PaymentPlan"> | string | null
+    createdAt?: DateTimeFilter<"PaymentPlan"> | Date | string
+    updatedAt?: DateTimeFilter<"PaymentPlan"> | Date | string
+    sede?: XOR<SedeNullableScalarRelationFilter, SedeWhereInput> | null
+    enrollments?: EnrollmentListRelationFilter
+  }, "id">
+
+  export type PaymentPlanOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    description?: SortOrderInput | SortOrder
+    baseAmount?: SortOrder
+    discount?: SortOrder
+    finalAmount?: SortOrder
+    installments?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    sedeId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PaymentPlanCountOrderByAggregateInput
+    _avg?: PaymentPlanAvgOrderByAggregateInput
+    _max?: PaymentPlanMaxOrderByAggregateInput
+    _min?: PaymentPlanMinOrderByAggregateInput
+    _sum?: PaymentPlanSumOrderByAggregateInput
+  }
+
+  export type PaymentPlanScalarWhereWithAggregatesInput = {
+    AND?: PaymentPlanScalarWhereWithAggregatesInput | PaymentPlanScalarWhereWithAggregatesInput[]
+    OR?: PaymentPlanScalarWhereWithAggregatesInput[]
+    NOT?: PaymentPlanScalarWhereWithAggregatesInput | PaymentPlanScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PaymentPlan"> | string
+    name?: StringWithAggregatesFilter<"PaymentPlan"> | string
+    type?: EnumPaymentPlanTypeWithAggregatesFilter<"PaymentPlan"> | $Enums.PaymentPlanType
+    description?: StringNullableWithAggregatesFilter<"PaymentPlan"> | string | null
+    baseAmount?: FloatWithAggregatesFilter<"PaymentPlan"> | number
+    discount?: FloatWithAggregatesFilter<"PaymentPlan"> | number
+    finalAmount?: FloatWithAggregatesFilter<"PaymentPlan"> | number
+    installments?: IntNullableWithAggregatesFilter<"PaymentPlan"> | number | null
+    isActive?: BoolWithAggregatesFilter<"PaymentPlan"> | boolean
+    sedeId?: StringNullableWithAggregatesFilter<"PaymentPlan"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"PaymentPlan"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PaymentPlan"> | Date | string
+  }
+
   export type SedeCreateInput = {
     id?: string
     name: string
@@ -25912,6 +27467,7 @@ export namespace Prisma {
     classrooms?: ClassroomCreateNestedManyWithoutSedeInput
     memberships?: MembershipCreateNestedManyWithoutSedeInput
     announcements?: AnnouncementCreateNestedManyWithoutSedeInput
+    paymentPlans?: PaymentPlanCreateNestedManyWithoutSedeInput
   }
 
   export type SedeUncheckedCreateInput = {
@@ -25925,6 +27481,7 @@ export namespace Prisma {
     classrooms?: ClassroomUncheckedCreateNestedManyWithoutSedeInput
     memberships?: MembershipUncheckedCreateNestedManyWithoutSedeInput
     announcements?: AnnouncementUncheckedCreateNestedManyWithoutSedeInput
+    paymentPlans?: PaymentPlanUncheckedCreateNestedManyWithoutSedeInput
   }
 
   export type SedeUpdateInput = {
@@ -25938,6 +27495,7 @@ export namespace Prisma {
     classrooms?: ClassroomUpdateManyWithoutSedeNestedInput
     memberships?: MembershipUpdateManyWithoutSedeNestedInput
     announcements?: AnnouncementUpdateManyWithoutSedeNestedInput
+    paymentPlans?: PaymentPlanUpdateManyWithoutSedeNestedInput
   }
 
   export type SedeUncheckedUpdateInput = {
@@ -25951,6 +27509,7 @@ export namespace Prisma {
     classrooms?: ClassroomUncheckedUpdateManyWithoutSedeNestedInput
     memberships?: MembershipUncheckedUpdateManyWithoutSedeNestedInput
     announcements?: AnnouncementUncheckedUpdateManyWithoutSedeNestedInput
+    paymentPlans?: PaymentPlanUncheckedUpdateManyWithoutSedeNestedInput
   }
 
   export type SedeCreateManyInput = {
@@ -26215,6 +27774,7 @@ export namespace Prisma {
     id?: string
     name: string
     capacity?: number | null
+    priority?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26230,6 +27790,7 @@ export namespace Prisma {
     id?: string
     name: string
     capacity?: number | null
+    priority?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26245,6 +27806,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26260,6 +27822,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26275,6 +27838,7 @@ export namespace Prisma {
     id?: string
     name: string
     capacity?: number | null
+    priority?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26287,6 +27851,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26296,6 +27861,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26387,6 +27953,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26413,6 +27981,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26439,6 +28009,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26465,6 +28037,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26491,6 +28065,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26501,6 +28077,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26511,6 +28089,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26524,7 +28104,10 @@ export namespace Prisma {
     documentNumber?: string | null
     phone?: string | null
     birthDate?: Date | string | null
+    gender?: string | null
+    address?: string | null
     avatarUrl?: string | null
+    avatarPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutProfileInput
@@ -26539,7 +28122,10 @@ export namespace Prisma {
     documentNumber?: string | null
     phone?: string | null
     birthDate?: Date | string | null
+    gender?: string | null
+    address?: string | null
     avatarUrl?: string | null
+    avatarPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -26552,7 +28138,10 @@ export namespace Prisma {
     documentNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutProfileNestedInput
@@ -26567,7 +28156,10 @@ export namespace Prisma {
     documentNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26581,7 +28173,10 @@ export namespace Prisma {
     documentNumber?: string | null
     phone?: string | null
     birthDate?: Date | string | null
+    gender?: string | null
+    address?: string | null
     avatarUrl?: string | null
+    avatarPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -26594,7 +28189,10 @@ export namespace Prisma {
     documentNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26608,7 +28206,10 @@ export namespace Prisma {
     documentNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -26829,6 +28430,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     student: UserCreateNestedOneWithoutEnrollmentsInput
     section: SectionCreateNestedOneWithoutEnrollmentsInput
+    paymentPlan?: PaymentPlanCreateNestedOneWithoutEnrollmentsInput
   }
 
   export type EnrollmentUncheckedCreateInput = {
@@ -26839,6 +28441,7 @@ export namespace Prisma {
     enrolledAt?: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
+    paymentPlanId?: string | null
   }
 
   export type EnrollmentUpdateInput = {
@@ -26849,6 +28452,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: UserUpdateOneRequiredWithoutEnrollmentsNestedInput
     section?: SectionUpdateOneRequiredWithoutEnrollmentsNestedInput
+    paymentPlan?: PaymentPlanUpdateOneWithoutEnrollmentsNestedInput
   }
 
   export type EnrollmentUncheckedUpdateInput = {
@@ -26859,6 +28463,7 @@ export namespace Prisma {
     enrolledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paymentPlanId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EnrollmentCreateManyInput = {
@@ -26869,6 +28474,7 @@ export namespace Prisma {
     enrolledAt?: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
+    paymentPlanId?: string | null
   }
 
   export type EnrollmentUpdateManyMutationInput = {
@@ -26887,6 +28493,7 @@ export namespace Prisma {
     enrolledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paymentPlanId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ParentStudentCreateInput = {
@@ -27561,6 +29168,114 @@ export namespace Prisma {
     viewedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type PaymentPlanCreateInput = {
+    id?: string
+    name: string
+    type: $Enums.PaymentPlanType
+    description?: string | null
+    baseAmount: number
+    discount?: number
+    finalAmount: number
+    installments?: number | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sede?: SedeCreateNestedOneWithoutPaymentPlansInput
+    enrollments?: EnrollmentCreateNestedManyWithoutPaymentPlanInput
+  }
+
+  export type PaymentPlanUncheckedCreateInput = {
+    id?: string
+    name: string
+    type: $Enums.PaymentPlanType
+    description?: string | null
+    baseAmount: number
+    discount?: number
+    finalAmount: number
+    installments?: number | null
+    isActive?: boolean
+    sedeId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    enrollments?: EnrollmentUncheckedCreateNestedManyWithoutPaymentPlanInput
+  }
+
+  export type PaymentPlanUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumPaymentPlanTypeFieldUpdateOperationsInput | $Enums.PaymentPlanType
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    baseAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    installments?: NullableIntFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sede?: SedeUpdateOneWithoutPaymentPlansNestedInput
+    enrollments?: EnrollmentUpdateManyWithoutPaymentPlanNestedInput
+  }
+
+  export type PaymentPlanUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumPaymentPlanTypeFieldUpdateOperationsInput | $Enums.PaymentPlanType
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    baseAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    installments?: NullableIntFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sedeId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    enrollments?: EnrollmentUncheckedUpdateManyWithoutPaymentPlanNestedInput
+  }
+
+  export type PaymentPlanCreateManyInput = {
+    id?: string
+    name: string
+    type: $Enums.PaymentPlanType
+    description?: string | null
+    baseAmount: number
+    discount?: number
+    finalAmount: number
+    installments?: number | null
+    isActive?: boolean
+    sedeId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PaymentPlanUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumPaymentPlanTypeFieldUpdateOperationsInput | $Enums.PaymentPlanType
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    baseAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    installments?: NullableIntFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentPlanUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumPaymentPlanTypeFieldUpdateOperationsInput | $Enums.PaymentPlanType
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    baseAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    installments?: NullableIntFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sedeId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[]
@@ -27625,6 +29340,12 @@ export namespace Prisma {
     none?: AnnouncementWhereInput
   }
 
+  export type PaymentPlanListRelationFilter = {
+    every?: PaymentPlanWhereInput
+    some?: PaymentPlanWhereInput
+    none?: PaymentPlanWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -27639,6 +29360,10 @@ export namespace Prisma {
   }
 
   export type AnnouncementOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PaymentPlanOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -27914,6 +29639,17 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type ClassroomScalarRelationFilter = {
     is?: ClassroomWhereInput
     isNot?: ClassroomWhereInput
@@ -27966,6 +29702,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     capacity?: SortOrder
+    priority?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -27976,12 +29713,14 @@ export namespace Prisma {
 
   export type SectionAvgOrderByAggregateInput = {
     capacity?: SortOrder
+    priority?: SortOrder
   }
 
   export type SectionMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     capacity?: SortOrder
+    priority?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -27994,6 +29733,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     capacity?: SortOrder
+    priority?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -28004,6 +29744,23 @@ export namespace Prisma {
 
   export type SectionSumOrderByAggregateInput = {
     capacity?: SortOrder
+    priority?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type CourseTeacherListRelationFilter = {
@@ -28139,6 +29896,8 @@ export namespace Prisma {
     email?: SortOrder
     passwordHash?: SortOrder
     isActive?: SortOrder
+    mustChangePassword?: SortOrder
+    passwordChangedAt?: SortOrder
     lastLoginAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -28149,6 +29908,8 @@ export namespace Prisma {
     email?: SortOrder
     passwordHash?: SortOrder
     isActive?: SortOrder
+    mustChangePassword?: SortOrder
+    passwordChangedAt?: SortOrder
     lastLoginAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -28159,6 +29920,8 @@ export namespace Prisma {
     email?: SortOrder
     passwordHash?: SortOrder
     isActive?: SortOrder
+    mustChangePassword?: SortOrder
+    passwordChangedAt?: SortOrder
     lastLoginAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -28198,7 +29961,10 @@ export namespace Prisma {
     documentNumber?: SortOrder
     phone?: SortOrder
     birthDate?: SortOrder
+    gender?: SortOrder
+    address?: SortOrder
     avatarUrl?: SortOrder
+    avatarPublicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -28212,7 +29978,10 @@ export namespace Prisma {
     documentNumber?: SortOrder
     phone?: SortOrder
     birthDate?: SortOrder
+    gender?: SortOrder
+    address?: SortOrder
     avatarUrl?: SortOrder
+    avatarPublicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -28226,7 +29995,10 @@ export namespace Prisma {
     documentNumber?: SortOrder
     phone?: SortOrder
     birthDate?: SortOrder
+    gender?: SortOrder
+    address?: SortOrder
     avatarUrl?: SortOrder
+    avatarPublicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -28418,6 +30190,11 @@ export namespace Prisma {
     not?: NestedEnumEnrollmentStatusFilter<$PrismaModel> | $Enums.EnrollmentStatus
   }
 
+  export type PaymentPlanNullableScalarRelationFilter = {
+    is?: PaymentPlanWhereInput | null
+    isNot?: PaymentPlanWhereInput | null
+  }
+
   export type EnrollmentOrderByRelevanceInput = {
     fields: EnrollmentOrderByRelevanceFieldEnum | EnrollmentOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -28437,6 +30214,7 @@ export namespace Prisma {
     enrolledAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    paymentPlanId?: SortOrder
   }
 
   export type EnrollmentMaxOrderByAggregateInput = {
@@ -28447,6 +30225,7 @@ export namespace Prisma {
     enrolledAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    paymentPlanId?: SortOrder
   }
 
   export type EnrollmentMinOrderByAggregateInput = {
@@ -28457,6 +30236,7 @@ export namespace Prisma {
     enrolledAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    paymentPlanId?: SortOrder
   }
 
   export type EnumEnrollmentStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -29037,6 +30817,88 @@ export namespace Prisma {
     viewedAt?: SortOrder
   }
 
+  export type EnumPaymentPlanTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentPlanType | EnumPaymentPlanTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentPlanType[]
+    notIn?: $Enums.PaymentPlanType[]
+    not?: NestedEnumPaymentPlanTypeFilter<$PrismaModel> | $Enums.PaymentPlanType
+  }
+
+  export type PaymentPlanOrderByRelevanceInput = {
+    fields: PaymentPlanOrderByRelevanceFieldEnum | PaymentPlanOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type PaymentPlanCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    description?: SortOrder
+    baseAmount?: SortOrder
+    discount?: SortOrder
+    finalAmount?: SortOrder
+    installments?: SortOrder
+    isActive?: SortOrder
+    sedeId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PaymentPlanAvgOrderByAggregateInput = {
+    baseAmount?: SortOrder
+    discount?: SortOrder
+    finalAmount?: SortOrder
+    installments?: SortOrder
+  }
+
+  export type PaymentPlanMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    description?: SortOrder
+    baseAmount?: SortOrder
+    discount?: SortOrder
+    finalAmount?: SortOrder
+    installments?: SortOrder
+    isActive?: SortOrder
+    sedeId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PaymentPlanMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    description?: SortOrder
+    baseAmount?: SortOrder
+    discount?: SortOrder
+    finalAmount?: SortOrder
+    installments?: SortOrder
+    isActive?: SortOrder
+    sedeId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PaymentPlanSumOrderByAggregateInput = {
+    baseAmount?: SortOrder
+    discount?: SortOrder
+    finalAmount?: SortOrder
+    installments?: SortOrder
+  }
+
+  export type EnumPaymentPlanTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentPlanType | EnumPaymentPlanTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentPlanType[]
+    notIn?: $Enums.PaymentPlanType[]
+    not?: NestedEnumPaymentPlanTypeWithAggregatesFilter<$PrismaModel> | $Enums.PaymentPlanType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPaymentPlanTypeFilter<$PrismaModel>
+    _max?: NestedEnumPaymentPlanTypeFilter<$PrismaModel>
+  }
+
   export type ClassroomCreateNestedManyWithoutSedeInput = {
     create?: XOR<ClassroomCreateWithoutSedeInput, ClassroomUncheckedCreateWithoutSedeInput> | ClassroomCreateWithoutSedeInput[] | ClassroomUncheckedCreateWithoutSedeInput[]
     connectOrCreate?: ClassroomCreateOrConnectWithoutSedeInput | ClassroomCreateOrConnectWithoutSedeInput[]
@@ -29058,6 +30920,13 @@ export namespace Prisma {
     connect?: AnnouncementWhereUniqueInput | AnnouncementWhereUniqueInput[]
   }
 
+  export type PaymentPlanCreateNestedManyWithoutSedeInput = {
+    create?: XOR<PaymentPlanCreateWithoutSedeInput, PaymentPlanUncheckedCreateWithoutSedeInput> | PaymentPlanCreateWithoutSedeInput[] | PaymentPlanUncheckedCreateWithoutSedeInput[]
+    connectOrCreate?: PaymentPlanCreateOrConnectWithoutSedeInput | PaymentPlanCreateOrConnectWithoutSedeInput[]
+    createMany?: PaymentPlanCreateManySedeInputEnvelope
+    connect?: PaymentPlanWhereUniqueInput | PaymentPlanWhereUniqueInput[]
+  }
+
   export type ClassroomUncheckedCreateNestedManyWithoutSedeInput = {
     create?: XOR<ClassroomCreateWithoutSedeInput, ClassroomUncheckedCreateWithoutSedeInput> | ClassroomCreateWithoutSedeInput[] | ClassroomUncheckedCreateWithoutSedeInput[]
     connectOrCreate?: ClassroomCreateOrConnectWithoutSedeInput | ClassroomCreateOrConnectWithoutSedeInput[]
@@ -29077,6 +30946,13 @@ export namespace Prisma {
     connectOrCreate?: AnnouncementCreateOrConnectWithoutSedeInput | AnnouncementCreateOrConnectWithoutSedeInput[]
     createMany?: AnnouncementCreateManySedeInputEnvelope
     connect?: AnnouncementWhereUniqueInput | AnnouncementWhereUniqueInput[]
+  }
+
+  export type PaymentPlanUncheckedCreateNestedManyWithoutSedeInput = {
+    create?: XOR<PaymentPlanCreateWithoutSedeInput, PaymentPlanUncheckedCreateWithoutSedeInput> | PaymentPlanCreateWithoutSedeInput[] | PaymentPlanUncheckedCreateWithoutSedeInput[]
+    connectOrCreate?: PaymentPlanCreateOrConnectWithoutSedeInput | PaymentPlanCreateOrConnectWithoutSedeInput[]
+    createMany?: PaymentPlanCreateManySedeInputEnvelope
+    connect?: PaymentPlanWhereUniqueInput | PaymentPlanWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -29137,6 +31013,20 @@ export namespace Prisma {
     deleteMany?: AnnouncementScalarWhereInput | AnnouncementScalarWhereInput[]
   }
 
+  export type PaymentPlanUpdateManyWithoutSedeNestedInput = {
+    create?: XOR<PaymentPlanCreateWithoutSedeInput, PaymentPlanUncheckedCreateWithoutSedeInput> | PaymentPlanCreateWithoutSedeInput[] | PaymentPlanUncheckedCreateWithoutSedeInput[]
+    connectOrCreate?: PaymentPlanCreateOrConnectWithoutSedeInput | PaymentPlanCreateOrConnectWithoutSedeInput[]
+    upsert?: PaymentPlanUpsertWithWhereUniqueWithoutSedeInput | PaymentPlanUpsertWithWhereUniqueWithoutSedeInput[]
+    createMany?: PaymentPlanCreateManySedeInputEnvelope
+    set?: PaymentPlanWhereUniqueInput | PaymentPlanWhereUniqueInput[]
+    disconnect?: PaymentPlanWhereUniqueInput | PaymentPlanWhereUniqueInput[]
+    delete?: PaymentPlanWhereUniqueInput | PaymentPlanWhereUniqueInput[]
+    connect?: PaymentPlanWhereUniqueInput | PaymentPlanWhereUniqueInput[]
+    update?: PaymentPlanUpdateWithWhereUniqueWithoutSedeInput | PaymentPlanUpdateWithWhereUniqueWithoutSedeInput[]
+    updateMany?: PaymentPlanUpdateManyWithWhereWithoutSedeInput | PaymentPlanUpdateManyWithWhereWithoutSedeInput[]
+    deleteMany?: PaymentPlanScalarWhereInput | PaymentPlanScalarWhereInput[]
+  }
+
   export type ClassroomUncheckedUpdateManyWithoutSedeNestedInput = {
     create?: XOR<ClassroomCreateWithoutSedeInput, ClassroomUncheckedCreateWithoutSedeInput> | ClassroomCreateWithoutSedeInput[] | ClassroomUncheckedCreateWithoutSedeInput[]
     connectOrCreate?: ClassroomCreateOrConnectWithoutSedeInput | ClassroomCreateOrConnectWithoutSedeInput[]
@@ -29177,6 +31067,20 @@ export namespace Prisma {
     update?: AnnouncementUpdateWithWhereUniqueWithoutSedeInput | AnnouncementUpdateWithWhereUniqueWithoutSedeInput[]
     updateMany?: AnnouncementUpdateManyWithWhereWithoutSedeInput | AnnouncementUpdateManyWithWhereWithoutSedeInput[]
     deleteMany?: AnnouncementScalarWhereInput | AnnouncementScalarWhereInput[]
+  }
+
+  export type PaymentPlanUncheckedUpdateManyWithoutSedeNestedInput = {
+    create?: XOR<PaymentPlanCreateWithoutSedeInput, PaymentPlanUncheckedCreateWithoutSedeInput> | PaymentPlanCreateWithoutSedeInput[] | PaymentPlanUncheckedCreateWithoutSedeInput[]
+    connectOrCreate?: PaymentPlanCreateOrConnectWithoutSedeInput | PaymentPlanCreateOrConnectWithoutSedeInput[]
+    upsert?: PaymentPlanUpsertWithWhereUniqueWithoutSedeInput | PaymentPlanUpsertWithWhereUniqueWithoutSedeInput[]
+    createMany?: PaymentPlanCreateManySedeInputEnvelope
+    set?: PaymentPlanWhereUniqueInput | PaymentPlanWhereUniqueInput[]
+    disconnect?: PaymentPlanWhereUniqueInput | PaymentPlanWhereUniqueInput[]
+    delete?: PaymentPlanWhereUniqueInput | PaymentPlanWhereUniqueInput[]
+    connect?: PaymentPlanWhereUniqueInput | PaymentPlanWhereUniqueInput[]
+    update?: PaymentPlanUpdateWithWhereUniqueWithoutSedeInput | PaymentPlanUpdateWithWhereUniqueWithoutSedeInput[]
+    updateMany?: PaymentPlanUpdateManyWithWhereWithoutSedeInput | PaymentPlanUpdateManyWithWhereWithoutSedeInput[]
+    deleteMany?: PaymentPlanScalarWhereInput | PaymentPlanScalarWhereInput[]
   }
 
   export type SectionCreateNestedManyWithoutPeriodInput = {
@@ -29389,6 +31293,14 @@ export namespace Prisma {
     connectOrCreate?: AnnouncementCreateOrConnectWithoutSectionInput | AnnouncementCreateOrConnectWithoutSectionInput[]
     createMany?: AnnouncementCreateManySectionInputEnvelope
     connect?: AnnouncementWhereUniqueInput | AnnouncementWhereUniqueInput[]
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type ClassroomUpdateOneRequiredWithoutSectionsNestedInput = {
@@ -30509,6 +32421,12 @@ export namespace Prisma {
     connect?: SectionWhereUniqueInput
   }
 
+  export type PaymentPlanCreateNestedOneWithoutEnrollmentsInput = {
+    create?: XOR<PaymentPlanCreateWithoutEnrollmentsInput, PaymentPlanUncheckedCreateWithoutEnrollmentsInput>
+    connectOrCreate?: PaymentPlanCreateOrConnectWithoutEnrollmentsInput
+    connect?: PaymentPlanWhereUniqueInput
+  }
+
   export type EnumEnrollmentStatusFieldUpdateOperationsInput = {
     set?: $Enums.EnrollmentStatus
   }
@@ -30527,6 +32445,16 @@ export namespace Prisma {
     upsert?: SectionUpsertWithoutEnrollmentsInput
     connect?: SectionWhereUniqueInput
     update?: XOR<XOR<SectionUpdateToOneWithWhereWithoutEnrollmentsInput, SectionUpdateWithoutEnrollmentsInput>, SectionUncheckedUpdateWithoutEnrollmentsInput>
+  }
+
+  export type PaymentPlanUpdateOneWithoutEnrollmentsNestedInput = {
+    create?: XOR<PaymentPlanCreateWithoutEnrollmentsInput, PaymentPlanUncheckedCreateWithoutEnrollmentsInput>
+    connectOrCreate?: PaymentPlanCreateOrConnectWithoutEnrollmentsInput
+    upsert?: PaymentPlanUpsertWithoutEnrollmentsInput
+    disconnect?: PaymentPlanWhereInput | boolean
+    delete?: PaymentPlanWhereInput | boolean
+    connect?: PaymentPlanWhereUniqueInput
+    update?: XOR<XOR<PaymentPlanUpdateToOneWithWhereWithoutEnrollmentsInput, PaymentPlanUpdateWithoutEnrollmentsInput>, PaymentPlanUncheckedUpdateWithoutEnrollmentsInput>
   }
 
   export type UserCreateNestedOneWithoutParentOfInput = {
@@ -30967,6 +32895,68 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAnnouncementViewsInput, UserUpdateWithoutAnnouncementViewsInput>, UserUncheckedUpdateWithoutAnnouncementViewsInput>
   }
 
+  export type SedeCreateNestedOneWithoutPaymentPlansInput = {
+    create?: XOR<SedeCreateWithoutPaymentPlansInput, SedeUncheckedCreateWithoutPaymentPlansInput>
+    connectOrCreate?: SedeCreateOrConnectWithoutPaymentPlansInput
+    connect?: SedeWhereUniqueInput
+  }
+
+  export type EnrollmentCreateNestedManyWithoutPaymentPlanInput = {
+    create?: XOR<EnrollmentCreateWithoutPaymentPlanInput, EnrollmentUncheckedCreateWithoutPaymentPlanInput> | EnrollmentCreateWithoutPaymentPlanInput[] | EnrollmentUncheckedCreateWithoutPaymentPlanInput[]
+    connectOrCreate?: EnrollmentCreateOrConnectWithoutPaymentPlanInput | EnrollmentCreateOrConnectWithoutPaymentPlanInput[]
+    createMany?: EnrollmentCreateManyPaymentPlanInputEnvelope
+    connect?: EnrollmentWhereUniqueInput | EnrollmentWhereUniqueInput[]
+  }
+
+  export type EnrollmentUncheckedCreateNestedManyWithoutPaymentPlanInput = {
+    create?: XOR<EnrollmentCreateWithoutPaymentPlanInput, EnrollmentUncheckedCreateWithoutPaymentPlanInput> | EnrollmentCreateWithoutPaymentPlanInput[] | EnrollmentUncheckedCreateWithoutPaymentPlanInput[]
+    connectOrCreate?: EnrollmentCreateOrConnectWithoutPaymentPlanInput | EnrollmentCreateOrConnectWithoutPaymentPlanInput[]
+    createMany?: EnrollmentCreateManyPaymentPlanInputEnvelope
+    connect?: EnrollmentWhereUniqueInput | EnrollmentWhereUniqueInput[]
+  }
+
+  export type EnumPaymentPlanTypeFieldUpdateOperationsInput = {
+    set?: $Enums.PaymentPlanType
+  }
+
+  export type SedeUpdateOneWithoutPaymentPlansNestedInput = {
+    create?: XOR<SedeCreateWithoutPaymentPlansInput, SedeUncheckedCreateWithoutPaymentPlansInput>
+    connectOrCreate?: SedeCreateOrConnectWithoutPaymentPlansInput
+    upsert?: SedeUpsertWithoutPaymentPlansInput
+    disconnect?: SedeWhereInput | boolean
+    delete?: SedeWhereInput | boolean
+    connect?: SedeWhereUniqueInput
+    update?: XOR<XOR<SedeUpdateToOneWithWhereWithoutPaymentPlansInput, SedeUpdateWithoutPaymentPlansInput>, SedeUncheckedUpdateWithoutPaymentPlansInput>
+  }
+
+  export type EnrollmentUpdateManyWithoutPaymentPlanNestedInput = {
+    create?: XOR<EnrollmentCreateWithoutPaymentPlanInput, EnrollmentUncheckedCreateWithoutPaymentPlanInput> | EnrollmentCreateWithoutPaymentPlanInput[] | EnrollmentUncheckedCreateWithoutPaymentPlanInput[]
+    connectOrCreate?: EnrollmentCreateOrConnectWithoutPaymentPlanInput | EnrollmentCreateOrConnectWithoutPaymentPlanInput[]
+    upsert?: EnrollmentUpsertWithWhereUniqueWithoutPaymentPlanInput | EnrollmentUpsertWithWhereUniqueWithoutPaymentPlanInput[]
+    createMany?: EnrollmentCreateManyPaymentPlanInputEnvelope
+    set?: EnrollmentWhereUniqueInput | EnrollmentWhereUniqueInput[]
+    disconnect?: EnrollmentWhereUniqueInput | EnrollmentWhereUniqueInput[]
+    delete?: EnrollmentWhereUniqueInput | EnrollmentWhereUniqueInput[]
+    connect?: EnrollmentWhereUniqueInput | EnrollmentWhereUniqueInput[]
+    update?: EnrollmentUpdateWithWhereUniqueWithoutPaymentPlanInput | EnrollmentUpdateWithWhereUniqueWithoutPaymentPlanInput[]
+    updateMany?: EnrollmentUpdateManyWithWhereWithoutPaymentPlanInput | EnrollmentUpdateManyWithWhereWithoutPaymentPlanInput[]
+    deleteMany?: EnrollmentScalarWhereInput | EnrollmentScalarWhereInput[]
+  }
+
+  export type EnrollmentUncheckedUpdateManyWithoutPaymentPlanNestedInput = {
+    create?: XOR<EnrollmentCreateWithoutPaymentPlanInput, EnrollmentUncheckedCreateWithoutPaymentPlanInput> | EnrollmentCreateWithoutPaymentPlanInput[] | EnrollmentUncheckedCreateWithoutPaymentPlanInput[]
+    connectOrCreate?: EnrollmentCreateOrConnectWithoutPaymentPlanInput | EnrollmentCreateOrConnectWithoutPaymentPlanInput[]
+    upsert?: EnrollmentUpsertWithWhereUniqueWithoutPaymentPlanInput | EnrollmentUpsertWithWhereUniqueWithoutPaymentPlanInput[]
+    createMany?: EnrollmentCreateManyPaymentPlanInputEnvelope
+    set?: EnrollmentWhereUniqueInput | EnrollmentWhereUniqueInput[]
+    disconnect?: EnrollmentWhereUniqueInput | EnrollmentWhereUniqueInput[]
+    delete?: EnrollmentWhereUniqueInput | EnrollmentWhereUniqueInput[]
+    connect?: EnrollmentWhereUniqueInput | EnrollmentWhereUniqueInput[]
+    update?: EnrollmentUpdateWithWhereUniqueWithoutPaymentPlanInput | EnrollmentUpdateWithWhereUniqueWithoutPaymentPlanInput[]
+    updateMany?: EnrollmentUpdateManyWithWhereWithoutPaymentPlanInput | EnrollmentUpdateManyWithWhereWithoutPaymentPlanInput[]
+    deleteMany?: EnrollmentScalarWhereInput | EnrollmentScalarWhereInput[]
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[]
@@ -31137,6 +33127,33 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | null
@@ -31254,17 +33271,6 @@ export namespace Prisma {
     not?: NestedEnumAssessmentTypeFilter<$PrismaModel> | $Enums.AssessmentType
   }
 
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
   export type NestedEnumAssessmentTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.AssessmentType | EnumAssessmentTypeFieldRefInput<$PrismaModel>
     in?: $Enums.AssessmentType[]
@@ -31339,6 +33345,23 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumAnnouncementPriorityFilter<$PrismaModel>
     _max?: NestedEnumAnnouncementPriorityFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPaymentPlanTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentPlanType | EnumPaymentPlanTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentPlanType[]
+    notIn?: $Enums.PaymentPlanType[]
+    not?: NestedEnumPaymentPlanTypeFilter<$PrismaModel> | $Enums.PaymentPlanType
+  }
+
+  export type NestedEnumPaymentPlanTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentPlanType | EnumPaymentPlanTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentPlanType[]
+    notIn?: $Enums.PaymentPlanType[]
+    not?: NestedEnumPaymentPlanTypeWithAggregatesFilter<$PrismaModel> | $Enums.PaymentPlanType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPaymentPlanTypeFilter<$PrismaModel>
+    _max?: NestedEnumPaymentPlanTypeFilter<$PrismaModel>
   }
 
   export type ClassroomCreateWithoutSedeInput = {
@@ -31441,6 +33464,46 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type PaymentPlanCreateWithoutSedeInput = {
+    id?: string
+    name: string
+    type: $Enums.PaymentPlanType
+    description?: string | null
+    baseAmount: number
+    discount?: number
+    finalAmount: number
+    installments?: number | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    enrollments?: EnrollmentCreateNestedManyWithoutPaymentPlanInput
+  }
+
+  export type PaymentPlanUncheckedCreateWithoutSedeInput = {
+    id?: string
+    name: string
+    type: $Enums.PaymentPlanType
+    description?: string | null
+    baseAmount: number
+    discount?: number
+    finalAmount: number
+    installments?: number | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    enrollments?: EnrollmentUncheckedCreateNestedManyWithoutPaymentPlanInput
+  }
+
+  export type PaymentPlanCreateOrConnectWithoutSedeInput = {
+    where: PaymentPlanWhereUniqueInput
+    create: XOR<PaymentPlanCreateWithoutSedeInput, PaymentPlanUncheckedCreateWithoutSedeInput>
+  }
+
+  export type PaymentPlanCreateManySedeInputEnvelope = {
+    data: PaymentPlanCreateManySedeInput | PaymentPlanCreateManySedeInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ClassroomUpsertWithWhereUniqueWithoutSedeInput = {
     where: ClassroomWhereUniqueInput
     update: XOR<ClassroomUpdateWithoutSedeInput, ClassroomUncheckedUpdateWithoutSedeInput>
@@ -31534,10 +33597,45 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Announcement"> | Date | string
   }
 
+  export type PaymentPlanUpsertWithWhereUniqueWithoutSedeInput = {
+    where: PaymentPlanWhereUniqueInput
+    update: XOR<PaymentPlanUpdateWithoutSedeInput, PaymentPlanUncheckedUpdateWithoutSedeInput>
+    create: XOR<PaymentPlanCreateWithoutSedeInput, PaymentPlanUncheckedCreateWithoutSedeInput>
+  }
+
+  export type PaymentPlanUpdateWithWhereUniqueWithoutSedeInput = {
+    where: PaymentPlanWhereUniqueInput
+    data: XOR<PaymentPlanUpdateWithoutSedeInput, PaymentPlanUncheckedUpdateWithoutSedeInput>
+  }
+
+  export type PaymentPlanUpdateManyWithWhereWithoutSedeInput = {
+    where: PaymentPlanScalarWhereInput
+    data: XOR<PaymentPlanUpdateManyMutationInput, PaymentPlanUncheckedUpdateManyWithoutSedeInput>
+  }
+
+  export type PaymentPlanScalarWhereInput = {
+    AND?: PaymentPlanScalarWhereInput | PaymentPlanScalarWhereInput[]
+    OR?: PaymentPlanScalarWhereInput[]
+    NOT?: PaymentPlanScalarWhereInput | PaymentPlanScalarWhereInput[]
+    id?: StringFilter<"PaymentPlan"> | string
+    name?: StringFilter<"PaymentPlan"> | string
+    type?: EnumPaymentPlanTypeFilter<"PaymentPlan"> | $Enums.PaymentPlanType
+    description?: StringNullableFilter<"PaymentPlan"> | string | null
+    baseAmount?: FloatFilter<"PaymentPlan"> | number
+    discount?: FloatFilter<"PaymentPlan"> | number
+    finalAmount?: FloatFilter<"PaymentPlan"> | number
+    installments?: IntNullableFilter<"PaymentPlan"> | number | null
+    isActive?: BoolFilter<"PaymentPlan"> | boolean
+    sedeId?: StringNullableFilter<"PaymentPlan"> | string | null
+    createdAt?: DateTimeFilter<"PaymentPlan"> | Date | string
+    updatedAt?: DateTimeFilter<"PaymentPlan"> | Date | string
+  }
+
   export type SectionCreateWithoutPeriodInput = {
     id?: string
     name: string
     capacity?: number | null
+    priority?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -31552,6 +33650,7 @@ export namespace Prisma {
     id?: string
     name: string
     capacity?: number | null
+    priority?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -31595,6 +33694,7 @@ export namespace Prisma {
     id?: StringFilter<"Section"> | string
     name?: StringFilter<"Section"> | string
     capacity?: IntNullableFilter<"Section"> | number | null
+    priority?: IntFilter<"Section"> | number
     isActive?: BoolFilter<"Section"> | boolean
     createdAt?: DateTimeFilter<"Section"> | Date | string
     updatedAt?: DateTimeFilter<"Section"> | Date | string
@@ -31607,6 +33707,7 @@ export namespace Prisma {
     id?: string
     name: string
     capacity?: number | null
+    priority?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -31621,6 +33722,7 @@ export namespace Prisma {
     id?: string
     name: string
     capacity?: number | null
+    priority?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -31667,6 +33769,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     memberships?: MembershipCreateNestedManyWithoutSedeInput
     announcements?: AnnouncementCreateNestedManyWithoutSedeInput
+    paymentPlans?: PaymentPlanCreateNestedManyWithoutSedeInput
   }
 
   export type SedeUncheckedCreateWithoutClassroomsInput = {
@@ -31679,6 +33782,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     memberships?: MembershipUncheckedCreateNestedManyWithoutSedeInput
     announcements?: AnnouncementUncheckedCreateNestedManyWithoutSedeInput
+    paymentPlans?: PaymentPlanUncheckedCreateNestedManyWithoutSedeInput
   }
 
   export type SedeCreateOrConnectWithoutClassroomsInput = {
@@ -31690,6 +33794,7 @@ export namespace Prisma {
     id?: string
     name: string
     capacity?: number | null
+    priority?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -31704,6 +33809,7 @@ export namespace Prisma {
     id?: string
     name: string
     capacity?: number | null
+    priority?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -31745,6 +33851,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     memberships?: MembershipUpdateManyWithoutSedeNestedInput
     announcements?: AnnouncementUpdateManyWithoutSedeNestedInput
+    paymentPlans?: PaymentPlanUpdateManyWithoutSedeNestedInput
   }
 
   export type SedeUncheckedUpdateWithoutClassroomsInput = {
@@ -31757,6 +33864,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     memberships?: MembershipUncheckedUpdateManyWithoutSedeNestedInput
     announcements?: AnnouncementUncheckedUpdateManyWithoutSedeNestedInput
+    paymentPlans?: PaymentPlanUncheckedUpdateManyWithoutSedeNestedInput
   }
 
   export type SectionUpsertWithWhereUniqueWithoutClassroomInput = {
@@ -31859,6 +33967,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     student: UserCreateNestedOneWithoutEnrollmentsInput
+    paymentPlan?: PaymentPlanCreateNestedOneWithoutEnrollmentsInput
   }
 
   export type EnrollmentUncheckedCreateWithoutSectionInput = {
@@ -31868,6 +33977,7 @@ export namespace Prisma {
     enrolledAt?: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
+    paymentPlanId?: string | null
   }
 
   export type EnrollmentCreateOrConnectWithoutSectionInput = {
@@ -32076,6 +34186,7 @@ export namespace Prisma {
     enrolledAt?: DateTimeFilter<"Enrollment"> | Date | string
     createdAt?: DateTimeFilter<"Enrollment"> | Date | string
     updatedAt?: DateTimeFilter<"Enrollment"> | Date | string
+    paymentPlanId?: StringNullableFilter<"Enrollment"> | string | null
   }
 
   export type SectionCourseUpsertWithWhereUniqueWithoutSectionInput = {
@@ -32235,7 +34346,10 @@ export namespace Prisma {
     documentNumber?: string | null
     phone?: string | null
     birthDate?: Date | string | null
+    gender?: string | null
+    address?: string | null
     avatarUrl?: string | null
+    avatarPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -32248,7 +34362,10 @@ export namespace Prisma {
     documentNumber?: string | null
     phone?: string | null
     birthDate?: Date | string | null
+    gender?: string | null
+    address?: string | null
     avatarUrl?: string | null
+    avatarPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -32353,6 +34470,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     section: SectionCreateNestedOneWithoutEnrollmentsInput
+    paymentPlan?: PaymentPlanCreateNestedOneWithoutEnrollmentsInput
   }
 
   export type EnrollmentUncheckedCreateWithoutStudentInput = {
@@ -32362,6 +34480,7 @@ export namespace Prisma {
     enrolledAt?: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
+    paymentPlanId?: string | null
   }
 
   export type EnrollmentCreateOrConnectWithoutStudentInput = {
@@ -32757,7 +34876,10 @@ export namespace Prisma {
     documentNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32770,7 +34892,10 @@ export namespace Prisma {
     documentNumber?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -33108,6 +35233,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33133,6 +35260,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33174,6 +35303,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33199,6 +35330,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33224,6 +35357,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33249,6 +35384,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33284,6 +35421,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     classrooms?: ClassroomCreateNestedManyWithoutSedeInput
     announcements?: AnnouncementCreateNestedManyWithoutSedeInput
+    paymentPlans?: PaymentPlanCreateNestedManyWithoutSedeInput
   }
 
   export type SedeUncheckedCreateWithoutMembershipsInput = {
@@ -33296,6 +35434,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     classrooms?: ClassroomUncheckedCreateNestedManyWithoutSedeInput
     announcements?: AnnouncementUncheckedCreateNestedManyWithoutSedeInput
+    paymentPlans?: PaymentPlanUncheckedCreateNestedManyWithoutSedeInput
   }
 
   export type SedeCreateOrConnectWithoutMembershipsInput = {
@@ -33319,6 +35458,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33344,6 +35485,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33385,6 +35528,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     classrooms?: ClassroomUpdateManyWithoutSedeNestedInput
     announcements?: AnnouncementUpdateManyWithoutSedeNestedInput
+    paymentPlans?: PaymentPlanUpdateManyWithoutSedeNestedInput
   }
 
   export type SedeUncheckedUpdateWithoutMembershipsInput = {
@@ -33397,6 +35541,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     classrooms?: ClassroomUncheckedUpdateManyWithoutSedeNestedInput
     announcements?: AnnouncementUncheckedUpdateManyWithoutSedeNestedInput
+    paymentPlans?: PaymentPlanUncheckedUpdateManyWithoutSedeNestedInput
   }
 
   export type CourseCreateWithoutCourseTeachersInput = {
@@ -33431,6 +35576,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33456,6 +35603,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33530,6 +35679,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33555,6 +35706,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33579,6 +35732,7 @@ export namespace Prisma {
     id?: string
     name: string
     capacity?: number | null
+    priority?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33593,6 +35747,7 @@ export namespace Prisma {
     id?: string
     name: string
     capacity?: number | null
+    priority?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33640,6 +35795,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33665,6 +35822,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33809,6 +35968,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33823,6 +35983,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33882,6 +36043,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33907,6 +36070,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33995,6 +36160,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34020,6 +36187,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34049,6 +36218,7 @@ export namespace Prisma {
     id?: string
     name: string
     capacity?: number | null
+    priority?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34063,6 +36233,7 @@ export namespace Prisma {
     id?: string
     name: string
     capacity?: number | null
+    priority?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34076,6 +36247,41 @@ export namespace Prisma {
   export type SectionCreateOrConnectWithoutEnrollmentsInput = {
     where: SectionWhereUniqueInput
     create: XOR<SectionCreateWithoutEnrollmentsInput, SectionUncheckedCreateWithoutEnrollmentsInput>
+  }
+
+  export type PaymentPlanCreateWithoutEnrollmentsInput = {
+    id?: string
+    name: string
+    type: $Enums.PaymentPlanType
+    description?: string | null
+    baseAmount: number
+    discount?: number
+    finalAmount: number
+    installments?: number | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sede?: SedeCreateNestedOneWithoutPaymentPlansInput
+  }
+
+  export type PaymentPlanUncheckedCreateWithoutEnrollmentsInput = {
+    id?: string
+    name: string
+    type: $Enums.PaymentPlanType
+    description?: string | null
+    baseAmount: number
+    discount?: number
+    finalAmount: number
+    installments?: number | null
+    isActive?: boolean
+    sedeId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PaymentPlanCreateOrConnectWithoutEnrollmentsInput = {
+    where: PaymentPlanWhereUniqueInput
+    create: XOR<PaymentPlanCreateWithoutEnrollmentsInput, PaymentPlanUncheckedCreateWithoutEnrollmentsInput>
   }
 
   export type UserUpsertWithoutEnrollmentsInput = {
@@ -34094,6 +36300,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34119,6 +36327,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34154,6 +36364,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34168,6 +36379,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34178,11 +36390,54 @@ export namespace Prisma {
     announcements?: AnnouncementUncheckedUpdateManyWithoutSectionNestedInput
   }
 
+  export type PaymentPlanUpsertWithoutEnrollmentsInput = {
+    update: XOR<PaymentPlanUpdateWithoutEnrollmentsInput, PaymentPlanUncheckedUpdateWithoutEnrollmentsInput>
+    create: XOR<PaymentPlanCreateWithoutEnrollmentsInput, PaymentPlanUncheckedCreateWithoutEnrollmentsInput>
+    where?: PaymentPlanWhereInput
+  }
+
+  export type PaymentPlanUpdateToOneWithWhereWithoutEnrollmentsInput = {
+    where?: PaymentPlanWhereInput
+    data: XOR<PaymentPlanUpdateWithoutEnrollmentsInput, PaymentPlanUncheckedUpdateWithoutEnrollmentsInput>
+  }
+
+  export type PaymentPlanUpdateWithoutEnrollmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumPaymentPlanTypeFieldUpdateOperationsInput | $Enums.PaymentPlanType
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    baseAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    installments?: NullableIntFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sede?: SedeUpdateOneWithoutPaymentPlansNestedInput
+  }
+
+  export type PaymentPlanUncheckedUpdateWithoutEnrollmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumPaymentPlanTypeFieldUpdateOperationsInput | $Enums.PaymentPlanType
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    baseAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    installments?: NullableIntFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    sedeId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UserCreateWithoutParentOfInput = {
     id?: string
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34208,6 +36463,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34238,6 +36495,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34263,6 +36522,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34304,6 +36565,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34329,6 +36592,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34365,6 +36630,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34390,6 +36657,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34415,6 +36684,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34440,6 +36711,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34499,6 +36772,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34524,6 +36799,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34565,6 +36842,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34590,6 +36869,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34661,6 +36942,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34686,6 +36969,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34821,6 +37106,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34846,6 +37133,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34905,6 +37194,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34930,6 +37221,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34971,6 +37264,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34996,6 +37291,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35067,6 +37364,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35092,6 +37391,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35146,6 +37447,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -35171,6 +37474,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -35287,6 +37592,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35312,6 +37619,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35353,6 +37662,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -35378,6 +37689,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -35437,6 +37750,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -35462,6 +37777,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -35503,6 +37820,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35528,6 +37847,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35599,6 +37920,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35624,6 +37947,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35649,6 +37974,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -35674,6 +38001,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -35709,6 +38038,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     classrooms?: ClassroomCreateNestedManyWithoutSedeInput
     memberships?: MembershipCreateNestedManyWithoutSedeInput
+    paymentPlans?: PaymentPlanCreateNestedManyWithoutSedeInput
   }
 
   export type SedeUncheckedCreateWithoutAnnouncementsInput = {
@@ -35721,6 +38051,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     classrooms?: ClassroomUncheckedCreateNestedManyWithoutSedeInput
     memberships?: MembershipUncheckedCreateNestedManyWithoutSedeInput
+    paymentPlans?: PaymentPlanUncheckedCreateNestedManyWithoutSedeInput
   }
 
   export type SedeCreateOrConnectWithoutAnnouncementsInput = {
@@ -35732,6 +38063,7 @@ export namespace Prisma {
     id?: string
     name: string
     capacity?: number | null
+    priority?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -35746,6 +38078,7 @@ export namespace Prisma {
     id?: string
     name: string
     capacity?: number | null
+    priority?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -35799,6 +38132,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35824,6 +38159,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35865,6 +38202,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     classrooms?: ClassroomUpdateManyWithoutSedeNestedInput
     memberships?: MembershipUpdateManyWithoutSedeNestedInput
+    paymentPlans?: PaymentPlanUpdateManyWithoutSedeNestedInput
   }
 
   export type SedeUncheckedUpdateWithoutAnnouncementsInput = {
@@ -35877,6 +38215,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     classrooms?: ClassroomUncheckedUpdateManyWithoutSedeNestedInput
     memberships?: MembershipUncheckedUpdateManyWithoutSedeNestedInput
+    paymentPlans?: PaymentPlanUncheckedUpdateManyWithoutSedeNestedInput
   }
 
   export type SectionUpsertWithoutAnnouncementsInput = {
@@ -35894,6 +38233,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35908,6 +38248,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35974,6 +38315,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -35999,6 +38342,8 @@ export namespace Prisma {
     email: string
     passwordHash: string
     isActive?: boolean
+    mustChangePassword?: boolean
+    passwordChangedAt?: Date | string | null
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -36081,6 +38426,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36106,6 +38453,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     passwordHash?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    passwordChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36124,6 +38473,120 @@ export namespace Prisma {
     studentSubmissions?: TaskSubmissionUncheckedUpdateManyWithoutStudentNestedInput
     gradedSubmissions?: TaskSubmissionUncheckedUpdateManyWithoutGradedByNestedInput
     announcements?: AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+  }
+
+  export type SedeCreateWithoutPaymentPlansInput = {
+    id?: string
+    name: string
+    address?: string | null
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    classrooms?: ClassroomCreateNestedManyWithoutSedeInput
+    memberships?: MembershipCreateNestedManyWithoutSedeInput
+    announcements?: AnnouncementCreateNestedManyWithoutSedeInput
+  }
+
+  export type SedeUncheckedCreateWithoutPaymentPlansInput = {
+    id?: string
+    name: string
+    address?: string | null
+    phone?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    classrooms?: ClassroomUncheckedCreateNestedManyWithoutSedeInput
+    memberships?: MembershipUncheckedCreateNestedManyWithoutSedeInput
+    announcements?: AnnouncementUncheckedCreateNestedManyWithoutSedeInput
+  }
+
+  export type SedeCreateOrConnectWithoutPaymentPlansInput = {
+    where: SedeWhereUniqueInput
+    create: XOR<SedeCreateWithoutPaymentPlansInput, SedeUncheckedCreateWithoutPaymentPlansInput>
+  }
+
+  export type EnrollmentCreateWithoutPaymentPlanInput = {
+    id?: string
+    status?: $Enums.EnrollmentStatus
+    enrolledAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    student: UserCreateNestedOneWithoutEnrollmentsInput
+    section: SectionCreateNestedOneWithoutEnrollmentsInput
+  }
+
+  export type EnrollmentUncheckedCreateWithoutPaymentPlanInput = {
+    id?: string
+    studentId: string
+    sectionId: string
+    status?: $Enums.EnrollmentStatus
+    enrolledAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EnrollmentCreateOrConnectWithoutPaymentPlanInput = {
+    where: EnrollmentWhereUniqueInput
+    create: XOR<EnrollmentCreateWithoutPaymentPlanInput, EnrollmentUncheckedCreateWithoutPaymentPlanInput>
+  }
+
+  export type EnrollmentCreateManyPaymentPlanInputEnvelope = {
+    data: EnrollmentCreateManyPaymentPlanInput | EnrollmentCreateManyPaymentPlanInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SedeUpsertWithoutPaymentPlansInput = {
+    update: XOR<SedeUpdateWithoutPaymentPlansInput, SedeUncheckedUpdateWithoutPaymentPlansInput>
+    create: XOR<SedeCreateWithoutPaymentPlansInput, SedeUncheckedCreateWithoutPaymentPlansInput>
+    where?: SedeWhereInput
+  }
+
+  export type SedeUpdateToOneWithWhereWithoutPaymentPlansInput = {
+    where?: SedeWhereInput
+    data: XOR<SedeUpdateWithoutPaymentPlansInput, SedeUncheckedUpdateWithoutPaymentPlansInput>
+  }
+
+  export type SedeUpdateWithoutPaymentPlansInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    classrooms?: ClassroomUpdateManyWithoutSedeNestedInput
+    memberships?: MembershipUpdateManyWithoutSedeNestedInput
+    announcements?: AnnouncementUpdateManyWithoutSedeNestedInput
+  }
+
+  export type SedeUncheckedUpdateWithoutPaymentPlansInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    classrooms?: ClassroomUncheckedUpdateManyWithoutSedeNestedInput
+    memberships?: MembershipUncheckedUpdateManyWithoutSedeNestedInput
+    announcements?: AnnouncementUncheckedUpdateManyWithoutSedeNestedInput
+  }
+
+  export type EnrollmentUpsertWithWhereUniqueWithoutPaymentPlanInput = {
+    where: EnrollmentWhereUniqueInput
+    update: XOR<EnrollmentUpdateWithoutPaymentPlanInput, EnrollmentUncheckedUpdateWithoutPaymentPlanInput>
+    create: XOR<EnrollmentCreateWithoutPaymentPlanInput, EnrollmentUncheckedCreateWithoutPaymentPlanInput>
+  }
+
+  export type EnrollmentUpdateWithWhereUniqueWithoutPaymentPlanInput = {
+    where: EnrollmentWhereUniqueInput
+    data: XOR<EnrollmentUpdateWithoutPaymentPlanInput, EnrollmentUncheckedUpdateWithoutPaymentPlanInput>
+  }
+
+  export type EnrollmentUpdateManyWithWhereWithoutPaymentPlanInput = {
+    where: EnrollmentScalarWhereInput
+    data: XOR<EnrollmentUpdateManyMutationInput, EnrollmentUncheckedUpdateManyWithoutPaymentPlanInput>
   }
 
   export type ClassroomCreateManySedeInput = {
@@ -36155,6 +38618,20 @@ export namespace Prisma {
     authorId: string
     sectionId?: string | null
     isGlobal?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PaymentPlanCreateManySedeInput = {
+    id?: string
+    name: string
+    type: $Enums.PaymentPlanType
+    description?: string | null
+    baseAmount: number
+    discount?: number
+    finalAmount: number
+    installments?: number | null
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -36262,10 +38739,55 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type PaymentPlanUpdateWithoutSedeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumPaymentPlanTypeFieldUpdateOperationsInput | $Enums.PaymentPlanType
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    baseAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    installments?: NullableIntFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    enrollments?: EnrollmentUpdateManyWithoutPaymentPlanNestedInput
+  }
+
+  export type PaymentPlanUncheckedUpdateWithoutSedeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumPaymentPlanTypeFieldUpdateOperationsInput | $Enums.PaymentPlanType
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    baseAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    installments?: NullableIntFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    enrollments?: EnrollmentUncheckedUpdateManyWithoutPaymentPlanNestedInput
+  }
+
+  export type PaymentPlanUncheckedUpdateManyWithoutSedeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumPaymentPlanTypeFieldUpdateOperationsInput | $Enums.PaymentPlanType
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    baseAmount?: FloatFieldUpdateOperationsInput | number
+    discount?: FloatFieldUpdateOperationsInput | number
+    finalAmount?: FloatFieldUpdateOperationsInput | number
+    installments?: NullableIntFieldUpdateOperationsInput | number | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type SectionCreateManyPeriodInput = {
     id?: string
     name: string
     capacity?: number | null
+    priority?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -36277,6 +38799,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36291,6 +38814,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36305,6 +38829,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36316,6 +38841,7 @@ export namespace Prisma {
     id?: string
     name: string
     capacity?: number | null
+    priority?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -36327,6 +38853,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36341,6 +38868,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36355,6 +38883,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36366,6 +38895,7 @@ export namespace Prisma {
     id?: string
     name: string
     capacity?: number | null
+    priority?: number
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -36377,6 +38907,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36391,6 +38922,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36405,6 +38937,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     capacity?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: IntFieldUpdateOperationsInput | number
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36419,6 +38952,7 @@ export namespace Prisma {
     enrolledAt?: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
+    paymentPlanId?: string | null
   }
 
   export type SectionCourseCreateManySectionInput = {
@@ -36451,6 +38985,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: UserUpdateOneRequiredWithoutEnrollmentsNestedInput
+    paymentPlan?: PaymentPlanUpdateOneWithoutEnrollmentsNestedInput
   }
 
   export type EnrollmentUncheckedUpdateWithoutSectionInput = {
@@ -36460,6 +38995,7 @@ export namespace Prisma {
     enrolledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paymentPlanId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EnrollmentUncheckedUpdateManyWithoutSectionInput = {
@@ -36469,6 +39005,7 @@ export namespace Prisma {
     enrolledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paymentPlanId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type SectionCourseUpdateWithoutSectionInput = {
@@ -36655,6 +39192,7 @@ export namespace Prisma {
     enrolledAt?: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
+    paymentPlanId?: string | null
   }
 
   export type ParentStudentCreateManyParentInput = {
@@ -36873,6 +39411,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     section?: SectionUpdateOneRequiredWithoutEnrollmentsNestedInput
+    paymentPlan?: PaymentPlanUpdateOneWithoutEnrollmentsNestedInput
   }
 
   export type EnrollmentUncheckedUpdateWithoutStudentInput = {
@@ -36882,6 +39421,7 @@ export namespace Prisma {
     enrolledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paymentPlanId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EnrollmentUncheckedUpdateManyWithoutStudentInput = {
@@ -36891,6 +39431,7 @@ export namespace Prisma {
     enrolledAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paymentPlanId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ParentStudentUpdateWithoutParentInput = {
@@ -37538,6 +40079,46 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     viewedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EnrollmentCreateManyPaymentPlanInput = {
+    id?: string
+    studentId: string
+    sectionId: string
+    status?: $Enums.EnrollmentStatus
+    enrolledAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EnrollmentUpdateWithoutPaymentPlanInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
+    enrolledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    student?: UserUpdateOneRequiredWithoutEnrollmentsNestedInput
+    section?: SectionUpdateOneRequiredWithoutEnrollmentsNestedInput
+  }
+
+  export type EnrollmentUncheckedUpdateWithoutPaymentPlanInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    sectionId?: StringFieldUpdateOperationsInput | string
+    status?: EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
+    enrolledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EnrollmentUncheckedUpdateManyWithoutPaymentPlanInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    sectionId?: StringFieldUpdateOperationsInput | string
+    status?: EnumEnrollmentStatusFieldUpdateOperationsInput | $Enums.EnrollmentStatus
+    enrolledAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

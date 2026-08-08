@@ -166,6 +166,7 @@ exports.Prisma.SectionScalarFieldEnum = {
   id: 'id',
   name: 'name',
   capacity: 'capacity',
+  priority: 'priority',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -189,6 +190,8 @@ exports.Prisma.UserScalarFieldEnum = {
   email: 'email',
   passwordHash: 'passwordHash',
   isActive: 'isActive',
+  mustChangePassword: 'mustChangePassword',
+  passwordChangedAt: 'passwordChangedAt',
   lastLoginAt: 'lastLoginAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -203,7 +206,10 @@ exports.Prisma.ProfileScalarFieldEnum = {
   documentNumber: 'documentNumber',
   phone: 'phone',
   birthDate: 'birthDate',
+  gender: 'gender',
+  address: 'address',
   avatarUrl: 'avatarUrl',
+  avatarPublicId: 'avatarPublicId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -244,7 +250,8 @@ exports.Prisma.EnrollmentScalarFieldEnum = {
   status: 'status',
   enrolledAt: 'enrolledAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  paymentPlanId: 'paymentPlanId'
 };
 
 exports.Prisma.ParentStudentScalarFieldEnum = {
@@ -344,6 +351,21 @@ exports.Prisma.AnnouncementViewScalarFieldEnum = {
   viewedAt: 'viewedAt'
 };
 
+exports.Prisma.PaymentPlanScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  type: 'type',
+  description: 'description',
+  baseAmount: 'baseAmount',
+  discount: 'discount',
+  finalAmount: 'finalAmount',
+  installments: 'installments',
+  isActive: 'isActive',
+  sedeId: 'sedeId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -409,7 +431,10 @@ exports.Prisma.ProfileOrderByRelevanceFieldEnum = {
   documentType: 'documentType',
   documentNumber: 'documentNumber',
   phone: 'phone',
-  avatarUrl: 'avatarUrl'
+  gender: 'gender',
+  address: 'address',
+  avatarUrl: 'avatarUrl',
+  avatarPublicId: 'avatarPublicId'
 };
 
 exports.Prisma.MembershipOrderByRelevanceFieldEnum = {
@@ -434,7 +459,8 @@ exports.Prisma.SectionCourseOrderByRelevanceFieldEnum = {
 exports.Prisma.EnrollmentOrderByRelevanceFieldEnum = {
   id: 'id',
   studentId: 'studentId',
-  sectionId: 'sectionId'
+  sectionId: 'sectionId',
+  paymentPlanId: 'paymentPlanId'
 };
 
 exports.Prisma.ParentStudentOrderByRelevanceFieldEnum = {
@@ -497,6 +523,13 @@ exports.Prisma.AnnouncementViewOrderByRelevanceFieldEnum = {
   id: 'id',
   announcementId: 'announcementId',
   userId: 'userId'
+};
+
+exports.Prisma.PaymentPlanOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  sedeId: 'sedeId'
 };
 exports.PeriodStatus = exports.$Enums.PeriodStatus = {
   DRAFT: 'DRAFT',
@@ -565,6 +598,15 @@ exports.AnnouncementPriority = exports.$Enums.AnnouncementPriority = {
   URGENT: 'URGENT'
 };
 
+exports.PaymentPlanType = exports.$Enums.PaymentPlanType = {
+  FULL_PAYMENT: 'FULL_PAYMENT',
+  INSTALLMENTS: 'INSTALLMENTS',
+  SIBLING_DISCOUNT: 'SIBLING_DISCOUNT',
+  AGREEMENT: 'AGREEMENT',
+  SCHOLARSHIP: 'SCHOLARSHIP',
+  OTHER: 'OTHER'
+};
+
 exports.Prisma.ModelName = {
   Sede: 'Sede',
   AcademicPeriod: 'AcademicPeriod',
@@ -585,7 +627,8 @@ exports.Prisma.ModelName = {
   Task: 'Task',
   TaskSubmission: 'TaskSubmission',
   Announcement: 'Announcement',
-  AnnouncementView: 'AnnouncementView'
+  AnnouncementView: 'AnnouncementView',
+  PaymentPlan: 'PaymentPlan'
 };
 
 /**

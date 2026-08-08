@@ -17,6 +17,8 @@ import { EnrollmentModule } from './academic/enrollments/enrollments.module';
 import { ParentStudentModule } from './academic/parent-students/parent-students.module';
 import { AppController } from './app.controller';
 import { AttendanceModule } from './academic/attendance/attendance.module';
+import { CloudinaryModule } from './common/cloudinary/cloudinary.module';
+import { PaymentPlanModule } from './academic/payment-plans/payment-plans.module';
 
 @Module({
   imports: [
@@ -45,6 +47,7 @@ import { AttendanceModule } from './academic/attendance/attendance.module';
         },
       ],
     }),
+    CloudinaryModule,
     PrismaModule,
     AuthModule,
     UsersModule,
@@ -59,6 +62,7 @@ import { AttendanceModule } from './academic/attendance/attendance.module';
     SectionCourseModule,
     EnrollmentModule,
     AttendanceModule,
+    PaymentPlanModule,
   ],
   controllers: [AppController],
   providers: [
