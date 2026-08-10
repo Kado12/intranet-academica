@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, Res, Request } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { EnrollmentsService } from './enrollments.service';
 import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
 import { UpdateEnrollmentDto } from './dto/update-enrollment.dto';
+import { TransferEnrollmentDto } from './dto/transfer-enrollment.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
@@ -30,15 +31,29 @@ export class EnrollmentsController {
   }
 
   @Get()
-  @ApiQuery({ name: 'periodId', required: false, description: 'Filtrar por ID de período' })
-  @ApiQuery({ name: 'sectionId', required: false, description: 'Filtrar por ID de sección' })
-  @ApiOperation({ summary: 'Listar todas las matrículas' })
-  @ApiResponse({ status: 200, description: 'Lista de matrículas' })
+  @ApiQuery({ name: 'periodId', required: false })
+  @ApiQuery({ name: 'sectionId', required: false })
+  @ApiQuery({ name: 'sedeId', required: false })
+  @ApiQuery({ name: 'turnId', required: false })
+  @ApiQuery({ name: 'paymentPlanId', required: false })
+  @ApiQuery({ name: 'search', required: false, description: 'Buscar por nombre, apellido o documento' })
+  @ApiOperation({ summary: 'Listar matrículas con filtros' })
   findAll(
     @Query('periodId') periodId?: string,
     @Query('sectionId') sectionId?: string,
+    @Query('sedeId') sedeId?: string,
+    @Query('turnId') turnId?: string,
+    @Query('paymentPlanId') paymentPlanId?: string,
+    @Query('search') search?: string,
   ) {
-    return this.enrollmentsService.findAll(periodId, sectionId);
+    return this.enrollmentsService.findAll({
+      periodId,
+      sectionId,
+      sedeId,
+      turnId,
+      paymentPlanId,
+      search,
+    });
   }
 
   @Get('by-student')
@@ -79,6 +94,19 @@ export class EnrollmentsController {
   @ApiResponse({ status: 200, description: 'Matrícula actualizada' })
   update(@Param('id') id: string, @Body() updateEnrollmentDto: UpdateEnrollmentDto) {
     return this.enrollmentsService.update(id, updateEnrollmentDto);
+  }
+
+  @Patch(':id/transfer')
+  @Roles(Role.ADMIN, Role.COORDINADOR, Role.SECRETARIA)
+  @ApiOperation({ summary: 'Transferir estudiante a otra sección (cambio de turno/sede/sección)' })
+  @ApiResponse({ status: 200, description: 'Transferencia realizada' })
+  @ApiResponse({ status: 400, description: 'No hay cupo disponible' })
+  transferEnrollment(
+    @Param('id') id: string,
+    @Body() transferDto: TransferEnrollmentDto,
+    @Request() req,
+  ) {
+    return this.enrollmentsService.transferEnrollment(id, transferDto, req.user.id);
   }
 
   @Delete(':id')

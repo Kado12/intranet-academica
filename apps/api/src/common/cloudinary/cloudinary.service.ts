@@ -141,4 +141,40 @@ export class CloudinaryService {
       fetch_format: 'auto',
     });
   }
+
+  async renameImage(
+    oldPublicId: string,
+    newPublicId: string,
+    folder: string = 'intranet/students',
+  ): Promise<CloudinaryResponse> {
+    if (!oldPublicId || !newPublicId || oldPublicId === newPublicId) {
+      throw new BadRequestException('IDs inválidos para renombrado');
+    }
+
+    try {
+      this.logger.log(`Renombrando imagen: ${oldPublicId} → ${newPublicId}`);
+
+      // 1. Copiar la imagen con el nuevo public_id
+      // Cloudinary no tiene rename nativo, así que copiamos y eliminamos
+      const sourceUrl = this.cloudinary.url(oldPublicId, { secure: true });
+
+      const result = await this.cloudinary.uploader.upload(sourceUrl, {
+        folder,
+        public_id: newPublicId,
+        overwrite: true,
+      });
+
+      // 2. Eliminar la imagen antigua
+      await this.cloudinary.uploader.destroy(oldPublicId);
+      this.logger.log(`✅ Imagen antigua eliminada: ${oldPublicId}`);
+
+      return {
+        secure_url: result.secure_url,
+        public_id: result.public_id,
+      };
+    } catch (error) {
+      this.logger.error(`❌ Error al renombrar imagen: ${error.message}`);
+      throw new BadRequestException(`Error al renombrar imagen: ${error.message}`);
+    }
+  }
 }

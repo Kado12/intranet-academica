@@ -44,14 +44,32 @@ export interface RegisterStudentResponse {
   note: string;
 }
 
+export interface UpdateStudentProfileDto {
+  firstName?: string;
+  lastName?: string;
+  documentType?: string;
+  documentNumber?: string;
+  birthDate?: string;
+  gender?: string;
+  phone?: string;
+  address?: string;
+  email?: string;
+  avatarUrl?: string;
+  avatarPublicId?: string;
+}
+
 export const studentsRegistrationService = {
   async registerStudent(data: RegisterStudentDto): Promise<RegisterStudentResponse> {
     const response = await api.post<RegisterStudentResponse>('/api/users/students/register', data);
     return response.data;
   },
 
-  async resetPassword(userId: string): Promise<{ message: string; temporaryPassword: string }> {
-    const response = await api.patch<{ message: string; temporaryPassword: string }>(
+  async resetPassword(userId: string): Promise<{ 
+    message: string; 
+    temporaryPassword: string;
+    email?: string;
+  }> {
+    const response = await api.patch(
       `/api/users/${userId}/reset-password`
     );
     return response.data;
@@ -98,6 +116,17 @@ export const studentsRegistrationService = {
     const response = await api.get(
       `/api/academic/enrollments/${enrollmentId}/card`,
       { responseType: 'blob' },
+    );
+    return response.data;
+  },
+
+  async updateStudentProfile(
+  userId: string,
+  data: UpdateStudentProfileDto
+  ): Promise<{ message: string; profile: any }> {
+    const response = await api.patch(
+      `/api/users/${userId}/profile`,
+      data
     );
     return response.data;
   },

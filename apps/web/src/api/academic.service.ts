@@ -195,24 +195,60 @@ export interface EnrollmentResponse {
     profile?: {
       firstName: string;
       lastName: string;
+      documentNumber?: string;
+      avatarUrl?: string;
     };
   };
   section?: {
     id: string;
     name: string;
-    classroom?: { name: string };
-    turn?: { name: string };
-    period?: { name: string };
+    classroom?: { 
+      name: string;
+      sede?: { id: string; name: string };
+    };
+    turn?: { id: string; name: string };
+    period?: { id: string; name: string };
+  };
+  paymentPlan?: {
+    id: string;
+    name: string;
+    finalAmount: number;
   };
 }
 
+export interface EnrollmentFilters {
+  periodId?: string;
+  sectionId?: string;
+  sedeId?: string;
+  turnId?: string;
+  paymentPlanId?: string;
+  search?: string;
+}
+
+export interface TransferEnrollmentDto {
+  sectionId?: string;
+  sedeId?: string;
+  turnId?: string;
+  paymentPlanId?: string;
+  reason?: string;
+}
+
 export const enrollmentsService = {
-  async findAll(periodId?: string, sectionId?: string): Promise<EnrollmentResponse[]> {
+  async findAll(filters?: EnrollmentFilters): Promise<EnrollmentResponse[]> {
     const params = new URLSearchParams();
-    if (periodId) params.append('periodId', periodId);
-    if (sectionId) params.append('sectionId', sectionId);
+    if (filters?.periodId) params.append('periodId', filters.periodId);
+    if (filters?.sectionId) params.append('sectionId', filters.sectionId);
+    if (filters?.sedeId) params.append('sedeId', filters.sedeId);
+    if (filters?.turnId) params.append('turnId', filters.turnId);
+    if (filters?.paymentPlanId) params.append('paymentPlanId', filters.paymentPlanId);
+    if (filters?.search) params.append('search', filters.search);
     
     const response = await api.get<EnrollmentResponse[]>(`/api/academic/enrollments?${params.toString()}`);
+    return response.data;
+  },
+
+  async transfer(id: string, data: TransferEnrollmentDto): Promise<any> {
+    const response = await api.patch(`/api/academic/enrollments/${id}/transfer`, data);
     return response.data;
   },
 

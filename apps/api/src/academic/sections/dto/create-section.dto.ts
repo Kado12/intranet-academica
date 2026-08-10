@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional, IsInt, IsBoolean, IsNotEmpty } from 'class-validator';
+import { IsString, IsOptional, IsInt, IsBoolean, IsNotEmpty, Min } from 'class-validator';
 
 export class CreateSectionDto {
   @ApiProperty({ example: 'A', description: 'Nombre de la sección' })
@@ -11,6 +11,17 @@ export class CreateSectionDto {
   @IsInt()
   @IsOptional()
   capacity?: number;
+
+  @ApiProperty({
+    example: 1,
+    description: 'Prioridad de llenado (1 = se llena primero, 2 = segundo, etc.)',
+    required: false,
+    default: 1,
+  })
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  priority?: number;
 
   @ApiProperty({ example: true, description: 'Estado activo de la sección', required: false })
   @IsBoolean()

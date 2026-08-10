@@ -26,6 +26,7 @@ import { getZodErrors } from '../../utils/zodHelpers';
 const sectionSchema = z.object({
   name: z.string().min(1, 'El nombre es requerido'),
   capacity: z.string().optional(),
+  priority: z.string().min(1, 'La prioridad es requerida'), // ← NUEVO
   classroomId: z.string().min(1, 'Selecciona un salón'),
   turnId: z.string().min(1, 'Selecciona un turno'),
   periodId: z.string().min(1, 'Selecciona un período'),
@@ -46,6 +47,7 @@ export const SectionsPage: React.FC = () => {
   const [formData, setFormData] = useState<SectionFormData>({
     name: '',
     capacity: '',
+    priority: '1',
     classroomId: '',
     turnId: '',
     periodId: '',
@@ -114,6 +116,7 @@ export const SectionsPage: React.FC = () => {
       const data = {
         name: formData.name,
         capacity: formData.capacity ? parseInt(formData.capacity) : undefined,
+        priority: formData.priority ? parseInt(formData.priority) : 1,
         classroomId: formData.classroomId,
         turnId: formData.turnId,
         periodId: formData.periodId,
@@ -143,6 +146,7 @@ export const SectionsPage: React.FC = () => {
     setFormData({
       name: '',
       capacity: '',
+      priority: '1',
       classroomId: '',
       turnId: '',
       periodId: '',
@@ -155,6 +159,7 @@ export const SectionsPage: React.FC = () => {
     setFormData({
       name: section.name,
       capacity: section.capacity?.toString() || '',
+      priority: (section as any).priority?.toString() || '1',
       classroomId: section.classroomId,
       turnId: section.turnId,
       periodId: section.periodId,
@@ -285,6 +290,26 @@ export const SectionsPage: React.FC = () => {
             />
           </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              label="Prioridad de llenado"
+              type="number"
+              name="priority"
+              value={formData.priority}
+              onChange={handleChange}
+              placeholder="1"
+              min="1"
+              error={errors.priority}
+              required
+            />
+            <div className="flex items-end">
+              <p className="text-xs text-gray-500">
+                💡 Las secciones con prioridad 1 se llenan primero. 
+                Usa 1, 2, 3... para controlar el orden de auto-asignación.
+              </p>
+            </div>
+          </div>
+
           <div className="flex justify-end space-x-4 pt-4">
             <Button
               type="button"
@@ -348,6 +373,9 @@ export const SectionsPage: React.FC = () => {
                     Capacidad
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Prioridad
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Acciones
                   </th>
                 </tr>
@@ -374,6 +402,11 @@ export const SectionsPage: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {section.capacity || '-'}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="px-2 py-1 text-xs font-medium bg-purple-100 text-purple-800 rounded-full">
+                        {(section as any).priority || 1}
+                      </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex space-x-2">

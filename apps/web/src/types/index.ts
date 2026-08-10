@@ -124,6 +124,7 @@ export interface Section {
   id: string;
   name: string;
   capacity?: number;
+  priority?: number;
   isActive: boolean;
   classroomId: string;
   turnId: string;

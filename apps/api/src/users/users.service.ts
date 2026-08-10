@@ -1,8 +1,10 @@
 import { Injectable, NotFoundException, ConflictException, BadRequestException, Logger } from '@nestjs/common';
+import { CloudinaryService } from '../common/cloudinary/cloudinary.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { Role, EnrollmentStatus } from '@intranet/database';
 import { RegisterStudentDto } from './dto/register-student.dto';
 import * as bcrypt from 'bcrypt';
+import { UpdateStudentProfileDto } from './dto/update-student-profile.dto';
 
 // Roles administrativos que se muestran en la tabla de gestión
 const ADMIN_ROLES: Role[] = [
@@ -16,7 +18,10 @@ const ADMIN_ROLES: Role[] = [
 export class UsersService {
   private readonly logger = new Logger(UsersService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
   async findAdminUsers(search?: string, role?: Role) {
     const where: any = {
@@ -465,6 +470,153 @@ export class UsersService {
       email: user.email,
       temporaryPassword: newPassword,
       note: 'La nueva contraseña temporal es: ' + newPassword,
+    };
+  }
+
+  async updateStudentProfile(
+    userId: string,
+    updateDto: UpdateStudentProfileDto,
+    adminId: string,
+  ) {
+    // 1. Verificar que el usuario existe y es estudiante
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        profile: true,
+        memberships: {
+          where: { status: 'ACTIVE', role: 'ESTUDIANTE' },
+        },
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    if (user.memberships.length === 0) {
+      throw new BadRequestException('El usuario no tiene el rol de estudiante');
+    }
+
+    const oldDocumentNumber = user.profile?.documentNumber;
+    const newDocumentNumber = updateDto.documentNumber;
+    const documentChanged = newDocumentNumber && newDocumentNumber !== oldDocumentNumber;
+    console.log(oldDocumentNumber, newDocumentNumber, documentChanged);
+    console.log(user.profile?.avatarPublicId);
+
+    // 2. Si se cambia el email, verificar que no exista
+    if (updateDto.email && updateDto.email !== user.email) {
+      const existingEmail = await this.prisma.user.findUnique({
+        where: { email: updateDto.email },
+      });
+
+      if (existingEmail) {
+        throw new ConflictException('Ya existe un usuario con ese correo electrónico');
+      }
+    }
+    // 3. Si se cambia el documento, verificar que no exista (excepto el propio)
+    if (documentChanged) {
+      const existingDocument = await this.prisma.profile.findUnique({
+        where: { documentNumber: newDocumentNumber },
+      });
+
+      if (existingDocument) {
+        throw new ConflictException('Ya existe un usuario con ese número de documento');
+      }
+    }
+
+    // 4. Manejar cambio de foto (si se envía una nueva con DNI diferente)
+    let finalAvatarUrl = updateDto.avatarUrl ?? user.profile?.avatarUrl ?? null;
+    let finalAvatarPublicId = updateDto.avatarPublicId ?? user.profile?.avatarPublicId ?? null;
+
+    if (
+      documentChanged &&
+      user.profile?.avatarPublicId &&
+      user.profile.avatarPublicId !== newDocumentNumber
+    ) {
+      try {
+        // Renombrar la foto en Cloudinary
+        const renamed = await this.cloudinaryService.renameImage(
+          user.profile.avatarPublicId,
+          newDocumentNumber,
+          'intranet/students',
+        );
+
+        finalAvatarUrl = renamed.secure_url;
+        finalAvatarPublicId = renamed.public_id;
+
+        this.logger.log(
+          `📷 Foto renombrada en Cloudinary: ${user.profile.avatarPublicId} → ${newDocumentNumber}`,
+        );
+      } catch (error) {
+        this.logger.warn(
+          `⚠️ No se pudo renombrar la foto automáticamente: ${error.message}. ` +
+            `La foto quedará con el DNI anterior.`,
+        );
+        // No lanzamos error: el cambio de documento procede aunque falle el renombrado
+      }
+    }
+
+    // 5. Si el frontend envió una nueva foto, usarla
+    if (updateDto.avatarUrl) {
+      finalAvatarUrl = updateDto.avatarUrl;
+      finalAvatarPublicId = updateDto.avatarPublicId || '';
+    }
+
+    // 6. Actualizar en transacción
+    const result = await this.prisma.$transaction(async (tx) => {
+      if (updateDto.email && updateDto.email !== user.email) {
+        await tx.user.update({
+          where: { id: userId },
+          data: { email: updateDto.email },
+        });
+      }
+
+      const profileData: any = {};
+
+      if (updateDto.firstName !== undefined)
+        profileData.firstName = updateDto.firstName;
+      if (updateDto.lastName !== undefined)
+        profileData.lastName = updateDto.lastName;
+      if (updateDto.documentType !== undefined)
+        profileData.documentType = updateDto.documentType;
+      if (updateDto.documentNumber !== undefined)
+        profileData.documentNumber = updateDto.documentNumber;
+      if (updateDto.birthDate !== undefined) {
+        profileData.birthDate = updateDto.birthDate ? new Date(updateDto.birthDate) : null;
+      }
+      if (updateDto.gender !== undefined) profileData.gender = updateDto.gender;
+      if (updateDto.phone !== undefined) profileData.phone = updateDto.phone;
+      if (updateDto.address !== undefined) profileData.address = updateDto.address;
+
+      // Siempre actualizar la foto (puede haber sido renombrada o cambiada)
+      profileData.avatarUrl = finalAvatarUrl;
+      profileData.avatarPublicId = finalAvatarPublicId;
+
+      if (user.profile) {
+        return tx.profile.update({
+          where: { userId },
+          data: profileData,
+          include: { user: true },
+        });
+      } else {
+        return tx.profile.create({
+          data: {
+            userId,
+            ...profileData,
+          },
+          include: { user: true },
+        });
+      }
+    });
+
+    this.logger.log(
+      `Perfil actualizado: ${user.email} | Por: ${adminId} | Campos: ${Object.keys(updateDto).join(', ')}`,
+    );
+
+    return {
+      message: 'Datos del estudiante actualizados exitosamente',
+      profile: result,
+      photoRenamed: documentChanged && finalAvatarPublicId === newDocumentNumber,
     };
   }
 }
