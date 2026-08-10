@@ -1,13 +1,20 @@
-import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, BadRequestException, Logger } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
 import { UpdateEnrollmentDto } from './dto/update-enrollment.dto';
 import { TransferEnrollmentDto } from './dto/transfer-enrollment.dto';
 import { Role, EnrollmentStatus } from '@intranet/database';
+import { AuditService } from '../../common/audit/audit.service';
+import { AuditAction, AuditEntity } from '@intranet/database';
 
 @Injectable()
 export class EnrollmentsService {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly logger = new Logger(EnrollmentsService.name);
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly auditService: AuditService,
+  ) {}
 
   async create(createEnrollmentDto: CreateEnrollmentDto) {
     const { studentId, sectionId } = createEnrollmentDto;
@@ -300,6 +307,7 @@ export class EnrollmentsService {
             period: true,
           },
         },
+        paymentPlan: true,
       },
     });
 
@@ -365,8 +373,30 @@ export class EnrollmentsService {
       },
     });
 
-    // 5. Log de auditoría
-    console.log(
+    // ===== LOG DE AUDITORÍA =====
+    await this.auditService.log({
+      action: AuditAction.TRANSFER,
+      entity: AuditEntity.ENROLLMENT,
+      entityId: enrollmentId,
+      entityName: enrollment.student.email,
+      oldData: {
+        section: enrollment.section.name,
+        classroom: enrollment.section.classroom?.name,
+        turn: enrollment.section.turn?.name,
+        sede: enrollment.section.classroom?.sede?.name,
+        paymentPlan: enrollment.paymentPlan?.name,
+      },
+      newData: {
+        section: updatedEnrollment.section.name,
+        classroom: updatedEnrollment.section.classroom?.name,
+        turn: updatedEnrollment.section.turn?.name,
+        sede: updatedEnrollment.section.classroom?.sede?.name,
+        paymentPlan: updatedEnrollment.paymentPlan?.name,
+      },
+      userId: adminId,
+    });
+
+    this.logger.log(
       `Transferencia: ${enrollment.student.email} | ` +
         `De: ${enrollment.section.name} → A: ${updatedEnrollment.section.name} | ` +
         `Motivo: ${reason || 'No especificado'} | ` +

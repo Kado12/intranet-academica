@@ -378,6 +378,25 @@ export const EnrollmentsPage: React.FC = () => {
     }
   };
 
+  const handleDownloadPdf = async (enrollment: EnrollmentResponse) => {
+    try {
+      const blob = await studentsRegistrationService.downloadEnrollmentCard(enrollment.id);
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `ficha-${enrollment.student?.profile?.firstName || 'estudiante'}-${enrollment.student?.profile?.documentNumber || 'sindni'}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      addToast('success', 'Ficha descargada exitosamente');
+    } catch (error) {
+      addToast('error', 'Error al descargar la ficha');
+    }
+  };
+
   // ===== HANDLERS DE RESETEO DE CONTRASEÑA =====
 
   const handleResetPasswordClick = () => {
@@ -716,6 +735,19 @@ export const EnrollmentsPage: React.FC = () => {
               />
             </div>
 
+            <div className="border-t pt-4 mt-4">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => handleDownloadPdf(editingEnrollment)}
+                className="w-full"
+              >
+                <span className="flex items-center justify-center">
+                  📄 Descargar Ficha PDF Actualizada
+                </span>
+              </Button>
+            </div>
+
             <div className="flex justify-end space-x-4 pt-4">
               <Button
                 type="button"
@@ -871,6 +903,25 @@ export const EnrollmentsPage: React.FC = () => {
               </p>
             </div>
 
+            <div className="border-t pt-4 mt-4">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => {
+                  // Buscar el enrollment correspondiente al estudiante
+                  const enrollment = enrollments.find(e => e.student?.id === editingStudent?.userId);
+                  if (enrollment) {
+                    handleDownloadPdf(enrollment);
+                  }
+                }}
+                className="w-full"
+              >
+                <span className="flex items-center justify-center">
+                  📄 Descargar Ficha PDF
+                </span>
+              </Button>
+            </div>
+
             {/* Sección de Reseteo de Contraseña */}
             <div className="border-t pt-4 mt-4">
               <div className="flex items-center justify-between mb-3">
@@ -992,8 +1043,6 @@ export const EnrollmentsPage: React.FC = () => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {enrollments.map((enrollment) => (
-                  console.log(enrollment),
-                  console.log(paymentPlans),
                   <tr key={enrollment.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
@@ -1046,6 +1095,7 @@ export const EnrollmentsPage: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex space-x-2">
+                        {/* Editar perfil */}
                         <button
                           onClick={() => handleEditProfileClick(enrollment)}
                           className="text-green-600 hover:text-green-900"
@@ -1053,6 +1103,7 @@ export const EnrollmentsPage: React.FC = () => {
                         >
                           <UserIcon className="h-5 w-5" />
                         </button>
+                        {/* Editar Matricula */}
                         <button
                           onClick={() => handleEditClick(enrollment)}
                           className="text-blue-600 hover:text-blue-900"
@@ -1060,6 +1111,15 @@ export const EnrollmentsPage: React.FC = () => {
                         >
                           <PencilIcon className="h-5 w-5" />
                         </button>
+                        {/* Descargar ficha PDF */}
+                        <button
+                          onClick={() => handleDownloadPdf(enrollment)}
+                          className="text-purple-600 hover:text-purple-900"
+                          title="Descargar ficha PDF"
+                        >
+                          <ClipboardDocumentListIcon className="h-5 w-5" />
+                        </button>
+                        {/* Eliminar Matricula */}
                         {enrollment.status === 'ACTIVE' && (
                           <button
                             onClick={() => handleDeleteClick(enrollment)}

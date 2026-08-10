@@ -366,9 +366,46 @@ exports.Prisma.PaymentPlanScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.AuditLogScalarFieldEnum = {
+  id: 'id',
+  action: 'action',
+  entity: 'entity',
+  entityId: 'entityId',
+  entityName: 'entityName',
+  oldData: 'oldData',
+  newData: 'newData',
+  changedFields: 'changedFields',
+  userId: 'userId',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.PaymentRecordScalarFieldEnum = {
+  id: 'id',
+  enrollmentId: 'enrollmentId',
+  amount: 'amount',
+  installmentNumber: 'installmentNumber',
+  totalInstallments: 'totalInstallments',
+  status: 'status',
+  dueDate: 'dueDate',
+  paidAt: 'paidAt',
+  paymentMethod: 'paymentMethod',
+  reference: 'reference',
+  notes: 'notes',
+  registeredById: 'registeredById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.NullsOrder = {
@@ -531,6 +568,35 @@ exports.Prisma.PaymentPlanOrderByRelevanceFieldEnum = {
   description: 'description',
   sedeId: 'sedeId'
 };
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
+exports.Prisma.AuditLogOrderByRelevanceFieldEnum = {
+  id: 'id',
+  entityId: 'entityId',
+  entityName: 'entityName',
+  userId: 'userId',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent'
+};
+
+exports.Prisma.PaymentRecordOrderByRelevanceFieldEnum = {
+  id: 'id',
+  enrollmentId: 'enrollmentId',
+  paymentMethod: 'paymentMethod',
+  reference: 'reference',
+  notes: 'notes',
+  registeredById: 'registeredById'
+};
 exports.PeriodStatus = exports.$Enums.PeriodStatus = {
   DRAFT: 'DRAFT',
   ACTIVE: 'ACTIVE',
@@ -607,6 +673,37 @@ exports.PaymentPlanType = exports.$Enums.PaymentPlanType = {
   OTHER: 'OTHER'
 };
 
+exports.AuditAction = exports.$Enums.AuditAction = {
+  CREATE: 'CREATE',
+  UPDATE: 'UPDATE',
+  DELETE: 'DELETE',
+  TRANSFER: 'TRANSFER',
+  RESET_PASSWORD: 'RESET_PASSWORD',
+  LOGIN: 'LOGIN',
+  LOGOUT: 'LOGOUT',
+  UPLOAD_PHOTO: 'UPLOAD_PHOTO',
+  DOWNLOAD_PDF: 'DOWNLOAD_PDF'
+};
+
+exports.AuditEntity = exports.$Enums.AuditEntity = {
+  USER: 'USER',
+  PROFILE: 'PROFILE',
+  ENROLLMENT: 'ENROLLMENT',
+  SECTION: 'SECTION',
+  CLASSROOM: 'CLASSROOM',
+  SEDE: 'SEDE',
+  PAYMENT_PLAN: 'PAYMENT_PLAN',
+  PERIOD: 'PERIOD',
+  COURSE: 'COURSE'
+};
+
+exports.PaymentStatus = exports.$Enums.PaymentStatus = {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  OVERDUE: 'OVERDUE',
+  WAIVED: 'WAIVED'
+};
+
 exports.Prisma.ModelName = {
   Sede: 'Sede',
   AcademicPeriod: 'AcademicPeriod',
@@ -628,7 +725,9 @@ exports.Prisma.ModelName = {
   TaskSubmission: 'TaskSubmission',
   Announcement: 'Announcement',
   AnnouncementView: 'AnnouncementView',
-  PaymentPlan: 'PaymentPlan'
+  PaymentPlan: 'PaymentPlan',
+  AuditLog: 'AuditLog',
+  PaymentRecord: 'PaymentRecord'
 };
 
 /**

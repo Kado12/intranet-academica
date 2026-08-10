@@ -12,7 +12,9 @@ import {
   UsersIcon,
   XMarkIcon,
   UserPlusIcon,
+  ClockIcon,
   CreditCardIcon,
+  BanknotesIcon,
 } from '@heroicons/react/24/outline';
 import { useAuth } from '../../context/AuthContext';
 import { Role } from '../../types';
@@ -54,6 +56,12 @@ const menuItems: MenuItem[] = [
     roles: [Role.ADMIN, Role.COORDINADOR, Role.SECRETARIA],
   },
   {
+    path: '/turns',
+    label: 'Turnos',
+    icon: ClockIcon,
+    roles: [Role.ADMIN, Role.COORDINADOR, Role.SECRETARIA],
+  },
+  {
     path: '/sections',
     label: 'Secciones',
     icon: AcademicCapIcon,
@@ -84,17 +92,29 @@ const menuItems: MenuItem[] = [
     roles: [Role.ADMIN, Role.COORDINADOR, Role.SECRETARIA],
   },
   {
-  path: '/students/register',
-  label: 'Registrar Estudiante',
-  icon: UserPlusIcon,
-  roles: [Role.ADMIN, Role.SECRETARIA, Role.COORDINADOR],
-},
-{
-  path: '/payment-plans',
-  label: 'Planes de Pago',
-  icon: CreditCardIcon,
-  roles: [Role.ADMIN, Role.SECRETARIA],
-},
+    path: '/students/register',
+    label: 'Registrar Estudiante',
+    icon: UserPlusIcon,
+    roles: [Role.ADMIN, Role.SECRETARIA, Role.COORDINADOR],
+  },
+  {
+    path: '/payment-plans',
+    label: 'Planes de Pago',
+    icon: CreditCardIcon,
+    roles: [Role.ADMIN, Role.SECRETARIA],
+  },
+  {
+    path: '/payments',
+    label: 'Seguimiento de Pagos',
+    icon: BanknotesIcon,
+    roles: [Role.ADMIN, Role.SECRETARIA, Role.COORDINADOR],
+  },
+  {
+    path: '/audit',
+    label: 'Historial de Cambios',
+    icon: ClipboardDocumentListIcon,
+    roles: [Role.ADMIN, Role.INFORMATICO],
+  },
 ];
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {

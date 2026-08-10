@@ -19,6 +19,8 @@ import { AppController } from './app.controller';
 import { AttendanceModule } from './academic/attendance/attendance.module';
 import { CloudinaryModule } from './common/cloudinary/cloudinary.module';
 import { PaymentPlanModule } from './academic/payment-plans/payment-plans.module';
+import { AuditModule } from './common/audit/audit.module';
+import { PaymentsModule } from './academic/payments/payments.module';
 
 @Module({
   imports: [
@@ -48,6 +50,7 @@ import { PaymentPlanModule } from './academic/payment-plans/payment-plans.module
       ],
     }),
     CloudinaryModule,
+    AuditModule,
     PrismaModule,
     AuthModule,
     UsersModule,
@@ -63,6 +66,7 @@ import { PaymentPlanModule } from './academic/payment-plans/payment-plans.module
     EnrollmentModule,
     AttendanceModule,
     PaymentPlanModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [

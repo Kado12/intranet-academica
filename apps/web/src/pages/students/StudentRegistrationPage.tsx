@@ -811,7 +811,7 @@ export const StudentRegistrationPage: React.FC = () => {
               </Button>
               <Button
                 variant="primary"
-                onClick={() => navigate('/students')}
+                onClick={() => navigate('/enrollments')}
               >
                 Ir a lista de estudiantes
               </Button>

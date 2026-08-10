@@ -6,8 +6,8 @@ import { Card } from '../../components/ui/Card';
 import { Modal, ConfirmModal } from '../../components/ui/Modal';
 import { ToastContainer } from '../../components/ui/Toast';
 import { useToast } from '../../hooks/useToast';
-import { sedesService } from '../../api/academic.service';
-import type { Sede } from '../../types';
+import { turnsService } from '../../api/academic.service';
+import type { Turn } from '../../types';
 import {
   PlusIcon,
   PencilIcon,
@@ -17,61 +17,61 @@ import {
 import { getZodErrors } from '../../utils/zodHelpers';
 
 // Schema de validación
-const sedeSchema = z.object({
+const turnSchema = z.object({
   name: z.string().min(1, 'El nombre es requerido'),
-  address: z.string().optional(),
-  phone: z.string().optional(),
+  startTime: z.string().optional(),
+  endTime: z.string().optional(),
 });
 
-type SedeFormData = z.infer<typeof sedeSchema>;
+type TurnFormData = z.infer<typeof turnSchema>;
 
-export const SedesPage: React.FC = () => {
-  const { toasts, addToast, removeToast } = useToast();
+export const TurnsPage: React.FC = () => {
+  const { toasts, addToast, removeToast } = useToast()
 
   // Estado de la lista
-  const [sedes, setSedes] = useState<Sede[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [turns, setTurns] = useState<Turn[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   // Estado del formulario
   const [showForm, setShowForm] = useState(false);
-  const [editingSede, setEditingSede] = useState<Sede | null>(null);
-  const [formData, setFormData] = useState<SedeFormData>({
+  const [editingTurn, setEditingTurn] = useState<Turn | null>(null);
+  const [formData, setFormData] = useState<TurnFormData>({
     name: '',
-    address: '',
-    phone: '',
+    startTime: '',
+    endTime: '',
   });
-  const [errors, setErrors] = useState<Partial<SedeFormData>>({});
+  const [errors, setErrors] = useState<Partial<TurnFormData>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Estado del modal de eliminación
-  const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; sede: Sede | null }>({
+  const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; turn: Turn | null }>({
     isOpen: false,
-    sede: null,
+    turn: null,
   });
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Cargar sedes
-  const loadSedes = useCallback(async () => {
+  // Cargar turnos
+  const loadTurns = useCallback(async () => {
     setIsLoading(true);
     try {
-      const data = await sedesService.findAll();
-      setSedes(data);
+      const data = await turnsService.findAll();
+      setTurns(data);
     } catch (error: any) {
-      addToast('error', 'Error al cargar las sedes');
+      addToast('error', 'Error al cargar los turnos');
     } finally {
       setIsLoading(false);
     }
   }, [addToast]);
 
   useEffect(() => {
-    loadSedes();
-  }, [loadSedes]);
+    loadTurns();
+  }, [loadTurns]);
 
   // Manejar cambios en el formulario
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name as keyof SedeFormData]) {
+    if (errors[name as keyof TurnFormData]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
   };
@@ -79,10 +79,10 @@ export const SedesPage: React.FC = () => {
   // Validar formulario
   const validateForm = (): boolean => {
     try {
-      sedeSchema.parse(formData);
+      turnSchema.parse(formData);
       return true;
     } catch (error) {
-      const fieldErrors = getZodErrors<SedeFormData>(error);
+      const fieldErrors = getZodErrors<TurnFormData>(error);
       setErrors(fieldErrors);
       return false;
     }
@@ -97,21 +97,21 @@ export const SedesPage: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      if (editingSede) {
-        await sedesService.update(editingSede.id, formData);
-        addToast('success', 'Sede actualizada exitosamente');
+      if (editingTurn) {
+        await turnsService.update(editingTurn.id, formData);
+        addToast('success', 'Turno actualizado exitosamente');
       } else {
-        await sedesService.create(formData);
-        addToast('success', 'Sede creada exitosamente');
+        await turnsService.create(formData);
+        addToast('success', 'Turno creado exitosamente');
       }
 
       setShowForm(false);
-      setEditingSede(null);
+      setEditingTurn(null);
       resetForm();
-      loadSedes();
+      loadTurns();
     } catch (error: any) {
       const message = error.response?.data?.message;
-      addToast('error', Array.isArray(message) ? message.join(', ') : message || 'Error al guardar la sede');
+      addToast('error', Array.isArray(message) ? message.join(', ') : message || 'Error al guardar el turno');
     } finally {
       setIsSubmitting(false);
     }
@@ -119,39 +119,39 @@ export const SedesPage: React.FC = () => {
 
   // Resetear formulario
   const resetForm = () => {
-    setFormData({ name: '', address: '', phone: '' });
+    setFormData({ name: '', startTime: '', endTime: '' });
     setErrors({});
   };
 
   // Abrir modal de edición
-  const handleEdit = (sede: Sede) => {
-    setEditingSede(sede);
+  const handleEdit = (turn: Turn) => {
+    setEditingTurn(turn);
     setFormData({
-      name: sede.name,
-      address: sede.address || '',
-      phone: sede.phone || '',
+      name: turn.name,
+      startTime: turn.startTime || '',
+      endTime: turn.endTime || '',
     });
     setShowForm(true);
   };
 
   // Abrir modal de eliminación
-  const handleDeleteClick = (sede: Sede) => {
-    setDeleteModal({ isOpen: true, sede });
+  const handleDeleteClick = (turn: Turn) => {
+    setDeleteModal({ isOpen: true, turn });
   };
 
   // Confirmar eliminación
   const handleDeleteConfirm = async () => {
-    if (!deleteModal.sede) return;
+    if (!deleteModal.turn) return;
 
     setIsDeleting(true);
 
     try {
-      await sedesService.remove(deleteModal.sede.id);
-      addToast('success', 'Sede eliminada exitosamente');
-      setDeleteModal({ isOpen: false, sede: null });
-      loadSedes();
+      await turnsService.remove(deleteModal.turn.id);
+      addToast('success', 'Turno eliminado exitosamente');
+      setDeleteModal({ isOpen: false, turn: null });
+      loadTurns();
     } catch (error: any) {
-      addToast('error', 'Error al eliminar la sede');
+      addToast('error', 'Error al eliminar elw turno');
     } finally {
       setIsDeleting(false);
     }
@@ -169,13 +169,13 @@ export const SedesPage: React.FC = () => {
           variant="primary"
           onClick={() => {
             resetForm();
-            setEditingSede(null);
+            setEditingTurn(null);
             setShowForm(true);
           }}
         >
           <span className="flex items-center">
             <PlusIcon className="h-5 w-5 mr-2" />
-            Nueva Sede
+            Nuevo Turno
           </span>
         </Button>
       </div>
@@ -185,10 +185,10 @@ export const SedesPage: React.FC = () => {
         isOpen={showForm}
         onClose={() => {
           setShowForm(false);
-          setEditingSede(null);
+          setEditingTurn(null);
           resetForm();
         }}
-        title={editingSede ? 'Editar Sede' : 'Nueva Sede'}
+        title={editingTurn ? 'Editar Turno' : 'Nuevo Turno'}
       >
         <form className="space-y-4" onSubmit={handleSubmit}>
           <Input
@@ -197,29 +197,29 @@ export const SedesPage: React.FC = () => {
             name="name"
             value={formData.name}
             onChange={handleChange}
-            placeholder="Sede Central"
+            placeholder="Mañana"
             error={errors.name}
             required
           />
 
           <Input
-            label="Dirección"
+            label="Hora de Inicio"
             type="text"
-            name="address"
-            value={formData.address}
+            name="startTime"
+            value={formData.startTime}
             onChange={handleChange}
-            placeholder="Av. Principal 123"
-            error={errors.address}
+            placeholder="08:00 AM"
+            error={errors.startTime}
           />
 
           <Input
-            label="Teléfono"
+            label="Hora de Fin"
             type="text"
-            name="phone"
-            value={formData.phone}
+            name="endTime"
+            value={formData.endTime}
             onChange={handleChange}
-            placeholder="+51 999 999 999"
-            error={errors.phone}
+            placeholder="12:45 PM"
+            error={errors.endTime}
           />
 
           <div className="flex justify-end space-x-4 pt-4">
@@ -228,7 +228,7 @@ export const SedesPage: React.FC = () => {
               variant="secondary"
               onClick={() => {
                 setShowForm(false);
-                setEditingSede(null);
+                setEditingTurn(null);
                 resetForm();
               }}
             >
@@ -239,7 +239,7 @@ export const SedesPage: React.FC = () => {
               variant="primary"
               isLoading={isSubmitting}
             >
-              {editingSede ? 'Actualizar' : 'Crear'}
+              {editingTurn ? 'Actualizar' : 'Crear'}
             </Button>
           </div>
         </form>
@@ -248,10 +248,10 @@ export const SedesPage: React.FC = () => {
       {/* Modal de confirmación de eliminación */}
       <ConfirmModal
         isOpen={deleteModal.isOpen}
-        onClose={() => setDeleteModal({ isOpen: false, sede: null })}
+        onClose={() => setDeleteModal({ isOpen: false, turn: null })}
         onConfirm={handleDeleteConfirm}
-        title="Eliminar Sede"
-        message={`¿Estás seguro de que deseas eliminar la sede "${deleteModal.sede?.name}"? Esta acción no se puede deshacer.`}
+        title="Eliminar Turno"
+        message={`¿Estás seguro de que deseas eliminar la sede "${deleteModal.turn?.name}"? Esta acción no se puede deshacer.`}
         isLoading={isDeleting}
       />
 
@@ -261,10 +261,10 @@ export const SedesPage: React.FC = () => {
           <div className="flex items-center justify-center py-8">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
           </div>
-        ) : sedes.length === 0 ? (
+        ) : turns.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
             <BuildingOfficeIcon className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-            No hay sedes registradas
+            No hay turnos registrados
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -275,10 +275,10 @@ export const SedesPage: React.FC = () => {
                     Nombre
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Dirección
+                    Inicio de Hora
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Teléfono
+                    Fin de Hora
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Estado
@@ -289,38 +289,38 @@ export const SedesPage: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {sedes.map((sede) => (
-                  <tr key={sede.id} className="hover:bg-gray-50">
+                {turns.map((turn) => (
+                  <tr key={turn.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <BuildingOfficeIcon className="h-5 w-5 text-gray-400 mr-3" />
-                        <span className="text-sm font-medium text-gray-900">{sede.name}</span>
+                        <span className="text-sm font-medium text-gray-900">{turn.name}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {sede.address || '-'}
+                      {turn.startTime || '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {sede.phone || '-'}
+                      {turn.endTime || '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 py-1 text-xs font-medium rounded-full ${sede.isActive
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-red-100 text-red-800'
+                      <span className={`px-2 py-1 text-xs font-medium rounded-full ${turn.isActive
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-red-100 text-red-800'
                         }`}>
-                        {sede.isActive ? 'Activa' : 'Inactiva'}
+                        {turn.isActive ? 'Activa' : 'Inactiva'}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex space-x-2">
                         <button
-                          onClick={() => handleEdit(sede)}
+                          onClick={() => handleEdit(turn)}
                           className="text-blue-600 hover:text-blue-900"
                         >
                           <PencilIcon className="h-5 w-5" />
                         </button>
                         <button
-                          onClick={() => handleDeleteClick(sede)}
+                          onClick={() => handleDeleteClick(turn)}
                           className="text-red-600 hover:text-red-900"
                         >
                           <TrashIcon className="h-5 w-5" />
@@ -336,4 +336,4 @@ export const SedesPage: React.FC = () => {
       </Card>
     </div>
   );
-};
+}

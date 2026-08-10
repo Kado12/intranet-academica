@@ -3,6 +3,8 @@ import { CloudinaryService } from '../common/cloudinary/cloudinary.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { Role, EnrollmentStatus } from '@intranet/database';
 import { RegisterStudentDto } from './dto/register-student.dto';
+import { AuditService } from '../common/audit/audit.service';
+import { AuditAction, AuditEntity } from '@intranet/database';
 import * as bcrypt from 'bcrypt';
 import { UpdateStudentProfileDto } from './dto/update-student-profile.dto';
 
@@ -21,6 +23,7 @@ export class UsersService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly cloudinaryService: CloudinaryService,
+    private readonly auditService: AuditService,
   ) {}
 
   async findAdminUsers(search?: string, role?: Role) {
@@ -258,7 +261,7 @@ export class UsersService {
         data: {
           email,
           passwordHash,
-          mustChangePassword: false, // No forzar cambio
+          mustChangePassword: false,
           profile: {
             create: {
               firstName,
@@ -269,8 +272,8 @@ export class UsersService {
               gender,
               phone,
               address,
-              avatarUrl: dto.avatarUrl || null, // ← NUEVO
-              avatarPublicId: dto.avatarPublicId || null, // ← NUEVO
+              avatarUrl: dto.avatarUrl || null,
+              avatarPublicId: dto.avatarPublicId || null,
             },
           },
           memberships: {
@@ -304,10 +307,29 @@ export class UsersService {
         },
       });
 
+      // 3. ← NUEVO: Crear registros de pago según el plan
+      await this.createPaymentRecords(tx, enrollment.id, paymentPlan);
+
       return { user, enrollment };
     });
 
     // ===== LOG DE AUDITORÍA =====
+
+    await this.auditService.log({
+      action: AuditAction.CREATE,
+      entity: AuditEntity.USER,
+      entityId: result.user.id,
+      entityName: result.user.email,
+      newData: {
+        email: result.user.email,
+        firstName: result.user.profile?.firstName,
+        lastName: result.user.profile?.lastName,
+        documentNumber: result.user.profile?.documentNumber,
+        section: result.enrollment.section.name,
+        paymentPlan: result.enrollment.paymentPlan?.name,
+      },
+      userId: adminId,
+    });
 
     this.logger.log(
       `Estudiante registrado: ${result.user.email} | ` +
@@ -377,6 +399,58 @@ export class UsersService {
     }
 
     return section;
+  }
+
+  /**
+   * Crear registros de pago según el plan
+   * Si el plan tiene cuotas, crea un registro por cuota
+   * Si no, crea un solo registro por el monto total
+   */
+  private async createPaymentRecords(
+    tx: any,
+    enrollmentId: string,
+    paymentPlan: any,
+  ) {
+    const now = new Date();
+    const records: any[] = [];
+
+    if (paymentPlan.installments && paymentPlan.installments > 1) {
+      // Plan en cuotas: crear N registros
+      const amountPerInstallment =
+        paymentPlan.finalAmount / paymentPlan.installments;
+
+      for (let i = 1; i <= paymentPlan.installments; i++) {
+        // Fecha de vencimiento: mes actual + (i-1) meses
+        const dueDate = new Date(now);
+        dueDate.setMonth(dueDate.getMonth() + (i - 1));
+        dueDate.setDate(15); // Vence el día 15 de cada mes
+
+        records.push({
+          enrollmentId,
+          amount: Math.round(amountPerInstallment * 100) / 100,
+          installmentNumber: i,
+          totalInstallments: paymentPlan.installments,
+          status: 'PENDING',
+          dueDate,
+        });
+      }
+    } else {
+      // Pago único: crear 1 registro
+      records.push({
+        enrollmentId,
+        amount: paymentPlan.finalAmount,
+        installmentNumber: null,
+        totalInstallments: null,
+        status: 'PENDING',
+        dueDate: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000), // 30 días desde ahora
+      });
+    }
+
+    await tx.paymentRecord.createMany({ data: records });
+
+    this.logger.log(
+      `💰 ${records.length} registro(s) de pago creado(s) para matrícula ${enrollmentId}`,
+    );
   }
 
   private async autoAssignSection(sedeId: string, periodId: string, turnId: string) {
@@ -461,7 +535,18 @@ export class UsersService {
       },
     });
 
-    // Log de auditoría
+    // ===== LOG DE AUDITORÍA =====
+    await this.auditService.log({
+      action: AuditAction.RESET_PASSWORD,
+      entity: AuditEntity.USER,
+      entityId: userId,
+      entityName: user.email,
+      newData: {
+        passwordChangedAt: new Date().toISOString(),
+        note: 'Contraseña reseteada por administrador',
+      },
+      userId: adminId,
+    });
     this.logger.log(`Contraseña reseteada para usuario ${userId} por admin ${adminId}`);
 
     return {
@@ -607,6 +692,31 @@ export class UsersService {
           include: { user: true },
         });
       }
+    });
+
+    // ===== LOG DE AUDITORÍA =====
+    await this.auditService.log({
+      action: AuditAction.UPDATE,
+      entity: AuditEntity.PROFILE,
+      entityId: userId,
+      entityName: user.email,
+      oldData: {
+        firstName: user.profile?.firstName,
+        lastName: user.profile?.lastName,
+        email: user.email,
+        documentNumber: user.profile?.documentNumber,
+        phone: user.profile?.phone,
+        address: user.profile?.address,
+      },
+      newData: {
+        firstName: result.firstName,
+        lastName: result.lastName,
+        email: updateDto.email || user.email,
+        documentNumber: result.documentNumber,
+        phone: result.phone,
+        address: result.address,
+      },
+      userId: adminId,
     });
 
     this.logger.log(

@@ -161,8 +161,6 @@ model User {
   enrollments          Enrollment[]
   parentOf             ParentStudent[] @relation("Parent")
   studentOf            ParentStudent[] @relation("Student")
-  
-  // Relaciones de la Fase 12
   studentAttendances   Attendance[]    @relation("StudentAttendance")
   excusedAttendances   Attendance[]    @relation("ExcusedAttendance")
   studentGrades        Grade[]         @relation("StudentGrades")
@@ -172,6 +170,8 @@ model User {
   gradedSubmissions    TaskSubmission[] @relation("SubmissionGradedBy")
   announcements        Announcement[]  @relation("AnnouncementAuthor")
   announcementViews    AnnouncementView[] @relation("AnnouncementViews")
+  auditLogs            AuditLog[]
+  registeredPayments PaymentRecord[] @relation("PaymentRegisteredBy")
 
   @@map("users")
 }
@@ -265,10 +265,9 @@ model Enrollment {
   updatedAt     DateTime         @updatedAt
   student       User             @relation(fields: [studentId], references: [id], onDelete: Restrict)
   section       Section          @relation(fields: [sectionId], references: [id], onDelete: Restrict)
-  
-  // ← NUEVO: Plan de pago
   paymentPlanId String?
   paymentPlan   PaymentPlan?     @relation(fields: [paymentPlanId], references: [id])
+  paymentRecords PaymentRecord[]
 
   @@unique([studentId, sectionId])
   @@index([studentId])
@@ -501,4 +500,85 @@ model PaymentPlan {
   @@index([sedeId])
   @@index([type])
   @@map("payment_plans")
+}
+
+// ==================== AUDITORÍA ====================
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  TRANSFER
+  RESET_PASSWORD
+  LOGIN
+  LOGOUT
+  UPLOAD_PHOTO
+  DOWNLOAD_PDF
+}
+
+enum AuditEntity {
+  USER
+  PROFILE
+  ENROLLMENT
+  SECTION
+  CLASSROOM
+  SEDE
+  PAYMENT_PLAN
+  PERIOD
+  COURSE
+}
+
+model AuditLog {
+  id            String       @id @default(cuid())
+  action        AuditAction
+  entity        AuditEntity
+  entityId      String?      // ID de la entidad afectada
+  entityName    String?      // Nombre descriptivo (ej: email del usuario)
+  oldData       Json?        // Datos anteriores (antes del cambio)
+  newData       Json?        // Datos nuevos (después del cambio)
+  changedFields Json?     // Lista de campos que cambiaron
+  userId        String?      // Usuario que realizó la acción
+  user          User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  ipAddress     String?
+  userAgent     String?
+  createdAt     DateTime     @default(now())
+
+  @@index([entity, entityId])
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// ==================== SEGUIMIENTO DE PAGOS ====================
+
+enum PaymentStatus {
+  PENDING    // Pendiente de pago
+  PAID       // Pagado
+  OVERDUE    // Vencido
+  WAIVED     // Condonado/exonerado
+}
+
+model PaymentRecord {
+  id                String        @id @default(cuid())
+  enrollmentId      String
+  enrollment        Enrollment    @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  amount            Float
+  installmentNumber Int?          // Número de cuota (1, 2, 3...). Null si es pago único
+  totalInstallments Int?          // Total de cuotas del plan
+  status            PaymentStatus @default(PENDING)
+  dueDate           DateTime
+  paidAt            DateTime?
+  paymentMethod     String?       // Efectivo, transferencia, tarjeta, etc.
+  reference         String?       // Número de referencia o voucher
+  notes             String?
+  registeredById    String?
+  registeredBy      User?         @relation("PaymentRegisteredBy", fields: [registeredById], references: [id])
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  @@index([enrollmentId])
+  @@index([status])
+  @@index([dueDate])
+  @@map("payment_records")
 }

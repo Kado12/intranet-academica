@@ -8,10 +8,14 @@ import { UsersPage } from './pages/users/UsersPage';
 import { SedesPage } from './pages/sedes/SedesPage';
 import { PeriodsPage } from './pages/periods/PeriodsPage';
 import { ClassroomsPage } from './pages/classrooms/ClassroomsPage';
+import { TurnsPage } from './pages/turns/TurnsPage';
 import { SectionsPage } from './pages/sections/SectionsPage';
 import { CoursesPage } from './pages/courses/CoursesPage';
 import { EnrollmentsPage } from './pages/enrollments/EnrollmentsPage';
 import { StudentRegistrationPage } from './pages/students/StudentRegistrationPage';
+import { PaymentPlansPage } from './pages/payment-plans/PaymentPlansPage';
+import { PaymentsPage } from './pages/payments/PaymentsPage';
+import { AuditPage } from './pages/audit/AuditPage';
 import { Role } from './types';
 
 function App() {
@@ -30,12 +34,16 @@ function App() {
               {/* Página de usuarios: solo ADMIN e INFORMATICO */}
               <Route element={<ProtectedRoute roles={[Role.ADMIN, Role.INFORMATICO]} />}>
                 <Route path="/users" element={<UsersPage />} />
+                <Route path="/audit" element={<AuditPage />} />
+                <Route path="/payment-plans" element={<PaymentPlansPage />} />
+                <Route path="/payments" element={<PaymentsPage />} />
               </Route>
 
               {/* Módulos académicos */}
               <Route path="/sedes" element={<SedesPage />} />
               <Route path="/periods" element={<PeriodsPage />} />
               <Route path="/classrooms" element={<ClassroomsPage />} />
+              <Route path="/turns" element={<TurnsPage />} />
               <Route path="/sections" element={<SectionsPage/>} />
               <Route path="/courses" element={<CoursesPage/>} />
               <Route path="/enrollments" element={<EnrollmentsPage/>} />
@@ -43,6 +51,7 @@ function App() {
 
               {/* Placeholder para rutas futuras */}
               <Route path="/parents" element={<div className="p-4">Módulo de Padres (próximamente)</div>} />
+              <Route path="/payment-plans" element={<div className="p-4">Módulo de Padres (próximamente)</div>} />
             </Route>
           </Route>
 

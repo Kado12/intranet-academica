@@ -1,5 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsEnum, IsNumber, IsOptional, IsInt, Min, Max, IsBoolean } from 'class-validator';
+import {
+  IsString,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsInt,
+  Min,
+  Max,
+  IsBoolean,
+} from 'class-validator';
 import { PaymentPlanType } from '@intranet/database';
 
 export class CreatePaymentPlanDto {
@@ -7,7 +16,10 @@ export class CreatePaymentPlanDto {
   @IsString()
   name: string;
 
-  @ApiProperty({ enum: PaymentPlanType, example: PaymentPlanType.SIBLING_DISCOUNT })
+  @ApiProperty({
+    enum: PaymentPlanType,
+    example: PaymentPlanType.SIBLING_DISCOUNT,
+  })
   @IsEnum(PaymentPlanType)
   type: PaymentPlanType;
 
@@ -27,13 +39,21 @@ export class CreatePaymentPlanDto {
   @Max(100)
   discount: number;
 
-  @ApiProperty({ example: 3, description: 'Número de cuotas (opcional)', required: false })
+  @ApiProperty({
+    example: 3,
+    description: 'Número de cuotas (opcional)',
+    required: false,
+  })
   @IsInt()
   @Min(1)
   @IsOptional()
   installments?: number;
 
-  @ApiProperty({ example: 'clxxxxxxxxxxxxx', description: 'ID de la sede (opcional, global si no se especifica)', required: false })
+  @ApiProperty({
+    example: 'clxxxxxxxxxxxxx',
+    description: 'ID de la sede (opcional, global si no se especifica)',
+    required: false,
+  })
   @IsString()
   @IsOptional()
   sedeId?: string;
