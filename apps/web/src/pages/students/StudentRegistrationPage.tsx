@@ -96,6 +96,14 @@ export const StudentRegistrationPage: React.FC = () => {
   const [studentPhoto, setStudentPhoto] = useState<File | null>(null);
   const [photoError, setPhotoError] = useState('');
 
+  // Pago inicial
+  const [firstPaymentDone, setFirstPaymentDone] = useState(false);
+  const [paymentDetails, setPaymentDetails] = useState({
+    paymentMethod: '',
+    paymentReference: '',
+    paymentNotes: '',
+  });
+
   // Datos cargados desde la API
   const [sedes, setSedes] = useState<Sede[]>([]);
   const [turns, setTurns] = useState<Turn[]>([]);
@@ -262,7 +270,14 @@ export const StudentRegistrationPage: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      // 1. Subir foto primero
+      // 1. Validar pago inicial si está marcado
+      if (firstPaymentDone && !paymentDetails.paymentMethod) {
+        addToast('error', 'Por favor selecciona el método de pago');
+        setIsSubmitting(false);
+        return;
+      }
+
+      // 2. Subir foto con el DNI
       let avatarUrl: string | undefined;
       let avatarPublicId: string | undefined;
 
@@ -272,10 +287,10 @@ export const StudentRegistrationPage: React.FC = () => {
           step1Data.documentNumber,
         );
         avatarUrl = uploadResult.tempAvatarUrl;
-        avatarPublicId = uploadResult.tempAvatarPublicId;
+        avatarPublicId = uploadResult.tempPublicId;
       }
 
-      // 2. Registrar estudiante
+      // 3. Registrar estudiante con todos los datos
       const result = await studentsRegistrationService.registerStudent({
         ...step1Data,
         ...step2Data,
@@ -287,6 +302,10 @@ export const StudentRegistrationPage: React.FC = () => {
         sectionId: step2Data.sectionId || undefined,
         avatarUrl,
         avatarPublicId,
+        firstPaymentDone,
+        paymentMethod: firstPaymentDone ? paymentDetails.paymentMethod : undefined,
+        paymentReference: firstPaymentDone ? paymentDetails.paymentReference : undefined,
+        paymentNotes: firstPaymentDone ? paymentDetails.paymentNotes : undefined,
       });
 
       setRegistrationResult(result);
@@ -638,8 +657,89 @@ export const StudentRegistrationPage: React.FC = () => {
                 })()}
               </div>
             )}
+
+            {/* ← NUEVO: Sección de pago inicial */}
+            <div className="border-t pt-6">
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <label className="flex items-start cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={firstPaymentDone}
+                    onChange={(e) => setFirstPaymentDone(e.target.checked)}
+                    className="mt-1 h-5 w-5 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                  />
+                  <div className="ml-3">
+                    <span className="text-sm font-medium text-green-800">
+                      💰 El estudiante ya realizó el pago inicial
+                    </span>
+                    <p className="text-xs text-green-700 mt-1">
+                      Marca esta opción si el estudiante ya pagó al momento de matricularse.
+                      Para planes en cuotas, se marcará la primera cuota como pagada.
+                      Para pago completo, se marcará el pago total como pagado.
+                    </p>
+                  </div>
+                </label>
+
+                {/* Campos adicionales si está marcado */}
+                {firstPaymentDone && (
+                  <div className="mt-4 space-y-4 border-t border-green-200 pt-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Select
+                        label="Método de pago"
+                        name="paymentMethod"
+                        value={paymentDetails.paymentMethod}
+                        onChange={(e) => setPaymentDetails(prev => ({
+                          ...prev,
+                          [e.target.name]: e.target.value,
+                        }))}
+                        options={[
+                          { value: '', label: 'Selecciona un método' },
+                          { value: 'Efectivo', label: 'Efectivo' },
+                          { value: 'Transferencia', label: 'Transferencia bancaria' },
+                          { value: 'Tarjeta', label: 'Tarjeta de crédito/débito' },
+                          { value: 'Yape', label: 'Yape' },
+                          { value: 'Plin', label: 'Plin' },
+                          { value: 'Otro', label: 'Otro' },
+                        ]}
+                        required
+                      />
+
+                      <Input
+                        label="Referencia / Voucher"
+                        type="text"
+                        name="paymentReference"
+                        value={paymentDetails.paymentReference}
+                        onChange={(e) => setPaymentDetails(prev => ({
+                          ...prev,
+                          [e.target.name]: e.target.value,
+                        }))}
+                        placeholder="Número de operación, voucher, etc."
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Notas (opcional)
+                      </label>
+                      <textarea
+                        name="paymentNotes"
+                        value={paymentDetails.paymentNotes}
+                        onChange={(e) => setPaymentDetails(prev => ({
+                          ...prev,
+                          [e.target.name]: e.target.value,
+                        }))}
+                        rows={2}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                        placeholder="Ej: Pago realizado por el padre en efectivo..."
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         )}
+
 
         {/* ===== PASO 4: CONFIRMACIÓN ===== */}
         {currentStep === 4 && (
@@ -780,6 +880,17 @@ export const StudentRegistrationPage: React.FC = () => {
                 Plan de pago: {registrationResult.enrollment.paymentPlan.name} | 
                 Monto: S/ {registrationResult.enrollment.paymentPlan.finalAmount.toFixed(2)}
               </p>
+              <p className="text-sm mt-2">
+                {firstPaymentDone ? (
+                  <span className="text-green-600 font-medium">
+                    ✅ Primer pago registrado ({paymentDetails.paymentMethod})
+                  </span>
+                ) : (
+                  <span className="text-yellow-600 font-medium">
+                    ⏳ Pago pendiente de verificación
+                  </span>
+                )}
+              </p>
             </div>
 
             <div className="flex justify-center space-x-4">
@@ -805,6 +916,12 @@ export const StudentRegistrationPage: React.FC = () => {
                   setStep3Data({ paymentPlanId: '' });
                   setStudentPhoto(null);
                   setRegistrationResult(null);
+                  setFirstPaymentDone(false);
+                  setPaymentDetails({
+                    paymentMethod: '',
+                    paymentReference: '',
+                    paymentNotes: '',
+                  });
                 }}
               >
                 Registrar otro estudiante

@@ -129,6 +129,7 @@ export class UploadController {
       );
 
       this.logger.log(`✅ Foto subida temporalmente: ${result.secure_url}`);
+      console.log(result.public_id);
 
       return {
         message: 'Foto subida temporalmente',

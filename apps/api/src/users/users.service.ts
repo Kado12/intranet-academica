@@ -308,7 +308,17 @@ export class UsersService {
       });
 
       // 3. ← NUEVO: Crear registros de pago según el plan
-      await this.createPaymentRecords(tx, enrollment.id, paymentPlan);
+      await this.createPaymentRecords(
+        tx,
+        enrollment.id,
+        paymentPlan,
+        dto.firstPaymentDone,
+        {
+          paymentMethod: dto.paymentMethod,
+          paymentReference: dto.paymentReference,
+          paymentNotes: dto.paymentNotes,
+        },
+      );
 
       return { user, enrollment };
     });
@@ -410,6 +420,12 @@ export class UsersService {
     tx: any,
     enrollmentId: string,
     paymentPlan: any,
+    firstPaymentDone?: boolean,
+    paymentDetails?: {
+      paymentMethod?: string;
+      paymentReference?: string;
+      paymentNotes?: string;
+    },
   ) {
     const now = new Date();
     const records: any[] = [];
@@ -446,11 +462,39 @@ export class UsersService {
       });
     }
 
-    await tx.paymentRecord.createMany({ data: records });
+    const created = await tx.paymentRecord.createMany({ data: records });
+
+    // Si el primer pago ya fue realizado, marcarlo como PAID
+    if (firstPaymentDone) {
+      const firstPayment = await tx.paymentRecord.findFirst({
+        where: { enrollmentId },
+        orderBy: [{ installmentNumber: 'asc' }, { dueDate: 'asc' }],
+      });
+
+      if (firstPayment) {
+        await tx.paymentRecord.update({
+          where: { id: firstPayment.id },
+          data: {
+            status: 'PAID',
+            paidAt: new Date(),
+            paymentMethod: paymentDetails?.paymentMethod || 'No especificado',
+            reference: paymentDetails?.paymentReference,
+            notes: paymentDetails?.paymentNotes,
+          },
+        });
+
+        this.logger.log(
+          `💰 Primer pago marcado como PAID para matrícula ${enrollmentId} | ` +
+            `Método: ${paymentDetails?.paymentMethod || 'N/A'}`,
+        );
+      }
+    }
 
     this.logger.log(
       `💰 ${records.length} registro(s) de pago creado(s) para matrícula ${enrollmentId}`,
     );
+
+    return created;
   }
 
   private async autoAssignSection(sedeId: string, periodId: string, turnId: string) {
@@ -584,9 +628,8 @@ export class UsersService {
 
     const oldDocumentNumber = user.profile?.documentNumber;
     const newDocumentNumber = updateDto.documentNumber;
-    const documentChanged = newDocumentNumber && newDocumentNumber !== oldDocumentNumber;
-    console.log(oldDocumentNumber, newDocumentNumber, documentChanged);
-    console.log(user.profile?.avatarPublicId);
+    const documentChanged =
+      newDocumentNumber && newDocumentNumber !== oldDocumentNumber;
 
     // 2. Si se cambia el email, verificar que no exista
     if (updateDto.email && updateDto.email !== user.email) {
@@ -611,7 +654,10 @@ export class UsersService {
 
     // 4. Manejar cambio de foto (si se envía una nueva con DNI diferente)
     let finalAvatarUrl = updateDto.avatarUrl ?? user.profile?.avatarUrl ?? null;
-    let finalAvatarPublicId = updateDto.avatarPublicId ?? user.profile?.avatarPublicId ?? null;
+    let finalAvatarPublicId =
+      updateDto.avatarPublicId ?? user.profile?.avatarPublicId ?? null;
+    console.log(user.profile);
+    console.log(finalAvatarUrl, finalAvatarPublicId, documentChanged);
 
     if (
       documentChanged &&
@@ -726,7 +772,147 @@ export class UsersService {
     return {
       message: 'Datos del estudiante actualizados exitosamente',
       profile: result,
-      photoRenamed: documentChanged && finalAvatarPublicId === newDocumentNumber,
+      photoRenamed:
+        documentChanged && finalAvatarPublicId === newDocumentNumber,
+    };
+  }
+
+  /**
+   * Eliminar completamente un estudiante y todos sus datos
+   * ⚠️ HARD DELETE: Esta acción no se puede deshacer
+   */
+  async deleteStudentCompletely(userId: string, adminId: string) {
+    // 1. Buscar el usuario con todas sus relaciones
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        profile: true,
+        memberships: true,
+        enrollments: {
+          include: {
+            paymentRecords: true,
+            section: true,
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('Estudiante no encontrado');
+    }
+
+    // Verificar que sea un estudiante
+    const isStudent = user.memberships.some((m) => m.role === Role.ESTUDIANTE);
+    if (!isStudent) {
+      throw new BadRequestException('Solo se pueden eliminar estudiantes');
+    }
+
+    // Guardar datos para auditoría antes de eliminar
+    const auditData = {
+      email: user.email,
+      firstName: user.profile?.firstName,
+      lastName: user.profile?.lastName,
+      documentNumber: user.profile?.documentNumber,
+      enrollments: user.enrollments.map((e) => ({
+        section: e.section?.name,
+        enrolledAt: e.enrolledAt,
+      })),
+    };
+
+    // 2. Eliminar foto de Cloudinary (antes de la transacción de BD)
+    if (user.profile?.avatarPublicId) {
+      try {
+        await this.cloudinaryService.deleteProfilePicture(
+          user.profile.avatarPublicId,
+        );
+        this.logger.log(
+          `🗑️ Foto eliminada de Cloudinary: ${user.profile.avatarPublicId}`,
+        );
+      } catch (error) {
+        this.logger.warn(
+          `⚠️ No se pudo eliminar la foto de Cloudinary: ${error.message}. ` +
+            `Continuando con la eliminación del usuario.`,
+        );
+      }
+    }
+
+    // 3. Eliminar todo en una transacción
+    await this.prisma.$transaction(async (tx) => {
+      // 3.1 Eliminar registros de pago (de todas las matrículas)
+      await tx.paymentRecord.deleteMany({
+        where: {
+          enrollment: {
+            studentId: userId,
+          },
+        },
+      });
+
+      // 3.2 Eliminar matrículas
+      await tx.enrollment.deleteMany({
+        where: { studentId: userId },
+      });
+
+      // 3.3 Eliminar asistencias
+      await tx.attendance.deleteMany({
+        where: { studentId: userId },
+      });
+
+      // 3.4 Eliminar calificaciones
+      await tx.grade.deleteMany({
+        where: { studentId: userId },
+      });
+
+      // 3.5 Eliminar entregas de tareas
+      await tx.taskSubmission.deleteMany({
+        where: { studentId: userId },
+      });
+
+      // 3.6 Eliminar relaciones padre-estudiante (si es hijo)
+      await tx.parentStudent.deleteMany({
+        where: {
+          OR: [{ studentId: userId }, { parentId: userId }],
+        },
+      });
+
+      // 3.7 Eliminar membresías
+      await tx.membership.deleteMany({
+        where: { userId },
+      });
+
+      // 3.8 Eliminar perfil
+      await tx.profile.deleteMany({
+        where: { userId },
+      });
+
+      // 3.9 Eliminar usuario
+      await tx.user.delete({
+        where: { id: userId },
+      });
+    });
+
+    // 4. Registrar en auditoría (después de la eliminación)
+    await this.auditService.log({
+      action: AuditAction.DELETE,
+      entity: AuditEntity.USER,
+      entityId: userId,
+      entityName: auditData.email,
+      oldData: auditData,
+      newData: null,
+      userId: adminId,
+    });
+
+    this.logger.log(
+      `🗑️ Estudiante eliminado completamente: ${auditData.email} | ` +
+        `DNI: ${auditData.documentNumber} | Por: ${adminId}`,
+    );
+
+    return {
+      message: 'Estudiante eliminado completamente',
+      deletedUser: {
+        email: auditData.email,
+        name: `${auditData.firstName} ${auditData.lastName}`,
+        documentNumber: auditData.documentNumber,
+      },
     };
   }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Param, Body, Query, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Param, Body, Query, UseGuards, Request, Delete } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { RegisterStudentDto } from './dto/register-student.dto';
@@ -109,5 +109,20 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'Usuario no encontrado' })
   resetPassword(@Param('id') id: string, @Request() req) {
     return this.usersService.resetPassword(id, req.user.id);
+  }
+
+  @Delete('students/:id/complete')
+  @Roles(Role.ADMIN)
+  @ApiOperation({
+    summary: 'Eliminar completamente un estudiante (HARD DELETE)',
+    description: 'Elimina el usuario, perfil, matrículas, pagos, asistencias, calificaciones y foto de Cloudinary. Esta acción no se puede deshacer.',
+  })
+  @ApiResponse({ status: 200, description: 'Estudiante eliminado completamente' })
+  @ApiResponse({ status: 404, description: 'Estudiante no encontrado' })
+  deleteStudentCompletely(
+    @Param('id') id: string,
+    @Request() req,
+  ) {
+    return this.usersService.deleteStudentCompletely(id, req.user.id);
   }
 }

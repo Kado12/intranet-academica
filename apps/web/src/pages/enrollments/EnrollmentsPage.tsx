@@ -9,10 +9,8 @@ import { useToast } from '../../hooks/useToast';
 import { sectionsService, enrollmentsService, type EnrollmentResponse, type EnrollmentFilters } from '../../api/academic.service';
 import { sedesService, turnsService, periodsService } from '../../api/academic.service';
 import { paymentPlansService, type PaymentPlan } from '../../api/payment-plans.service';
-import { studentsService, type StudentUser } from '../../api/students.service';
 import type { Section, Sede, Turn, AcademicPeriod } from '../../types';
 import {
-  PlusIcon,
   TrashIcon,
   PencilIcon,
   MagnifyingGlassIcon,
@@ -23,36 +21,12 @@ import {
 import { studentsRegistrationService } from '../../api/students-registration.service';
 import { ImageUpload } from '../../components/ui/ImageUpload';
 
-interface Enrollment {
-  id: string;
-  studentId: string;
-  sectionId: string;
-  status: string;
-  enrolledAt: string;
-  student?: {
-    id: string;
-    email: string;
-    profile?: {
-      firstName: string;
-      lastName: string;
-    };
-  };
-  section?: {
-    id: string;
-    name: string;
-    classroom?: { name: string };
-    turn?: { name: string };
-    period?: { name: string };
-  };
-}
-
 export const EnrollmentsPage: React.FC = () => {
   const { toasts, addToast, removeToast } = useToast();
 
   // Datos
   const [enrollments, setEnrollments] = useState<EnrollmentResponse[]>([]);
   const [sections, setSections] = useState<Section[]>([]);
-  const [students, setStudents] = useState<StudentUser[]>([]);
   const [sedes, setSedes] = useState<Sede[]>([]);
   const [turns, setTurns] = useState<Turn[]>([]);
   const [periods, setPeriods] = useState<AcademicPeriod[]>([]);
@@ -62,11 +36,6 @@ export const EnrollmentsPage: React.FC = () => {
   // Filtros
   const [filters, setFilters] = useState<EnrollmentFilters>({});
   const [searchTerm, setSearchTerm] = useState('');
-  
-  // Modal de nueva matrícula
-  const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({ studentId: '', sectionId: '' });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Modal de edición/transferencia
   const [showEditModal, setShowEditModal] = useState(false);
@@ -90,7 +59,7 @@ export const EnrollmentsPage: React.FC = () => {
   const [profilePhotoPreview, setProfilePhotoPreview] = useState<string | null>(null);
 
   // Modal de eliminacion
-  const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; enrollment: Enrollment | null }>({
+  const [deleteModal, setDeleteModal] = useState<{ isOpen: boolean; enrollment: EnrollmentResponse | null }>({
     isOpen: false,
     enrollment: null,
   });
@@ -117,16 +86,14 @@ export const EnrollmentsPage: React.FC = () => {
 
   const loadInitialData = useCallback(async () => {
     try {
-      const [sectionsData, studentsData, sedesData, turnsData, periodsData, plansData] = await Promise.all([
+      const [sectionsData, sedesData, turnsData, periodsData, plansData] = await Promise.all([
         sectionsService.findAll(),
-        studentsService.findAll(),
         sedesService.findAll(),
         turnsService.findAll(),
         periodsService.findAll(),
         paymentPlansService.findAll(),
       ]);
       setSections(sectionsData);
-      setStudents(studentsData);
       setSedes(sedesData);
       setTurns(turnsData);
       setPeriods(periodsData);
@@ -167,37 +134,6 @@ export const EnrollmentsPage: React.FC = () => {
   const clearFilters = () => {
     setFilters({});
     setSearchTerm('');
-  };
-
-  // ===== HANDLERS DE NUEVA MATRÍCULA =====
-
-  const handleFormChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!formData.studentId || !formData.sectionId) {
-      addToast('error', 'Selecciona un estudiante y una sección');
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      await enrollmentsService.create(formData);
-      addToast('success', 'Estudiante matriculado exitosamente');
-      setShowForm(false);
-      setFormData({ studentId: '', sectionId: '' });
-      loadEnrollments();
-    } catch (error: any) {
-      const message = error.response?.data?.message;
-      addToast('error', Array.isArray(message) ? message.join(', ') : message || 'Error al matricular');
-    } finally {
-      setIsSubmitting(false);
-    }
   };
 
   // ===== HANDLERS DE EDICIÓN/TRANSFERENCIA =====
@@ -268,12 +204,17 @@ export const EnrollmentsPage: React.FC = () => {
     setIsDeleting(true);
 
     try {
-      await enrollmentsService.remove(deleteModal.enrollment.id);
-      addToast('success', 'Matrícula retirada exitosamente');
+      // Eliminar completamente al estudiante
+      const result = await studentsRegistrationService.deleteStudentCompletely(
+        deleteModal.enrollment.student?.id || ''
+      );
+
+      addToast('success', `Estudiante ${result.deletedUser.name} eliminado completamente`);
       setDeleteModal({ isOpen: false, enrollment: null });
       loadEnrollments();
     } catch (error: any) {
-      addToast('error', 'Error al retirar la matrícula');
+      const message = error.response?.data?.message;
+      addToast('error', message || 'Error al eliminar el estudiante');
     } finally {
       setIsDeleting(false);
     }
@@ -342,7 +283,7 @@ export const EnrollmentsPage: React.FC = () => {
           profileFormData.documentNumber,
         );
         avatarUrl = uploadResult.tempAvatarUrl;
-        avatarPublicId = uploadResult.tempAvatarPublicId;
+        avatarPublicId = uploadResult.tempPublicId;
       }
 
       // 2. Actualizar perfil
@@ -430,14 +371,6 @@ export const EnrollmentsPage: React.FC = () => {
 
   // ===== OPCIONES PARA SELECTS =====
 
-  const studentOptions = [
-    { value: '', label: 'Selecciona un estudiante' },
-    ...students.map((s) => ({
-      value: s.id,
-      label: `${s.profile?.firstName || ''} ${s.profile?.lastName || ''} (${s.email})`,
-    })),
-  ];
-
   const sectionOptions = [
     { value: '', label: 'Selecciona una sección' },
     ...sections.map((s) => ({
@@ -464,45 +397,18 @@ export const EnrollmentsPage: React.FC = () => {
     })),
   ];
 
-  const getStatusBadge = (status: string) => {
-    const styles: Record<string, string> = {
-      ACTIVE: 'bg-green-100 text-green-800',
-      INACTIVE: 'bg-gray-100 text-gray-800',
-      WITHDRAWN: 'bg-red-100 text-red-800',
-      TRANSFERRED: 'bg-yellow-100 text-yellow-800',
-      COMPLETED: 'bg-blue-100 text-blue-800',
-    };
-
-    const labels: Record<string, string> = {
-      ACTIVE: 'Activa',
-      INACTIVE: 'Inactiva',
-      WITHDRAWN: 'Retirada',
-      TRANSFERRED: 'Transferida',
-      COMPLETED: 'Completada',
-    };
-
-    return (
-      <span className={`px-2 py-1 text-xs font-medium rounded-full ${styles[status] || styles.INACTIVE}`}>
-        {labels[status] || status}
-      </span>
-    );
-  };
-
   return (
     <div className="space-y-6">
       <ToastContainer toasts={toasts} onClose={removeToast} />
 
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-800">Gestión de Matrículas</h1>
-        <Button
-          variant="primary"
-          onClick={() => setShowForm(true)}
-        >
-          <span className="flex items-center">
-            <PlusIcon className="h-5 w-5 mr-2" />
-            Nueva Matrícula
-          </span>
-        </Button>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800">Gestión de Matrículas</h1>
+          <p className="text-sm text-gray-500 mt-1">
+            Vista de estudiantes inscritos. Para registrar nuevos estudiantes, usa la página de inscripción.
+          </p>
+        </div>
       </div>
 
       {/* Filtros */}
@@ -575,55 +481,6 @@ export const EnrollmentsPage: React.FC = () => {
           )}
         </div>
       </Card>
-
-      <Modal
-        isOpen={showForm}
-        onClose={() => {
-          setShowForm(false);
-          setFormData({ studentId: '', sectionId: '' });
-        }}
-        title="Nueva Matrícula"
-      >
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <Select
-            label="Estudiante"
-            name="studentId"
-            value={formData.studentId}
-            onChange={handleFormChange}
-            options={studentOptions}
-            required
-          />
-
-          <Select
-            label="Sección"
-            name="sectionId"
-            value={formData.sectionId}
-            onChange={handleFormChange}
-            options={sectionOptions}
-            required
-          />
-
-          <div className="flex justify-end space-x-4 pt-4">
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => {
-                setShowForm(false);
-                setFormData({ studentId: '', sectionId: '' });
-              }}
-            >
-              Cancelar
-            </Button>
-            <Button
-              type="submit"
-              variant="primary"
-              isLoading={isSubmitting}
-            >
-              Matricular
-            </Button>
-          </div>
-        </form>
-      </Modal>
 
       {/* Modal de edición/transferencia */}
       <Modal
@@ -703,13 +560,7 @@ export const EnrollmentsPage: React.FC = () => {
                 name="sectionId"
                 value={editFormData.sectionId}
                 onChange={handleEditChange}
-                options={[
-                  { value: '', label: 'Selecciona una sección' },
-                  ...sections.map((s) => ({
-                    value: s.id,
-                    label: `${s.classroom?.name || ''} - ${s.name} (${s.turn?.name || ''})`,
-                  })),
-                ]}
+                options={sectionOptions}
               />
             )}
 
@@ -733,19 +584,6 @@ export const EnrollmentsPage: React.FC = () => {
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Ej: Cambio solicitado por el padre..."
               />
-            </div>
-
-            <div className="border-t pt-4 mt-4">
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => handleDownloadPdf(editingEnrollment)}
-                className="w-full"
-              >
-                <span className="flex items-center justify-center">
-                  📄 Descargar Ficha PDF Actualizada
-                </span>
-              </Button>
             </div>
 
             <div className="flex justify-end space-x-4 pt-4">
@@ -903,25 +741,6 @@ export const EnrollmentsPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="border-t pt-4 mt-4">
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => {
-                  // Buscar el enrollment correspondiente al estudiante
-                  const enrollment = enrollments.find(e => e.student?.id === editingStudent?.userId);
-                  if (enrollment) {
-                    handleDownloadPdf(enrollment);
-                  }
-                }}
-                className="w-full"
-              >
-                <span className="flex items-center justify-center">
-                  📄 Descargar Ficha PDF
-                </span>
-              </Button>
-            </div>
-
             {/* Sección de Reseteo de Contraseña */}
             <div className="border-t pt-4 mt-4">
               <div className="flex items-center justify-between mb-3">
@@ -1011,8 +830,10 @@ export const EnrollmentsPage: React.FC = () => {
         isOpen={deleteModal.isOpen}
         onClose={() => setDeleteModal({ isOpen: false, enrollment: null })}
         onConfirm={handleDeleteConfirm}
-        title="Retirar Matrícula"
-        message={`¿Estás seguro de que deseas retirar la matrícula de ${deleteModal.enrollment?.student?.profile?.firstName} ${deleteModal.enrollment?.student?.profile?.lastName}?`}
+        title="⚠️ Eliminar Estudiante Completamente"
+        message={`Esta acción eliminará TODOS los datos de ${deleteModal.enrollment?.student?.profile?.firstName} ${deleteModal.enrollment?.student?.profile?.lastName} (DNI: ${deleteModal.enrollment?.student?.profile?.documentNumber || 'N/A'}):\n\n• Perfil del usuario\n• Foto de Cloudinary\n• Matrículas y pagos\n• Asistencias y calificaciones\n• Historial académico\n\nEsta acción NO se puede deshacer. ¿Estás completamente seguro?`}
+        confirmText="Sí, eliminar todo"
+        cancelText="Cancelar"
         isLoading={isDeleting}
       />
 
@@ -1124,7 +945,7 @@ export const EnrollmentsPage: React.FC = () => {
                           <button
                             onClick={() => handleDeleteClick(enrollment)}
                             className="text-red-600 hover:text-red-900"
-                            title="Retirar matrícula"
+                            title="Eliminar estudiante completamente (HARD DELETE)"
                           >
                             <TrashIcon className="h-5 w-5" />
                           </button>

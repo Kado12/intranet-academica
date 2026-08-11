@@ -17,6 +17,10 @@ export interface RegisterStudentDto {
   paymentPlanId: string;
   avatarUrl?: string;
   avatarPublicId?: string;
+  firstPaymentDone?: boolean;
+  paymentMethod?: string;
+  paymentReference?: string;
+  paymentNotes?: string;
 }
 
 export interface RegisterStudentResponse {
@@ -94,13 +98,13 @@ export const studentsRegistrationService = {
   async uploadStudentPicture(
     file: File,
     documentNumber: string,
-  ): Promise<{ tempAvatarUrl: string; tempAvatarPublicId: string }> {
+  ): Promise<{ tempAvatarUrl: string; tempPublicId: string }> {
     console.log(documentNumber)
     const formData = new FormData();
     formData.append('file', file);
     formData.append('documentNumber', documentNumber);
 
-    const response = await api.post<{ tempAvatarUrl: string; tempAvatarPublicId: string }>(
+    const response = await api.post<{ tempAvatarUrl: string; tempPublicId: string }>(
       '/api/upload/student-picture',
       formData,
       {
@@ -128,6 +132,18 @@ export const studentsRegistrationService = {
       `/api/users/${userId}/profile`,
       data
     );
+    return response.data;
+  },
+
+  async deleteStudentCompletely(userId: string): Promise<{ 
+    message: string;
+    deletedUser: {
+      email: string;
+      name: string;
+      documentNumber: string;
+    };
+  }> {
+    const response = await api.delete(`/api/users/students/${userId}/complete`);
     return response.data;
   },
 };
