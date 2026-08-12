@@ -17,12 +17,20 @@ import {
   ClipboardDocumentListIcon,
   ArrowPathIcon,
   UserIcon,
+  ArrowDownTrayIcon,
 } from '@heroicons/react/24/outline';
 import { studentsRegistrationService } from '../../api/students-registration.service';
 import { ImageUpload } from '../../components/ui/ImageUpload';
+import { exportsService } from '../../api/exports.service';
+import { ExportFiltersModal } from '../../components/export/ExportFiltersModal';
 
 export const EnrollmentsPage: React.FC = () => {
   const { toasts, addToast, removeToast } = useToast();
+
+  // Estados para modales de exportación
+  const [showStudentsExportModal, setShowStudentsExportModal] = useState(false);
+  const [showPaymentsExportModal, setShowPaymentsExportModal] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
 
   // Datos
   const [enrollments, setEnrollments] = useState<EnrollmentResponse[]>([]);
@@ -369,6 +377,42 @@ export const EnrollmentsPage: React.FC = () => {
     }
   };
 
+  const handleExportStudents = async (filters: any) => {
+    setIsExporting(true);
+    console.log(filters)
+    try {
+      await exportsService.downloadStudentsList({
+        sedeId: filters.sedeId || undefined,
+        turnId: filters.turnId || undefined,
+        classroomId: filters.classroomId || undefined,
+        sectionId: filters.sectionId || undefined,
+        search: filters.search || undefined,
+      });
+      addToast('success', 'Excel de alumnos descargado');
+    } catch (error) {
+      addToast('error', 'Error al descargar el Excel');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleExportPayments = async (filters: any) => {
+    setIsExporting(true);
+    try {
+      await exportsService.downloadPaymentStatus({
+        sedeId: filters.sedeId || undefined,
+        turnId: filters.turnId || undefined,
+        sectionId: filters.sectionId || undefined,
+        search: filters.search || undefined,
+      });
+      addToast('success', 'Excel de pagos descargado');
+    } catch (error) {
+      addToast('error', 'Error al descargar el Excel');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   // ===== OPCIONES PARA SELECTS =====
 
   const sectionOptions = [
@@ -408,6 +452,25 @@ export const EnrollmentsPage: React.FC = () => {
           <p className="text-sm text-gray-500 mt-1">
             Vista de estudiantes inscritos. Para registrar nuevos estudiantes, usa la página de inscripción.
           </p>
+        </div>
+
+        <div className="flex space-x-2">
+          <Button
+            variant="secondary"
+            onClick={() => setShowStudentsExportModal(true)}
+            className="flex items-center"
+          >
+            <ArrowDownTrayIcon className="h-4 w-4 mr-2" />
+            Excel Alumnos
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => setShowPaymentsExportModal(true)}
+            className="flex items-center"
+          >
+            <ArrowDownTrayIcon className="h-4 w-4 mr-2" />
+            Excel Pagos
+          </Button>
         </div>
       </div>
 
@@ -481,6 +544,23 @@ export const EnrollmentsPage: React.FC = () => {
           )}
         </div>
       </Card>
+
+      {/* Modal de exportación de alumnos */}
+      <ExportFiltersModal
+        isOpen={showStudentsExportModal}
+        onClose={() => setShowStudentsExportModal(false)}
+        onExport={handleExportStudents}
+        title="Descargar Lista de Alumnos"
+      />
+
+      {/* Modal de exportación de pagos */}
+      <ExportFiltersModal
+        isOpen={showPaymentsExportModal}
+        onClose={() => setShowPaymentsExportModal(false)}
+        onExport={handleExportPayments}
+        title="Descargar Estado de Pagos"
+        showPaymentFilters
+      />
 
       {/* Modal de edición/transferencia */}
       <Modal

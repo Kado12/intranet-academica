@@ -95,9 +95,8 @@ export const periodsService = {
 
 // ============== SALONES ==============
 export const classroomsService = {
-  async findAll(sedeId?: string): Promise<Classroom[]> {
-    const params = sedeId ? `?sedeId=${sedeId}` : '';
-    const response = await api.get<Classroom[]>(`/api/academic/classrooms${params}`);
+  async findAll(): Promise<Classroom[]> {
+    const response = await api.get<Classroom[]>('/api/academic/classrooms');
     return response.data;
   },
   

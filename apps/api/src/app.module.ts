@@ -23,6 +23,7 @@ import { AuditModule } from './common/audit/audit.module';
 import { PaymentsModule } from './academic/payments/payments.module';
 import { StatisticsModule } from './statistics/statistics.module';
 import { TeacherAttendanceModule } from './academic/teacher-attendance/teacher-attendance.module';
+import { ExportsModule } from './exports/exports.module';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { TeacherAttendanceModule } from './academic/teacher-attendance/teacher-a
     PaymentsModule,
     StatisticsModule,
     TeacherAttendanceModule,
+    ExportsModule,
   ],
   controllers: [AppController],
   providers: [

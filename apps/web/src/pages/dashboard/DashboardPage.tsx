@@ -4,7 +4,7 @@ import { Card } from '../../components/ui/Card';
 import { useNavigate } from 'react-router-dom';
 import { type StatisticsOverview, statisticsService } from '../../api/statistics.service';
 import { Button } from '../../components/ui/Button';
-import { AcademicCapIcon, BanknotesIcon, BuildingOfficeIcon, CheckCircleIcon, ClockIcon, DocumentTextIcon, ExclamationCircleIcon, UserGroupIcon, UserPlusIcon } from '@heroicons/react/24/outline';
+import { AcademicCapIcon, ArrowDownTrayIcon, BanknotesIcon, BuildingOfficeIcon, CheckCircleIcon, ClockIcon, DocumentTextIcon, ExclamationCircleIcon, UserGroupIcon, UserPlusIcon } from '@heroicons/react/24/outline';
 import {
   BarChart,
   Bar,
@@ -20,6 +20,9 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts'
+import { exportsService } from '../../api/exports.service';
+import { ToastContainer } from '../../components/ui/Toast';
+import { useToast } from '../../hooks/useToast';
 
 const COLORS = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#06b6d4'];
 const PAYMENT_COLORS = {
@@ -30,6 +33,8 @@ const PAYMENT_COLORS = {
 };
 
 export const DashboardPage: React.FC = () => {
+  const { toasts, addToast, removeToast } = useToast();
+  
   const { user } = useAuth();
 
   const navigate = useNavigate();
@@ -101,8 +106,19 @@ export const DashboardPage: React.FC = () => {
     { name: 'Vencidos', value: stats.payments.overdue.count, color: PAYMENT_COLORS.overdue },
   ].filter(item => item.value > 0);
 
+  const handleExportSummary = async () => {
+    try {
+      await exportsService.downloadSummary();
+      addToast('success', 'Resumen descargado');
+    } catch (error) {
+      addToast('error', 'Error al descargar');
+    }
+  };
+
   return (
+    
     <div className="space-y-6">
+      <ToastContainer toasts={toasts} onClose={removeToast} />
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
@@ -141,6 +157,14 @@ export const DashboardPage: React.FC = () => {
           >
             <DocumentTextIcon className="h-4 w-4 mr-2" />
             Matrículas
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={handleExportSummary}
+            className="flex items-center"
+          >
+            <ArrowDownTrayIcon className="h-4 w-4 mr-2" />
+            Resumen Excel
           </Button>
         </div>
       </div>
