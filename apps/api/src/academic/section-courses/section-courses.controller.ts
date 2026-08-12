@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, Request } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { SectionCoursesService } from './section-courses.service';
 import { CreateSectionCourseDto } from './dto/create-section-course.dto';
@@ -32,7 +32,14 @@ export class SectionCoursesController {
     return this.sectionCoursesService.findAll(periodId);
   }
 
-  @Get('by-section')
+  @Get('my-courses')
+  @Roles(Role.DOCENTE, Role.COORDINADOR)
+  @ApiOperation({ summary: 'Obtener mis cursos asignados (docente autenticado)' })
+  getMyCourses(@Request() req) {
+    return this.sectionCoursesService.findByTeacher(req.user.id);
+  }
+
+  @Get('by-section/:sectionId')
   @ApiQuery({ name: 'sectionId', required: true, description: 'ID de la sección' })
   @ApiOperation({ summary: 'Obtener cursos de una sección específica' })
   @ApiResponse({ status: 200, description: 'Cursos de la sección' })
@@ -40,7 +47,7 @@ export class SectionCoursesController {
     return this.sectionCoursesService.findBySection(sectionId);
   }
 
-  @Get('by-teacher')
+  @Get('by-teacher/:teacherId')
   @ApiQuery({ name: 'teacherId', required: true, description: 'ID del docente' })
   @ApiOperation({ summary: 'Obtener asignaciones de un docente específico' })
   @ApiResponse({ status: 200, description: 'Asignaciones del docente' })

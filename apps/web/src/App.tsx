@@ -17,6 +17,8 @@ import { PaymentPlansPage } from './pages/payment-plans/PaymentPlansPage';
 import { PaymentsPage } from './pages/payments/PaymentsPage';
 import { AuditPage } from './pages/audit/AuditPage';
 import { Role } from './types';
+import { TeacherAttendancePage } from './pages/attendance/TeacherAttendancePage';
+import { StudentAttendancePage } from './pages/attendance/StudentAttendancePage';
 
 function App() {
   return (
@@ -37,6 +39,12 @@ function App() {
                 <Route path="/audit" element={<AuditPage />} />
                 <Route path="/payment-plans" element={<PaymentPlansPage />} />
                 <Route path="/payments" element={<PaymentsPage />} />
+              </Route>
+
+              {/* Página de usuarios: solo ADMIN e INFORMATICO o COORDINADOR */}
+              <Route element={<ProtectedRoute roles={[Role.ADMIN, Role.INFORMATICO, Role.COORDINADOR]} />}>
+                <Route path="/attendance/students" element={<StudentAttendancePage />} />
+                <Route path="/attendance/teachers" element={<TeacherAttendancePage />} />
               </Route>
 
               {/* Módulos académicos */}

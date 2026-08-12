@@ -45,16 +45,17 @@ enum ParentRelationType {
 }
 
 model Sede {
-  id            String         @id @default(cuid())
-  name          String
-  address       String?
-  phone         String?
-  isActive      Boolean        @default(true)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  classrooms    Classroom[]
-  memberships   Membership[]
-  announcements Announcement[]
+  id                 String              @id @default(cuid())
+  name               String
+  address            String?
+  phone              String?
+  isActive           Boolean             @default(true)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  classrooms         Classroom[]
+  memberships        Membership[]
+  announcements      Announcement[]
+  teacherAttendances TeacherAttendance[]
 
   // ← NUEVO
   paymentPlans PaymentPlan[]
@@ -145,33 +146,35 @@ model Course {
 }
 
 model User {
-  id                 String             @id @default(cuid())
-  email              String             @unique
-  passwordHash       String
-  isActive           Boolean            @default(true)
-  mustChangePassword Boolean            @default(false) // ← NUEVO
-  passwordChangedAt  DateTime? // ← NUEVO
-  lastLoginAt        DateTime?
-  createdAt          DateTime           @default(now())
-  updatedAt          DateTime           @updatedAt
-  profile            Profile?
-  memberships        Membership[]
-  courseTeachers     CourseTeacher[]
-  sectionCourses     SectionCourse[]
-  enrollments        Enrollment[]
-  parentOf           ParentStudent[]    @relation("Parent")
-  studentOf          ParentStudent[]    @relation("Student")
-  studentAttendances Attendance[]       @relation("StudentAttendance")
-  excusedAttendances Attendance[]       @relation("ExcusedAttendance")
-  studentGrades      Grade[]            @relation("StudentGrades")
-  gradedGrades       Grade[]            @relation("GradedBy")
-  createdTasks       Task[]             @relation("TaskCreatedBy")
-  studentSubmissions TaskSubmission[]   @relation("StudentSubmissions")
-  gradedSubmissions  TaskSubmission[]   @relation("SubmissionGradedBy")
-  announcements      Announcement[]     @relation("AnnouncementAuthor")
-  announcementViews  AnnouncementView[] @relation("AnnouncementViews")
-  auditLogs          AuditLog[]
-  registeredPayments PaymentRecord[]    @relation("PaymentRegisteredBy")
+  id                         String              @id @default(cuid())
+  email                      String              @unique
+  passwordHash               String
+  isActive                   Boolean             @default(true)
+  mustChangePassword         Boolean             @default(false) // ← NUEVO
+  passwordChangedAt          DateTime? // ← NUEVO
+  lastLoginAt                DateTime?
+  createdAt                  DateTime            @default(now())
+  updatedAt                  DateTime            @updatedAt
+  profile                    Profile?
+  memberships                Membership[]
+  courseTeachers             CourseTeacher[]
+  sectionCourses             SectionCourse[]
+  enrollments                Enrollment[]
+  parentOf                   ParentStudent[]     @relation("Parent")
+  studentOf                  ParentStudent[]     @relation("Student")
+  studentAttendances         Attendance[]        @relation("StudentAttendance")
+  excusedAttendances         Attendance[]        @relation("ExcusedAttendance")
+  studentGrades              Grade[]             @relation("StudentGrades")
+  gradedGrades               Grade[]             @relation("GradedBy")
+  createdTasks               Task[]              @relation("TaskCreatedBy")
+  studentSubmissions         TaskSubmission[]    @relation("StudentSubmissions")
+  gradedSubmissions          TaskSubmission[]    @relation("SubmissionGradedBy")
+  announcements              Announcement[]      @relation("AnnouncementAuthor")
+  announcementViews          AnnouncementView[]  @relation("AnnouncementViews")
+  auditLogs                  AuditLog[]
+  registeredPayments         PaymentRecord[]     @relation("PaymentRegisteredBy")
+  teacherAttendances         TeacherAttendance[] @relation("TeacherAttendance")
+  registerdTeacherAttendance TeacherAttendance[] @relation("TeacherAttendanceRegisteredBy")
 
   @@map("users")
 }
@@ -322,6 +325,40 @@ model Attendance {
   @@index([sectionCourseId, date])
   @@index([studentId])
   @@map("attendances")
+}
+
+// ==================== ASISTENCIA DE DOCENTES ====================
+
+enum TeacherAttendanceStatus {
+  PRESENT // Presente
+  ABSENT // Ausente
+  LATE // Tarde
+  EXCUSED // Justificado
+  VACATION // Vacaciones
+  SICK_LEAVE // Licencia médica
+}
+
+model TeacherAttendance {
+  id             String                  @id @default(cuid())
+  date           DateTime                @db.Date
+  status         TeacherAttendanceStatus
+  notes          String?
+  teacherId      String
+  teacher        User                    @relation("TeacherAttendance", fields: [teacherId], references: [id], onDelete: Cascade)
+  sedeId         String?
+  sede           Sede?                   @relation(fields: [sedeId], references: [id])
+  registeredById String?
+  registeredBy   User?                   @relation("TeacherAttendanceRegisteredBy", fields: [registeredById], references: [id])
+  excuseNote     String?
+  excuseDate     DateTime?
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+
+  @@unique([teacherId, date]) // Una asistencia por docente por día
+  @@index([teacherId])
+  @@index([date])
+  @@index([sedeId])
+  @@map("teacher_attendances")
 }
 
 // ==================== CALIFICACIONES ====================

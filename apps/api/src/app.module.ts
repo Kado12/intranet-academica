@@ -21,6 +21,8 @@ import { CloudinaryModule } from './common/cloudinary/cloudinary.module';
 import { PaymentPlanModule } from './academic/payment-plans/payment-plans.module';
 import { AuditModule } from './common/audit/audit.module';
 import { PaymentsModule } from './academic/payments/payments.module';
+import { StatisticsModule } from './statistics/statistics.module';
+import { TeacherAttendanceModule } from './academic/teacher-attendance/teacher-attendance.module';
 
 @Module({
   imports: [
@@ -67,6 +69,8 @@ import { PaymentsModule } from './academic/payments/payments.module';
     AttendanceModule,
     PaymentPlanModule,
     PaymentsModule,
+    StatisticsModule,
+    TeacherAttendanceModule,
   ],
   controllers: [AppController],
   providers: [

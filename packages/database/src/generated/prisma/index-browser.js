@@ -278,6 +278,20 @@ exports.Prisma.AttendanceScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.TeacherAttendanceScalarFieldEnum = {
+  id: 'id',
+  date: 'date',
+  status: 'status',
+  notes: 'notes',
+  teacherId: 'teacherId',
+  sedeId: 'sedeId',
+  registeredById: 'registeredById',
+  excuseNote: 'excuseNote',
+  excuseDate: 'excuseDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.AssessmentScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -515,6 +529,15 @@ exports.Prisma.AttendanceOrderByRelevanceFieldEnum = {
   excuseNote: 'excuseNote'
 };
 
+exports.Prisma.TeacherAttendanceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  notes: 'notes',
+  teacherId: 'teacherId',
+  sedeId: 'sedeId',
+  registeredById: 'registeredById',
+  excuseNote: 'excuseNote'
+};
+
 exports.Prisma.AssessmentOrderByRelevanceFieldEnum = {
   id: 'id',
   name: 'name',
@@ -640,6 +663,15 @@ exports.AttendanceStatus = exports.$Enums.AttendanceStatus = {
   EXCUSED: 'EXCUSED'
 };
 
+exports.TeacherAttendanceStatus = exports.$Enums.TeacherAttendanceStatus = {
+  PRESENT: 'PRESENT',
+  ABSENT: 'ABSENT',
+  LATE: 'LATE',
+  EXCUSED: 'EXCUSED',
+  VACATION: 'VACATION',
+  SICK_LEAVE: 'SICK_LEAVE'
+};
+
 exports.AssessmentType = exports.$Enums.AssessmentType = {
   EXAM: 'EXAM',
   QUIZ: 'QUIZ',
@@ -719,6 +751,7 @@ exports.Prisma.ModelName = {
   Enrollment: 'Enrollment',
   ParentStudent: 'ParentStudent',
   Attendance: 'Attendance',
+  TeacherAttendance: 'TeacherAttendance',
   Assessment: 'Assessment',
   Grade: 'Grade',
   Task: 'Task',
