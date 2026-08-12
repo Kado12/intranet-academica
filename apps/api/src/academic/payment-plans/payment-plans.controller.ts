@@ -15,7 +15,7 @@ export class PaymentPlansController {
   constructor(private readonly paymentPlansService: PaymentPlansService) {}
 
   @Post()
-  @Roles(Role.ADMIN, Role.SECRETARIA, Role.COORDINADOR)
+  @Roles(Role.ADMIN, Role.SECRETARIA, Role.COORDINADOR, Role.INFORMATICO)
   @ApiOperation({ summary: 'Crear un nuevo plan de pago' })
   @ApiResponse({ status: 201, description: 'Plan creado' })
   create(@Body() createDto: CreatePaymentPlanDto) {
@@ -23,7 +23,7 @@ export class PaymentPlansController {
   }
 
   @Get()
-  @Roles(Role.ADMIN, Role.SECRETARIA, Role.COORDINADOR, Role.DOCENTE)
+  @Roles(Role.ADMIN, Role.SECRETARIA, Role.COORDINADOR, Role.DOCENTE, Role.INFORMATICO)
   @ApiQuery({ name: 'sedeId', required: false })
   @ApiOperation({ summary: 'Listar planes de pago' })
   findAll(@Query('sedeId') sedeId?: string) {
@@ -31,14 +31,14 @@ export class PaymentPlansController {
   }
 
   @Get(':id')
-  @Roles(Role.ADMIN, Role.SECRETARIA, Role.COORDINADOR)
+  @Roles(Role.ADMIN, Role.SECRETARIA, Role.COORDINADOR, Role.INFORMATICO)
   @ApiOperation({ summary: 'Obtener un plan de pago por ID' })
   findOne(@Param('id') id: string) {
     return this.paymentPlansService.findOne(id);
   }
 
   @Patch(':id')
-  @Roles(Role.ADMIN, Role.SECRETARIA)
+  @Roles(Role.ADMIN, Role.SECRETARIA, Role.INFORMATICO)
   @ApiOperation({ summary: 'Actualizar un plan de pago' })
   update(@Param('id') id: string, @Body() updateDto: Partial<CreatePaymentPlanDto>) {
     return this.paymentPlansService.update(id, updateDto);

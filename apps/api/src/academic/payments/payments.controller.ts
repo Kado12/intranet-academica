@@ -15,7 +15,7 @@ export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
 
   @Get()
-  @Roles(Role.ADMIN, Role.SECRETARIA, Role.COORDINADOR)
+  @Roles(Role.ADMIN, Role.SECRETARIA, Role.COORDINADOR, Role.INFORMATICO)
   @ApiQuery({ name: 'status', required: false, enum: PaymentStatus })
   @ApiQuery({ name: 'sedeId', required: false })
   @ApiQuery({ name: 'search', required: false })
@@ -39,21 +39,21 @@ export class PaymentsController {
   }
 
   @Get('summary')
-  @Roles(Role.ADMIN, Role.SECRETARIA, Role.COORDINADOR)
+  @Roles(Role.ADMIN, Role.SECRETARIA, Role.COORDINADOR, Role.INFORMATICO)
   @ApiOperation({ summary: 'Obtener resumen de pagos' })
   getSummary() {
     return this.paymentsService.getSummary();
   }
 
   @Get('enrollment/:enrollmentId')
-  @Roles(Role.ADMIN, Role.SECRETARIA, Role.COORDINADOR, Role.DOCENTE)
+  @Roles(Role.ADMIN, Role.SECRETARIA, Role.COORDINADOR, Role.DOCENTE, Role.INFORMATICO)
   @ApiOperation({ summary: 'Obtener pagos de una matrícula' })
   findByEnrollment(@Param('enrollmentId') enrollmentId: string) {
     return this.paymentsService.findByEnrollment(enrollmentId);
   }
 
   @Patch(':id')
-  @Roles(Role.ADMIN, Role.SECRETARIA)
+  @Roles(Role.ADMIN, Role.SECRETARIA, Role.INFORMATICO)
   @ApiOperation({ summary: 'Actualizar estado de un pago' })
   updatePayment(
     @Param('id') id: string,
