@@ -59,23 +59,64 @@ export class SectionsService {
     });
   }
 
-  async findAll(periodId?: string, classroomId?: string) {
-    const where: any = { isActive: true };
-    
-    if (periodId) where.periodId = periodId;
-    if (classroomId) where.classroomId = classroomId;
+  async findAll(filters: {
+    sedeId?: string;
+    turnId?: string;
+    periodId?: string;
+    search?: string;
+    page?: number;
+    limit?: number;
+  }) {
+    const where: any = {};
 
-    return this.prisma.section.findMany({
-      where,
-      include: {
-        classroom: {
-          include: { sede: true },
+    if (filters.sedeId) {
+      where.classroom = { sedeId: filters.sedeId };
+    }
+    if (filters.turnId) {
+      where.turnId = filters.turnId;
+    }
+    if (filters.periodId) {
+      where.periodId = filters.periodId;
+    }
+    if (filters.search) {
+      where.name = { contains: filters.search };
+    }
+
+    const page = filters.page || 1;
+    const limit = filters.limit || 10;
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await Promise.all([
+      this.prisma.section.findMany({
+        where,
+        include: {
+          classroom: { include: { sede: true } },
+          turn: true,
+          period: true,
+          _count: {
+            select: { enrollments: true },
+          },
         },
-        turn: true,
-        period: true,
+        orderBy: [
+          { classroom: { sede: { name: 'asc' } } },
+          { turn: { name: 'asc' } },
+          { name: 'asc' },
+        ],
+        skip,
+        take: limit,
+      }),
+      this.prisma.section.count({ where }),
+    ]);
+
+    return {
+      data,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
       },
-      orderBy: { name: 'asc' },
-    });
+    };
   }
 
   async findOne(id: string) {

@@ -9,6 +9,7 @@ import { ToastContainer } from '../../components/ui/Toast';
 import { useToast } from '../../hooks/useToast';
 import { classroomsService, sedesService } from '../../api/academic.service';
 import type { Classroom, Sede } from '../../types';
+import { Pagination } from '../../components/ui/Pagination';
 import {
   PlusIcon,
   PencilIcon,
@@ -16,6 +17,7 @@ import {
   Square3Stack3DIcon,
 } from '@heroicons/react/24/outline';
 import { getZodErrors } from '../../utils/zodHelpers';
+import api from '../../api/axios';
 
 // Schema de validación
 const classroomSchema = z.object({
@@ -28,6 +30,17 @@ const classroomSchema = z.object({
 type ClassroomFormData = z.infer<typeof classroomSchema>;
 
 export const ClassroomsPage: React.FC = () => {
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 0,
+  });
+
+  const [filters, setFilters] = useState({
+    sedeId: '',
+    search: '',
+  });
   const { toasts, addToast, removeToast } = useToast();
   
   const [classrooms, setClassrooms] = useState<Classroom[]>([]);
@@ -52,18 +65,23 @@ export const ClassroomsPage: React.FC = () => {
   const loadData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const [classroomsData, sedesData] = await Promise.all([
-        classroomsService.findAll(),
-        sedesService.findAll(),
-      ]);
-      setClassrooms(classroomsData);
-      setSedes(sedesData);
-    } catch (error: any) {
-      addToast('error', 'Error al cargar los datos');
+      const data = await sedesService.findAll()
+      setSedes(data)
+      const params = new URLSearchParams();
+      if (filters.sedeId) params.append('sedeId', filters.sedeId);
+      if (filters.search) params.append('search', filters.search);
+      params.append('page', pagination.page.toString());
+      params.append('limit', pagination.limit.toString());
+
+      const response = await api.get(`/api/academic/classrooms?${params.toString()}`);
+      setClassrooms(response.data.data);
+      setPagination(response.data.pagination);
+    } catch (error) {
+      addToast('error', 'Error al cargar salones');
     } finally {
       setIsLoading(false);
     }
-  }, [addToast]);
+  }, [filters, pagination.page, pagination.limit, addToast]);
 
   useEffect(() => {
     loadData();
@@ -77,6 +95,19 @@ export const ClassroomsPage: React.FC = () => {
     if (errors[name as keyof ClassroomFormData]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
+  };
+
+  const handlePageChange = (page: number) => {
+    setPagination(prev => ({ ...prev, page }));
+  };
+
+  const handleItemsPerPageChange = (limit: number) => {
+    setPagination(prev => ({ ...prev, limit, page: 1 }));
+  };
+
+  const handleFilterChange = (name: string, value: string) => {
+    setFilters(prev => ({ ...prev, [name]: value }));
+    setPagination(prev => ({ ...prev, page: 1 }));
   };
 
   const validateForm = (): boolean => {
@@ -283,6 +314,25 @@ export const ClassroomsPage: React.FC = () => {
           </div>
         ) : (
           <div className="overflow-x-auto">
+            <div className="flex flex-col md:flex-row gap-4 mb-4">
+              <input
+                type="text"
+                placeholder="Buscar salón..."
+                value={filters.search}
+                onChange={(e) => handleFilterChange('search', e.target.value)}
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg"
+              />
+              <select
+                value={filters.sedeId}
+                onChange={(e) => handleFilterChange('sedeId', e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-lg"
+              >
+                <option value="">Todas las sedes</option>
+                {sedes.map(s => (
+                  <option key={s.id} value={s.id}>{s.name}</option>
+                ))}
+              </select>
+            </div>
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -341,6 +391,14 @@ export const ClassroomsPage: React.FC = () => {
                 ))}
               </tbody>
             </table>
+            <Pagination
+              currentPage={pagination.page}
+              totalPages={pagination.totalPages}
+              totalItems={pagination.total}
+              itemsPerPage={pagination.limit}
+              onPageChange={handlePageChange}
+              onItemsPerPageChange={handleItemsPerPageChange}
+            />
           </div>
         )}
       </Card>

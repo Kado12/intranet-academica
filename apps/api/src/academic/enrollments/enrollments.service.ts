@@ -133,6 +133,8 @@ export class EnrollmentsService {
     turnId?: string;
     paymentPlanId?: string;
     search?: string;
+    page?: number;
+    limit?: number;
   }) {
     const where: any = {};
 
@@ -168,23 +170,42 @@ export class EnrollmentsService {
       };
     }
 
-    return this.prisma.enrollment.findMany({
-      where,
-      include: {
-        student: {
-          include: { profile: true },
-        },
-        section: {
-          include: {
-            classroom: { include: { sede: true } },
-            turn: true,
-            period: true,
+    const page = filters.page || 1;
+    const limit = filters.limit || 10;
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await Promise.all([
+      this.prisma.enrollment.findMany({
+        where,
+        include: {
+          student: {
+            include: { profile: true },
           },
+          section: {
+            include: {
+              classroom: { include: { sede: true } },
+              turn: true,
+              period: true,
+            },
+          },
+          paymentPlan: true,
         },
-        paymentPlan: true,
+        orderBy: { enrolledAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      this.prisma.enrollment.count({ where }),
+    ]);
+
+    return {
+      data,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
       },
-      orderBy: { enrolledAt: 'desc' },
-    });
+    };
   }
 
   async findByStudent(studentId: string) {

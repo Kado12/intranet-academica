@@ -93,6 +93,10 @@ export class AuthService {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
+    if (user.isActive === false) {
+      throw new UnauthorizedException('Tu usuario ha sido desactivado');
+    }
+
     // Actualizar la última fecha de login
     await this.prisma.user.update({
       where: { id: user.id },

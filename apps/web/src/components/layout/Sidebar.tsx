@@ -20,6 +20,7 @@ import {
   PresentationChartBarIcon,
   XMarkIcon,
   Bars3Icon,
+  ArrowUpTrayIcon,
 } from '@heroicons/react/24/outline';
 
 interface SidebarProps {
@@ -169,6 +170,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       title: 'Sistema',
       icon: ClipboardDocumentIcon,
       items: [
+        {
+          path: '/imports',
+          label: 'Importación Masiva',
+          icon: ArrowUpTrayIcon,
+          roles: [Role.ADMIN, Role.SECRETARIA],
+        },
         {
           path: '/audit',
           label: 'Historial de Cambios',

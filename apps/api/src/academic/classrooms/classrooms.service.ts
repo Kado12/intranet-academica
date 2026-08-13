@@ -37,16 +37,53 @@ export class ClassroomsService {
     });
   }
 
-  async findAll(sedeId?: string) {
-    const where = sedeId ? { sedeId, isActive: true } : { isActive: true };
+  async findAll(filters: {
+    sedeId?: string;
+    search?: string;
+    page?: number;
+    limit?: number;
+  }) {
+    const where: any = {};
 
-    return this.prisma.classroom.findMany({
-      where,
-      include: {
-        sede: true,
+    if (filters.sedeId) {
+      where.sedeId = filters.sedeId;
+    }
+    if (filters.search) {
+      where.name = { contains: filters.search };
+    }
+
+    const page = filters.page || 1;
+    const limit = filters.limit || 10;
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await Promise.all([
+      this.prisma.classroom.findMany({
+        where,
+        include: {
+          sede: true,
+          _count: {
+            select: { sections: true },
+          },
+        },
+        orderBy: [
+          { sede: { name: 'asc' } },
+          { name: 'asc' },
+        ],
+        skip,
+        take: limit,
+      }),
+      this.prisma.classroom.count({ where }),
+    ]);
+
+    return {
+      data,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
       },
-      orderBy: { name: 'asc' },
-    });
+    };
   }
 
   async findOne(id: string) {

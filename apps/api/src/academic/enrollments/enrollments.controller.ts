@@ -36,8 +36,10 @@ export class EnrollmentsController {
   @ApiQuery({ name: 'sedeId', required: false })
   @ApiQuery({ name: 'turnId', required: false })
   @ApiQuery({ name: 'paymentPlanId', required: false })
-  @ApiQuery({ name: 'search', required: false, description: 'Buscar por nombre, apellido o documento' })
-  @ApiOperation({ summary: 'Listar matrículas con filtros' })
+  @ApiQuery({ name: 'search', required: false })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiOperation({ summary: 'Listar matrículas con filtros y paginación' })
   findAll(
     @Query('periodId') periodId?: string,
     @Query('sectionId') sectionId?: string,
@@ -45,6 +47,8 @@ export class EnrollmentsController {
     @Query('turnId') turnId?: string,
     @Query('paymentPlanId') paymentPlanId?: string,
     @Query('search') search?: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
   ) {
     return this.enrollmentsService.findAll({
       periodId,
@@ -53,6 +57,8 @@ export class EnrollmentsController {
       turnId,
       paymentPlanId,
       search,
+      page: page ? parseInt(page) : 1,
+      limit: limit ? parseInt(limit) : 10,
     });
   }
 

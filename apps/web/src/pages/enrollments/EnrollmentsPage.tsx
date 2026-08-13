@@ -23,8 +23,16 @@ import { studentsRegistrationService } from '../../api/students-registration.ser
 import { ImageUpload } from '../../components/ui/ImageUpload';
 import { exportsService } from '../../api/exports.service';
 import { ExportFiltersModal } from '../../components/export/ExportFiltersModal';
+import { Pagination } from '../../components/ui/Pagination';
 
 export const EnrollmentsPage: React.FC = () => {
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 0,
+  });
+
   const { toasts, addToast, removeToast } = useToast();
 
   // Estados para modales de exportación
@@ -83,14 +91,21 @@ export const EnrollmentsPage: React.FC = () => {
   const loadEnrollments = useCallback(async () => {
     setIsLoading(true);
     try {
-      const data = await enrollmentsService.findAll(filters);
-      setEnrollments(data);
+      const response = await enrollmentsService.findAll({
+        ...filters,
+        search: searchTerm || undefined,
+        page: pagination.page,
+        limit: pagination.limit,
+      });
+      
+      setEnrollments(response.data);
+      setPagination(response.pagination);
     } catch (error) {
       addToast('error', 'Error al cargar las matrículas');
     } finally {
       setIsLoading(false);
     }
-  }, [filters, addToast]);
+  }, [filters, searchTerm, pagination.page, pagination.limit, addToast]);
 
   const loadInitialData = useCallback(async () => {
     try {
@@ -129,6 +144,7 @@ export const EnrollmentsPage: React.FC = () => {
       ...prev,
       [name]: value || undefined,
     }));
+    setPagination(prev => ({ ...prev, page: 1 }));
   };
 
   const handleSearchChange = (value: string) => {
@@ -137,11 +153,21 @@ export const EnrollmentsPage: React.FC = () => {
       ...prev,
       search: value || undefined,
     }));
+    setPagination(prev => ({ ...prev, page: 1 }));
   };
 
   const clearFilters = () => {
     setFilters({});
     setSearchTerm('');
+    setPagination(prev => ({ ...prev, page: 1 }));
+  };
+
+  const handlePageChange = (page: number) => {
+    setPagination(prev => ({ ...prev, page }));
+  };
+
+  const handleItemsPerPageChange = (limit: number) => {
+    setPagination(prev => ({ ...prev, limit, page: 1 }));
   };
 
   // ===== HANDLERS DE EDICIÓN/TRANSFERENCIA =====
@@ -416,10 +442,12 @@ export const EnrollmentsPage: React.FC = () => {
   // ===== OPCIONES PARA SELECTS =====
 
   const sectionOptions = [
+    console.log(sections),
     { value: '', label: 'Selecciona una sección' },
+    console.log(sections.data),
     ...sections.map((s) => ({
       value: s.id,
-      label: `${s.classroom?.name || ''} - ${s.name} (${s.turn?.name || ''})`,
+      label: `${s.name || ''} - ${s.name} (${s.turn?.name || ''})`,
     })),
   ];
 
@@ -1036,6 +1064,16 @@ export const EnrollmentsPage: React.FC = () => {
                 ))}
               </tbody>
             </table>
+            {pagination.total > 0 && (
+              <Pagination
+                currentPage={pagination.page}
+                totalPages={pagination.totalPages}
+                totalItems={pagination.total}
+                itemsPerPage={pagination.limit}
+                onPageChange={handlePageChange}
+                onItemsPerPageChange={handleItemsPerPageChange}
+              />
+            )}
           </div>
         )}
       </Card>

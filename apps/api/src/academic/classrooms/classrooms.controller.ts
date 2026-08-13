@@ -24,11 +24,23 @@ export class ClassroomsController {
   }
 
   @Get()
-  @ApiQuery({ name: 'sedeId', required: false, description: 'Filtrar por ID de sede' })
-  @ApiOperation({ summary: 'Listar todos los salones activos' })
-  @ApiResponse({ status: 200, description: 'Lista de salones' })
-  findAll(@Query('sedeId') sedeId?: string) {
-    return this.classroomsService.findAll(sedeId);
+  @ApiQuery({ name: 'sedeId', required: false })
+  @ApiQuery({ name: 'search', required: false })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiOperation({ summary: 'Listar salones con filtros y paginación' })
+  findAll(
+    @Query('sedeId') sedeId?: string,
+    @Query('search') search?: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    return this.classroomsService.findAll({
+      sedeId,
+      search,
+      page: page ? parseInt(page) : 1,
+      limit: limit ? parseInt(limit) : 10,
+    });
   }
 
   @Get(':id')

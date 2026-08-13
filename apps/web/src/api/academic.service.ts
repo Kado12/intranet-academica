@@ -8,6 +8,7 @@ import type{
   Course,
   // PeriodStatus,
 } from '../types';
+import { number } from 'zod';
 
 // ============== SEDES ==============
 export const sedesService = {
@@ -129,7 +130,8 @@ export const sectionsService = {
     if (classroomId) params.append('classroomId', classroomId);
     
     const response = await api.get<Section[]>(`/api/academic/sections?${params.toString()}`);
-    return response.data;
+    console.log(response)
+    return response.data.data;
   },
   
   async findOne(id: string): Promise<Section> {
@@ -215,6 +217,16 @@ export interface EnrollmentResponse {
   };
 }
 
+export interface EnrollmentsResponse {
+  data: EnrollmentResponse[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
 export interface EnrollmentFilters {
   periodId?: string;
   sectionId?: string;
@@ -222,6 +234,8 @@ export interface EnrollmentFilters {
   turnId?: string;
   paymentPlanId?: string;
   search?: string;
+  page?: number;
+  limit?: number;
 }
 
 export interface TransferEnrollmentDto {
@@ -233,7 +247,7 @@ export interface TransferEnrollmentDto {
 }
 
 export const enrollmentsService = {
-  async findAll(filters?: EnrollmentFilters): Promise<EnrollmentResponse[]> {
+  async findAll(filters?: EnrollmentFilters): Promise<EnrollmentsResponse> {
     const params = new URLSearchParams();
     if (filters?.periodId) params.append('periodId', filters.periodId);
     if (filters?.sectionId) params.append('sectionId', filters.sectionId);
@@ -241,8 +255,10 @@ export const enrollmentsService = {
     if (filters?.turnId) params.append('turnId', filters.turnId);
     if (filters?.paymentPlanId) params.append('paymentPlanId', filters.paymentPlanId);
     if (filters?.search) params.append('search', filters.search);
+    if (filters?.page) params.append('page', filters.page.toString());
+    if (filters?.limit) params.append('limit', filters.limit.toString());
     
-    const response = await api.get<EnrollmentResponse[]>(`/api/academic/enrollments?${params.toString()}`);
+    const response = await api.get<EnrollmentsResponse>(`/api/academic/enrollments?${params.toString()}`);
     return response.data;
   },
 

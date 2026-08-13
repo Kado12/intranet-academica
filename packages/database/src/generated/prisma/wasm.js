@@ -745,7 +745,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "D:\\intranet-academica\\packages\\database\\src\\generated\\prisma",
+      "value": "D:\\Proyectos\\Web\\intranet-academica\\packages\\database\\src\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -759,7 +759,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "D:\\intranet-academica\\packages\\database\\prisma\\schema.prisma",
+    "sourceFilePath": "D:\\Proyectos\\Web\\intranet-academica\\packages\\database\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {

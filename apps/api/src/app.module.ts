@@ -24,6 +24,7 @@ import { PaymentsModule } from './academic/payments/payments.module';
 import { StatisticsModule } from './statistics/statistics.module';
 import { TeacherAttendanceModule } from './academic/teacher-attendance/teacher-attendance.module';
 import { ExportsModule } from './exports/exports.module';
+import { ImportsModule } from './imports/imports.module';
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { ExportsModule } from './exports/exports.module';
     StatisticsModule,
     TeacherAttendanceModule,
     ExportsModule,
+    ImportsModule,
   ],
   controllers: [AppController],
   providers: [

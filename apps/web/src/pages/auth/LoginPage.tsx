@@ -5,13 +5,13 @@ import { useAuth } from '../../context/AuthContext';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card } from '../../components/ui/Card';
-import { AcademicCapIcon } from '@heroicons/react/24/outline';
+import { AcademicCapIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import { getZodErrors } from '../../utils/zodHelpers';
 
 // Schema de validación con Zod
 const loginSchema = z.object({
   email: z.string().email('Correo electrónico inválido'),
-  password: z.string().min(8, 'La contraseña debe tener al menos 8 caracteres'),
+  password: z.string().min(1, 'La contraseña es requerida'),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -30,9 +30,13 @@ export const LoginPage: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    // Limpiar el error del campo al escribir
+    
+    // Limpiar errores al escribir
     if (errors[name as keyof LoginFormData]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
+    }
+    if (serverError) {
+      setServerError('');
     }
   };
 
@@ -49,6 +53,8 @@ export const LoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    e.stopPropagation();
+    
     setServerError('');
 
     if (!validateForm()) return;
@@ -56,10 +62,29 @@ export const LoginPage: React.FC = () => {
     setIsLoading(true);
 
     try {
+      // ⚠️ CORRECCIÓN: Pasar email y password como parámetros separados
       await login(formData);
       navigate('/dashboard');
     } catch (error: any) {
-      setServerError(error.message || 'Error al iniciar sesión');
+      // ⚠️ CORRECCIÓN: Extraer correctamente el mensaje del backend
+      let errorMessage = 'Error al iniciar sesión. Por favor, intenta nuevamente.';
+      
+      if (error.response?.data?.message) {
+        // Error del backend (Axios)
+        const msg = error.response.data.message;
+        errorMessage = Array.isArray(msg) ? msg.join(', ') : msg;
+      } else if (error.message) {
+        // Error de JavaScript
+        errorMessage = error.message;
+      } else if (error.request) {
+        // Error de red
+        errorMessage = 'No se pudo conectar al servidor. Verifica tu conexión.';
+      }
+      
+      setServerError(errorMessage);
+      
+      // Limpiar el campo de contraseña para que el usuario intente de nuevo
+      setFormData(prev => ({ ...prev, password: '' }));
     } finally {
       setIsLoading(false);
     }
@@ -81,10 +106,12 @@ export const LoginPage: React.FC = () => {
         </div>
 
         <Card>
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form className="space-y-6" onSubmit={handleSubmit} noValidate>
+            {/* Mensaje de error del servidor */}
             {serverError && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-                {serverError}
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-start gap-2">
+                <ExclamationCircleIcon className="h-5 w-5 flex-shrink-0 mt-0.5" />
+                <span className="text-sm">{serverError}</span>
               </div>
             )}
 
@@ -94,9 +121,11 @@ export const LoginPage: React.FC = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="usuario@ejemplo.com"
+              placeholder="usuario@intranet.edu"
               error={errors.email}
               required
+              autoComplete="email"
+              autoFocus
             />
 
             <Input
@@ -108,15 +137,17 @@ export const LoginPage: React.FC = () => {
               placeholder="••••••••"
               error={errors.password}
               required
+              autoComplete="current-password"
             />
 
             <Button
               type="submit"
               variant="primary"
               isLoading={isLoading}
+              disabled={isLoading}
               className="w-full"
             >
-              Iniciar Sesión
+              {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
             </Button>
           </form>
 

@@ -24,15 +24,29 @@ export class SectionsController {
   }
 
   @Get()
-  @ApiQuery({ name: 'periodId', required: false, description: 'Filtrar por ID de período' })
-  @ApiQuery({ name: 'classroomId', required: false, description: 'Filtrar por ID de salón' })
-  @ApiOperation({ summary: 'Listar todas las secciones activas' })
-  @ApiResponse({ status: 200, description: 'Lista de secciones' })
+  @ApiQuery({ name: 'sedeId', required: false })
+  @ApiQuery({ name: 'turnId', required: false })
+  @ApiQuery({ name: 'periodId', required: false })
+  @ApiQuery({ name: 'search', required: false })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiOperation({ summary: 'Listar secciones con filtros y paginación' })
   findAll(
+    @Query('sedeId') sedeId?: string,
+    @Query('turnId') turnId?: string,
     @Query('periodId') periodId?: string,
-    @Query('classroomId') classroomId?: string,
+    @Query('search') search?: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
   ) {
-    return this.sectionsService.findAll(periodId, classroomId);
+    return this.sectionsService.findAll({
+      sedeId,
+      turnId,
+      periodId,
+      search,
+      page: page ? parseInt(page) : 1,
+      limit: limit ? parseInt(limit) : 10,
+    });
   }
 
   @Get(':id')

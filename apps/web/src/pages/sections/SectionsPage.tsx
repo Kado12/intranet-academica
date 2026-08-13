@@ -21,6 +21,8 @@ import {
   AcademicCapIcon,
 } from '@heroicons/react/24/outline';
 import { getZodErrors } from '../../utils/zodHelpers';
+import { Pagination } from '../../components/ui/Pagination';
+import api from '../../api/axios';
 
 // Schema de validación
 const sectionSchema = z.object({
@@ -36,6 +38,21 @@ type SectionFormData = z.infer<typeof sectionSchema>;
 
 export const SectionsPage: React.FC = () => {
   const { toasts, addToast, removeToast } = useToast();
+
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 0,
+  });
+
+  // Filtros
+  const [filters, setFilters] = useState({
+    sedeId: '',
+    turnId: '',
+    periodId: '',
+    search: '',
+  });
 
   const [sections, setSections] = useState<Section[]>([]);
   const [classrooms, setClassrooms] = useState<Classroom[]>([]);
@@ -60,29 +77,44 @@ export const SectionsPage: React.FC = () => {
   });
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const loadData = useCallback(async () => {
+  const loadSections = useCallback(async () => {
     setIsLoading(true);
     try {
-      const [sectionsData, classroomsData, turnsData, periodsData] = await Promise.all([
-        sectionsService.findAll(),
-        classroomsService.findAll(),
-        turnsService.findAll(),
-        periodsService.findAll(),
-      ]);
-      setSections(sectionsData);
-      setClassrooms(classroomsData);
-      setTurns(turnsData);
-      setPeriods(periodsData);
-    } catch (error: any) {
-      addToast('error', 'Error al cargar los datos');
+      const params = new URLSearchParams();
+      if (filters.sedeId) params.append('sedeId', filters.sedeId);
+      if (filters.turnId) params.append('turnId', filters.turnId);
+      if (filters.periodId) params.append('periodId', filters.periodId);
+      if (filters.search) params.append('search', filters.search);
+      params.append('page', pagination.page.toString());
+      params.append('limit', pagination.limit.toString());
+
+      const response = await api.get(`/api/academic/sections?${params.toString()}`);
+      setSections(response.data.data);
+      setPagination(response.data.pagination);
+    } catch (error) {
+      addToast('error', 'Error al cargar secciones');
     } finally {
       setIsLoading(false);
     }
-  }, [addToast]);
+  }, [filters, pagination.page, pagination.limit, addToast]);
 
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    loadSections();
+  }, [loadSections]);
+
+  // Handler de cambio de página
+  const handlePageChange = (page: number) => {
+    setPagination(prev => ({ ...prev, page }));
+  };
+
+  const handleItemsPerPageChange = (limit: number) => {
+    setPagination(prev => ({ ...prev, limit, page: 1 }));
+  };
+
+  const handleFilterChange = (name: string, value: string) => {
+    setFilters(prev => ({ ...prev, [name]: value }));
+    setPagination(prev => ({ ...prev, page: 1 }));
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -428,6 +460,14 @@ export const SectionsPage: React.FC = () => {
                 ))}
               </tbody>
             </table>
+            <Pagination
+              currentPage={pagination.page}
+              totalPages={pagination.totalPages}
+              totalItems={pagination.total}
+              itemsPerPage={pagination.limit}
+              onPageChange={handlePageChange}
+              onItemsPerPageChange={handleItemsPerPageChange}
+            />
           </div>
         )}
       </Card>
