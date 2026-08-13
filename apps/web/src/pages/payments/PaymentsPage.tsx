@@ -150,17 +150,6 @@ export const PaymentsPage: React.FC = () => {
     }
   };
 
-  const handleMarkAsPending = async (payment: PaymentRecord) => {
-    try {
-      await paymentsService.updatePayment(payment.id, { status: 'PENDING' });
-      addToast('success', 'Pago marcado como pendiente');
-      loadPayments();
-      loadSummary();
-    } catch (error) {
-      addToast('error', 'Error al actualizar el pago');
-    }
-  };
-
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('es-PE', {
       year: 'numeric',

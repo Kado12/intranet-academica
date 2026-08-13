@@ -22,7 +22,6 @@ import {
 } from '@heroicons/react/24/outline';
 import { getZodErrors } from '../../utils/zodHelpers';
 import { Pagination } from '../../components/ui/Pagination';
-import api from '../../api/axios';
 
 // Schema de validación
 const sectionSchema = z.object({
@@ -47,7 +46,7 @@ export const SectionsPage: React.FC = () => {
   });
 
   // Filtros
-  const [filters, setFilters] = useState({
+  const [filters] = useState({
     sedeId: '',
     turnId: '',
     periodId: '',
@@ -88,9 +87,18 @@ export const SectionsPage: React.FC = () => {
       params.append('page', pagination.page.toString());
       params.append('limit', pagination.limit.toString());
 
-      const response = await api.get(`/api/academic/sections?${params.toString()}`);
-      setSections(response.data.data);
-      setPagination(response.data.pagination);
+      const [classroomData, turnsData, periodsData] = await Promise.all([
+        classroomsService.findAll(),
+        turnsService.findAll(),
+        periodsService.findAll(),
+      ]);
+      console.log(classroomData)
+      setClassrooms(classroomData.data)
+      setTurns(turnsData)
+      setPeriods(periodsData)
+      const dataSection = await sectionsService.findAll(params)
+      setSections(dataSection.data)
+      setPagination(dataSection.pagination);
     } catch (error) {
       addToast('error', 'Error al cargar secciones');
     } finally {
@@ -109,11 +117,6 @@ export const SectionsPage: React.FC = () => {
 
   const handleItemsPerPageChange = (limit: number) => {
     setPagination(prev => ({ ...prev, limit, page: 1 }));
-  };
-
-  const handleFilterChange = (name: string, value: string) => {
-    setFilters(prev => ({ ...prev, [name]: value }));
-    setPagination(prev => ({ ...prev, page: 1 }));
   };
 
   const handleChange = (
@@ -165,7 +168,7 @@ export const SectionsPage: React.FC = () => {
       setShowForm(false);
       setEditingSection(null);
       resetForm();
-      loadData();
+      loadSections();
     } catch (error: any) {
       const message = error.response?.data?.message;
       addToast('error', Array.isArray(message) ? message.join(', ') : message || 'Error al guardar la sección');
@@ -212,7 +215,7 @@ export const SectionsPage: React.FC = () => {
       await sectionsService.remove(deleteModal.section.id);
       addToast('success', 'Sección eliminada exitosamente');
       setDeleteModal({ isOpen: false, section: null });
-      loadData();
+      loadSections();
     } catch (error: any) {
       addToast('error', 'Error al eliminar la sección');
     } finally {

@@ -20,7 +20,6 @@ export const ExportFiltersModal: React.FC<ExportFiltersModalProps> = ({
   onClose,
   onExport,
   title = 'Descargar Excel',
-  showPaymentFilters = false,
 }) => {
   // Datos
   const [sedes, setSedes] = useState<Sede[]>([]);
@@ -57,8 +56,8 @@ export const ExportFiltersModal: React.FC<ExportFiltersModalProps> = ({
       ]);
       setSedes(sedesData);
       setTurns(turnsData);
-      setClassrooms(classroomsData);
-      setSections(sectionsData);
+      setClassrooms(classroomsData.data);
+      setSections(sectionsData.data);
     } catch (error) {
       console.error('Error al cargar datos:', error);
     }

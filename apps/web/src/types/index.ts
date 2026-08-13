@@ -47,7 +47,19 @@ export interface AuthUser {
   email: string;
   firstName: string;
   lastName: string;
+  avatarUrl?: string;
   roles: Role[];
+  profile?: {
+    firstName?: string;
+    lastName?: string;
+    avatarUrl?: string;
+    address?: string;
+    phone?: string;
+    gender?: string;
+    documentType?: string
+    documentNumber?: string
+    birthDate?: string
+  };
 }
 
 // Respuesta de autenticación

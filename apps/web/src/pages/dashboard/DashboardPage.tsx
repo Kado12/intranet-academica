@@ -291,7 +291,7 @@ export const DashboardPage: React.FC = () => {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) => `${name}: ${(Number(percent) * 100).toFixed(0)}%`}
                   outerRadius={100}
                   fill="#8884d8"
                   dataKey="value"
@@ -350,13 +350,13 @@ export const DashboardPage: React.FC = () => {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) => `${name}: ${(Number(percent) * 100).toFixed(0)}%`}
                   outerRadius={100}
                   fill="#8884d8"
                   dataKey="count"
                 >
                   {stats.charts.paymentPlansDistribution.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    <Cell className={entry.name} key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
                 <Tooltip />

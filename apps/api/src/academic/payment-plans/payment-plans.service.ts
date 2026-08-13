@@ -101,7 +101,7 @@ export class PaymentPlansService {
     // Verificar que no tenga matrículas asociadas
     if (plan.enrollments.length > 0) {
       throw new ConflictException(
-        `No se puede eliminar el plan porque tiene ${plan.enrollments.length} matrículas asociadas`
+        `No se puede eliminar el plan porque tiene ${plan.enrollments.length} matrículas asociadas`,
       );
     }
 

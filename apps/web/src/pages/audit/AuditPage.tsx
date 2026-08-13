@@ -8,7 +8,6 @@ import { auditService, type AuditLog } from '../../api/audit.service';
 import {
   ClipboardDocumentListIcon,
   EyeIcon,
-  MagnifyingGlassIcon,
 } from '@heroicons/react/24/outline';
 
 // Configuración de visualización por tipo de acción

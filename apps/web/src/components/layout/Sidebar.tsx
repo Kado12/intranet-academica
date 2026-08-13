@@ -16,10 +16,7 @@ import {
   BanknotesIcon,
   UsersIcon,
   ClipboardDocumentIcon,
-  CheckCircleIcon,
-  PresentationChartBarIcon,
   XMarkIcon,
-  Bars3Icon,
   ArrowUpTrayIcon,
 } from '@heroicons/react/24/outline';
 
@@ -116,12 +113,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           icon: ClipboardDocumentListIcon,
           roles: [Role.ADMIN, Role.SECRETARIA, Role.COORDINADOR],
         },
-        {
-          path: '/attendance/students',
-          label: 'Asistencia Alumnos',
-          icon: CheckCircleIcon,
-          roles: [Role.DOCENTE, Role.COORDINADOR, Role.ADMIN, Role.INFORMATICO],
-        },
       ],
     },
     {
@@ -142,18 +133,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         },
       ],
     },
-    {
-      title: 'Docentes',
-      icon: UsersIcon,
-      items: [
-        {
-          path: '/attendance/teachers',
-          label: 'Asistencia Docentes',
-          icon: CheckCircleIcon,
-          roles: [Role.COORDINADOR, Role.ADMIN, Role.INFORMATICO],
-        },
-      ],
-    },
+    // {
+    //   title: 'Docentes',
+    //   icon: UsersIcon,
+    //   items: [
+    //     {
+    //       path: '/attendance/teachers',
+    //       label: 'Asistencia Docentes',
+    //       icon: CheckCircleIcon,
+    //       roles: [Role.COORDINADOR, Role.ADMIN, Role.INFORMATICO],
+    //     },
+    //   ],
+    // },
     {
       title: 'Usuarios',
       icon: UsersIcon,

@@ -8,7 +8,6 @@ import {
   ArrowDownTrayIcon,
   ArrowUpTrayIcon,
   DocumentArrowUpIcon,
-  CheckCircleIcon,
   XCircleIcon,
   AcademicCapIcon,
   BuildingOfficeIcon,

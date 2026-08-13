@@ -34,8 +34,6 @@ export class ExportsService {
       status: EnrollmentStatus.ACTIVE,
     };
 
-    console.log('PArametros', filters);
-
     // Filtro por sede
     if (filters.sedeId) {
       where.section = {

@@ -12,7 +12,7 @@ import { getZodErrors, type FormErrors } from '../../utils/zodHelpers';
 import { sedesService, turnsService, periodsService, sectionsService } from '../../api/academic.service';
 import { paymentPlansService, type PaymentPlan } from '../../api/payment-plans.service';
 import { studentsRegistrationService } from '../../api/students-registration.service';
-import type { Sede, Turn, AcademicPeriod, Section, Role } from '../../types';
+import type { Sede, Turn, AcademicPeriod, Section } from '../../types';
 import {
   UserIcon,
   AcademicCapIcon,
@@ -139,16 +139,26 @@ export const StudentRegistrationPage: React.FC = () => {
     loadInitialData();
   }, [loadInitialData]);
 
+  const [filters] = useState({
+    sedeId: '',
+    turnId: '',
+    periodId: '',
+  });
+
   // ===== CARGAR SECCIONES CUANDO CAMBIA SEDE/PERÍODO/TURNO =====
 
   useEffect(() => {
     const loadSections = async () => {
       if (step2Data.sedeId && step2Data.periodId && step2Data.turnId) {
         try {
+          const params = new URLSearchParams();
+          if (filters.sedeId) params.append('sedeId', filters.sedeId);
+          if (filters.turnId) params.append('turnId', filters.turnId);
+          if (filters.periodId) params.append('periodId', filters.periodId);
           // Aquí necesitarías un endpoint que filtre secciones por sede, período y turno
           // Por ahora cargamos todas y filtramos en el frontend
-          const allSections = await sectionsService.findAll(step2Data.periodId);
-          setSections(allSections);
+          const allSections = await sectionsService.findAll(params);
+          setSections(allSections.data);
         } catch (error) {
           console.error('Error al cargar secciones:', error);
         }

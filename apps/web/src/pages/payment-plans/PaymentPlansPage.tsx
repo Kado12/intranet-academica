@@ -219,7 +219,7 @@ export const PaymentPlansPage: React.FC = () => {
 
   const calculatedInstallmentAmount = () => {
     const final = calculatedFinalAmount();
-    const installments = parseInt(formData.installments) || 1;
+    const installments = parseInt(formData.installments || '') || 1;
     return final / installments;
   };
 
@@ -344,7 +344,7 @@ export const PaymentPlansPage: React.FC = () => {
                 <p className="text-blue-600">Monto final</p>
                 <p className="font-bold text-lg text-green-600">S/ {calculatedFinalAmount().toFixed(2)}</p>
               </div>
-              {parseInt(formData.installments) > 1 && (
+              {parseInt(formData.installments || '') > 1 && (
                 <div>
                   <p className="text-blue-600">Por cuota</p>
                   <p className="font-bold text-lg text-purple-600">

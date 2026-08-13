@@ -8,7 +8,6 @@ import type{
   Course,
   // PeriodStatus,
 } from '../types';
-import { number } from 'zod';
 
 // ============== SEDES ==============
 export const sedesService = {
@@ -96,8 +95,8 @@ export const periodsService = {
 
 // ============== SALONES ==============
 export const classroomsService = {
-  async findAll(): Promise<Classroom[]> {
-    const response = await api.get<Classroom[]>('/api/academic/classrooms');
+  async findAll(): Promise<{ data: Classroom[]; pagination: any }> {
+    const response = await api.get('/api/academic/classrooms');
     return response.data;
   },
   
@@ -124,14 +123,17 @@ export const classroomsService = {
 
 // ============== SECCIONES ==============
 export const sectionsService = {
-  async findAll(periodId?: string, classroomId?: string): Promise<Section[]> {
+  async findAll(filters?: any): Promise<{ data: Section[]; pagination: any }> {
     const params = new URLSearchParams();
-    if (periodId) params.append('periodId', periodId);
-    if (classroomId) params.append('classroomId', classroomId);
-    
-    const response = await api.get<Section[]>(`/api/academic/sections?${params.toString()}`);
-    console.log(response)
-    return response.data.data;
+    if (filters?.sedeId) params.append('sedeId', filters.sedeId);
+    if (filters?.turnId) params.append('turnId', filters.turnId);
+    if (filters?.periodId) params.append('periodId', filters.periodId);
+    if (filters?.search) params.append('search', filters.search);
+    if (filters?.page) params.append('page', filters.page.toString());
+    if (filters?.limit) params.append('limit', filters.limit.toString());
+
+    const response = await api.get(`/api/academic/sections?${params.toString()}`);
+    return response.data;
   },
   
   async findOne(id: string): Promise<Section> {
@@ -194,10 +196,15 @@ export interface EnrollmentResponse {
     id: string;
     email: string;
     profile?: {
-      firstName: string;
-      lastName: string;
-      documentNumber?: string;
+      firstName?: string;
+      lastName?: string;
       avatarUrl?: string;
+      address?: string;
+      phone?: string;
+      gender?: string;
+      documentType?: string
+      documentNumber?: string
+      birthDate?: string
     };
   };
   section?: {

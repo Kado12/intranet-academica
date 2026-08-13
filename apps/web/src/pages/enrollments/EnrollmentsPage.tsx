@@ -49,6 +49,8 @@ export const EnrollmentsPage: React.FC = () => {
   const [paymentPlans, setPaymentPlans] = useState<PaymentPlan[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  console.log(isExporting,periods)
+
   // Filtros
   const [filters, setFilters] = useState<EnrollmentFilters>({});
   const [searchTerm, setSearchTerm] = useState('');
@@ -116,7 +118,7 @@ export const EnrollmentsPage: React.FC = () => {
         periodsService.findAll(),
         paymentPlansService.findAll(),
       ]);
-      setSections(sectionsData);
+      setSections(sectionsData.data);
       setSedes(sedesData);
       setTurns(turnsData);
       setPeriods(periodsData);
@@ -405,7 +407,6 @@ export const EnrollmentsPage: React.FC = () => {
 
   const handleExportStudents = async (filters: any) => {
     setIsExporting(true);
-    console.log(filters)
     try {
       await exportsService.downloadStudentsList({
         sedeId: filters.sedeId || undefined,
@@ -442,9 +443,7 @@ export const EnrollmentsPage: React.FC = () => {
   // ===== OPCIONES PARA SELECTS =====
 
   const sectionOptions = [
-    console.log(sections),
     { value: '', label: 'Selecciona una sección' },
-    console.log(sections.data),
     ...sections.map((s) => ({
       value: s.id,
       label: `${s.name || ''} - ${s.name} (${s.turn?.name || ''})`,
