@@ -320,27 +320,33 @@ export class ImportsService {
 
       // Crear todos los estudiantes válidos en transacción
       if (result.created.length > 0) {
-        await this.prisma.$transaction(async (tx) => {
-          for (const item of result.created) {
-            try {
-              const student = await this.createStudentFromImport(
-                tx,
-                item.data,
-                paymentPlans,
-                sections,
-              );
-              result.successful++;
-              item.data = { ...item.data, studentId: student.id };
-            } catch (error: any) {
-              result.failed++;
-              result.errors.push({
-                row: item.row,
-                reason: `Error al crear: ${error.message}`,
-                data: item.data,
-              });
+        await this.prisma.$transaction(
+          async (tx) => {
+            for (const item of result.created) {
+              try {
+                const student = await this.createStudentFromImport(
+                  tx,
+                  item.data,
+                  paymentPlans,
+                  sections,
+                );
+                result.successful++;
+                item.data = { ...item.data, studentId: student.id };
+              } catch (error: any) {
+                result.failed++;
+                result.errors.push({
+                  row: item.row,
+                  reason: `Error al crear: ${error.message}`,
+                  data: item.data,
+                });
+              }
             }
-          }
-        });
+          },
+          {
+            maxWait: 10_000,
+            timeout: 60_000,
+          },
+        );
 
         // Auditoría
         await this.auditService.log({
